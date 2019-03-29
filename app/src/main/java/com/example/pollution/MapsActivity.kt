@@ -26,7 +26,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        main()
+        setup()
     }
 
     /**
@@ -54,7 +54,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     var service = retrofit.create(WeatherService::class.java)
 
-    fun main() {
+    fun setup() {
         print("THE DATA: " + service.toString())
         val weather = service.getWeather(60.1, 9.58).execute().body()
         println(weather)
