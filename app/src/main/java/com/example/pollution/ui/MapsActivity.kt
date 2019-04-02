@@ -34,6 +34,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         //getMapASYNC
         mapFragment.getMapAsync(this)
+        getData(59.915780, 10.752913)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -44,7 +45,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(oslo))
     }
 
-    fun getData() {
+    fun getData(lat: Double, lon: Double) {
         doAsync {
             val client = Retrofit.Builder()
                 .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
@@ -52,7 +53,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .build()
                 .create(WeatherService::class.java)
 
-            val weather = client.getWeather(59.915780, 10.752913).execute().body()
+            val weather = client.getWeather(lat, lon).execute().body()
             println(weather)
         }
     }
