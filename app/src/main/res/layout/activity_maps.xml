@@ -1,8 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:id="@+id/map"
-          tools:context=".ui.MapsActivity"
-          android:name="com.google.android.gms.maps.SupportMapFragment"/>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <fragment
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/map"
+              tools:context=".ui.MapsActivity"
+              android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:elevation="10dp"
+        android:background="@drawable/relative_layout_border">
+
+        <ImageView
+                android:src="@drawable/ic_search_icon"
+                android:id="@+id/search_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@string/picture_of_magnifying_glass"/>
+        
+        <EditText
+                android:id="@+id/search_input"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/search_icon"
+                android:imeOptions="actionSearch"
+                android:hint="@string/enter_a_city_name"
+                android:inputType="text"
+                android:textSize="20sp"
+                android:textColor="#000"
+                android:cursorVisible="false"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
