@@ -42,7 +42,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Add a marker in Oslo and move the camera
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(oslo))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
     }
 
     fun getData(lat: Double, lon: Double) {

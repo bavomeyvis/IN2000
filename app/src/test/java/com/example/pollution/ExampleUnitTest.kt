@@ -22,6 +22,6 @@ class ExampleUnitTest {
         val service = retrofit.create(WeatherService::class.java)
 
         val weather = service.getWeather(59.915780, 10.752913).execute().body()
-        assertEquals(weather?.data?.time?.get(1)?.variables?.aQI?.value, 1.6452500820159912)
+        assertEquals(weather?.data?.time?.get(1)?.variables?.aQI?.value, 1.7429293394088745) // 1.6452500820159912
     }
 }
