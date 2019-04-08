@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 // Packages' class imports
 import com.example.pollution.R
 import com.example.pollution.response.WeatherService
+import com.google.android.gms.maps.model.LatLngBounds
 import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
@@ -65,6 +66,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
+        val boundOne = LatLng(57.696784, 3.601294)
+        val boundTwo = LatLng(71.214304, 34.476990)
+
+        val builder = LatLngBounds.Builder()
+        builder.include(boundOne)
+        builder.include(boundTwo)
+
+        val bounds = builder.build()
+
+        mMap.setLatLngBoundsForCameraTarget(bounds)
         // Add a marker in Oslo and move the camera
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
