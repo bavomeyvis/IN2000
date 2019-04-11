@@ -1,10 +1,12 @@
 package com.example.pollution.ui
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -18,7 +20,10 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
+import com.example.pollution.data.Location
 import com.example.pollution.response.WeatherService
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_maps.*
 
@@ -36,6 +41,9 @@ private const val TAG = "MapsActivity"
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+    private lateinit var lastLocation: android.location.Location
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +55,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         getData(59.915780, 10.752913)
         init()
+        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
     private fun init() {
@@ -82,6 +91,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
+        setUpMap()
     }
 
     fun getData(lat: Double, lon: Double) {
@@ -151,5 +161,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val currentView: View? = this.currentFocus
         val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(currentView?.windowToken, 0)
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    }
+
+    private fun setUpMap() {
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+            return
+        }
+
+        mMap.isMyLocationEnabled = true
+
+        /* Kanskje dette bare ikke funker på emulator?
+        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+            if (location != null) {
+                lastLocation = location
+                val currentLatLng = LatLng(location.latitude, location.longitude)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
+            }
+        }
+        */
     }
 }
