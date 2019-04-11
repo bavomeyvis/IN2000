@@ -15,17 +15,16 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 
 // Packages' class imports
 import com.example.pollution.R
 import com.example.pollution.response.WeatherService
-import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.runOnUiThread
 
 // Retrofit imports
 import retrofit2.Retrofit
@@ -55,7 +54,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (actionId == EditorInfo.IME_ACTION_DONE
                 || actionId == EditorInfo.IME_ACTION_SEARCH
                 || event.action == KeyEvent.ACTION_DOWN
-                || event.action == KeyEvent.KEYCODE_ENTER) {
+                || event.action == KeyEvent.KEYCODE_ENTER
+            ) {
                 searchLocation()
                 search_input.setText("")
                 closeKeyboard()
@@ -64,6 +64,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             false
         }
     }
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -96,6 +97,38 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun addMarkerColoured(address: Address) {
+        val lat = address.latitude
+        val lon = address.longitude
+
+        val client = Retrofit.Builder()
+            .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(WeatherService::class.java)
+
+        doAsync {
+            val weather = client.getWeather(lat, lon).execute().body()
+            val aqi = weather?.data?.time?.get(0)?.variables?.aQI?.value
+            println(aqi)
+
+            var markerColor = BitmapDescriptorFactory.HUE_RED
+
+            if (aqi != null && aqi < 1.75) {
+                markerColor = BitmapDescriptorFactory.HUE_GREEN
+            }
+
+            runOnUiThread {
+                mMap.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(lat, lon))
+                        .title(address.getAddressLine(0))
+                        .icon(BitmapDescriptorFactory.defaultMarker(markerColor))
+                )
+            }
+        }
+    }
+
     fun searchLocation() {
         val searchAddress = search_input.text.toString()
         val geocoder = Geocoder(this)
@@ -108,14 +141,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (addressList.size > 0) {
             val address = addressList[0]
             val addressLatLng = LatLng(address.latitude, address.longitude)
-            mMap.addMarker(MarkerOptions().position(addressLatLng).title(address.getAddressLine(0)))
+
+            addMarkerColoured(address)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(addressLatLng, 15F))
         }
     }
 
     private fun closeKeyboard() {
-        val currentView : View? = this.currentFocus
-        val imm : InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val currentView: View? = this.currentFocus
+        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(currentView?.windowToken, 0)
     }
 }
