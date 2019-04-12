@@ -29,6 +29,14 @@
                <category android:name="android.intent.category.LAUNCHER"/>
            </intent-filter>
        </activity>
+
+
+        <!-- List Activity -->
+        <activity android:name=".ui.SettingsActivity"
+                  android:label="@string/list_title"
+                  android:parentActivityName=".ui.MapsActivity">
+
+        </activity>
    </application>
 
 </manifest>
