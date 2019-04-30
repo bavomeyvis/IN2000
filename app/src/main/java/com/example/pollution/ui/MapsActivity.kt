@@ -1,3 +1,4 @@
+
 package com.example.pollution.ui
 
 import android.content.Context
@@ -55,7 +56,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         getData(59.915780, 10.752913)
         init()
-        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
     private fun init() {
@@ -177,7 +178,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mMap.isMyLocationEnabled = true
 
-        /* Kanskje dette bare ikke funker på emulator?
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
             if (location != null) {
                 lastLocation = location
@@ -185,6 +185,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
             }
         }
-        */
     }
 }
