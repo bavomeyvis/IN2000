@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <fragment
               android:layout_width="match_parent"
@@ -12,28 +12,36 @@
               tools:context=".ui.MapsActivity"
               android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:elevation="10dp"
         android:background="@drawable/relative_layout_border">
 
         <ImageView
-                android:src="@drawable/ic_search_icon"
-                android:id="@+id/search_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="@string/picture_of_magnifying_glass"/>
-        
+                android:id="@+id/drop_down_handler"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+
+                android:src="@drawable/ic_dehaze_black_24dp"
+                android:contentDescription="@string/picture_of_drop_down_handler"/>
+
+        <!-- android:layout_width="0dp", which is the equivalent of "MATCH_CONSTRAINT" -->
         <EditText
                 android:id="@+id/search_input"
-                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toEndOf="@+id/search_icon"
+                app:layout_constraintStart_toEndOf="@id/drop_down_handler"
+                app:layout_constraintEnd_toStartOf="@id/search_icon"
+                android:layout_width="0dp"
+
+                android:importantForAutofill="no"
+                tools:targetApi="o"
+
+                android:background="@android:color/transparent"
                 android:imeOptions="actionSearch"
                 android:hint="@string/enter_a_city_name"
                 android:inputType="text"
@@ -42,6 +50,20 @@
                 android:cursorVisible="false"/>
 
 
-    </RelativeLayout>
+        <ImageView
+
+
+                android:id="@id/search_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:layout_alignEnd="@+id/search_input"
+
+                android:src="@drawable/ic_search_icon"
+                android:contentDescription="@string/picture_of_magnifying_glass"/>
+
+    </android.support.constraint.ConstraintLayout>
 
 </RelativeLayout>

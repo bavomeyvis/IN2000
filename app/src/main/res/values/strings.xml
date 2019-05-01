@@ -3,4 +3,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="enter_a_city_name">Enter a city name</string>
     <string name="picture_of_magnifying_glass">Picture of magnifying glass</string>
+    <string name="picture_of_drop_down_handler">drop_down</string>
+    <string name="settings">settings</string>
 </resources>
