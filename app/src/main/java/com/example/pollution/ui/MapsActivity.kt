@@ -1,11 +1,14 @@
 package com.example.pollution.ui
 
+// Our stuff
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.KeyEvent
@@ -13,6 +16,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 
+// Maps stuff
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -40,6 +44,7 @@ private const val TAG = "MapsActivity"
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    //Google Maps
     private lateinit var mMap: GoogleMap
     private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -48,6 +53,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+
+        // Sets listener to settings
+        configureNextButton()
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -92,6 +101,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
         setUpMap()
+    }
+
+
+    //Settings button listener
+    private fun configureNextButton() {
+        btnToSettings.setOnClickListener {
+            // Handler code here.
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     fun getData(lat: Double, lon: Double) {
