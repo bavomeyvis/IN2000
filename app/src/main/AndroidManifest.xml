@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.pollution">
 
-    <!--We have specified the ACCESS_FINE_LOCATION for the 'MyLocation' functionality.-->
+    <!-- fine location used in MapsActivity.kt. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <!-- Allow backup is a feature we neither require nor want. -->
     <application
