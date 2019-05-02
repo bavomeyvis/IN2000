@@ -27,6 +27,7 @@
                 android:paddingEnd="12dp"
                 android:paddingStart="12dp"
 
+                android:onClick="showPopup"
                 android:src="@drawable/ic_dehaze_black_24dp"
                 android:contentDescription="@string/picture_of_drop_down_handler"/>
 
