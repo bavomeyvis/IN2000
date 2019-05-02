@@ -60,6 +60,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
+
+
+
+
         //getMapASYNC
         mapFragment.getMapAsync(this)
         getData(59.915780, 10.752913)
@@ -85,6 +89,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
+        // https://stackoverflow.com/questions/6250325/hide-google-logo-from-mapview/6250405
+        // Turns off the two buttons in the bottom right (directions and open maps)
+        mMap.uiSettings.isMapToolbarEnabled = false
+        mMap.uiSettings.isMyLocationButtonEnabled = true
 
         val boundOne = LatLng(57.696784, 3.601294)
         val boundTwo = LatLng(71.214304, 34.476990)
