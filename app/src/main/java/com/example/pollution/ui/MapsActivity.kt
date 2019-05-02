@@ -12,9 +12,12 @@ import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.KeyEvent
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.PopupMenu
+import android.widget.Toast
 
 // Maps stuff
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -42,7 +45,7 @@ import java.io.IOException
 
 private const val TAG = "MapsActivity"
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuItemClickListener {
 
     //Google Maps
     private lateinit var mMap: GoogleMap
@@ -53,9 +56,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-
-        // Sets listener to settings
-        configureNextButton()
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -104,15 +104,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    //Settings button listener
-    private fun configureNextButton() {
-        btnToSettings.setOnClickListener {
-            // Handler code here.
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
     fun getData(lat: Double, lon: Double) {
         doAsync {
             val client = Retrofit.Builder()
@@ -126,6 +117,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    // find location
     private fun addMarkerColoured(address: Address) {
         val lat = address.latitude
         val lon = address.longitude
@@ -176,6 +168,45 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    // the different menu items' actions
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        // this should be in item4...
+        val intent = Intent(this, SettingsActivity::class.java)
+
+        when(item?.itemId) {
+            R.id.item1 -> Toast.makeText(this, "Item 1 clicked", Toast.LENGTH_SHORT).show()
+            R.id.item2 -> Toast.makeText(this, "Item 2 clicked", Toast.LENGTH_SHORT).show()
+            R.id.item3 -> Toast.makeText(this, "Item 3 clicked", Toast.LENGTH_SHORT).show()
+            R.id.item4 -> startActivity(intent)
+        }
+        return true
+    }
+
+    // https://www.youtube.com/watch?v=ncHjCsoj0Ws
+    // https://developer.android.com/guide/topics/ui/menus
+    // https://stackoverflow.com/questions/36876720/android-studio-2-0-not-showing-menu-icons-in-preview
+    // shows popup as well as icons
+    /*TODO: only popup.show() should be necessary*/
+    fun showPopup(v:View) {
+        val popup = PopupMenu(this, v)
+        popup.setOnMenuItemClickListener(this)
+        popup.inflate(R.menu.popup_menu)
+        // Lots of bullshit due to PopupMenu not coming with icons
+        // Consider using your own defined menu
+        try {
+            val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+            fieldMPopup.isAccessible = true
+            val mPopup = fieldMPopup.get(popup)
+            mPopup.javaClass
+                .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                .invoke(mPopup, true)
+        } catch (e: Exception){
+            Log.e("Main", "Error showing menu icons.", e)
+        } finally {
+            popup.show()
+        }
+    }
+
     private fun closeKeyboard() {
         val currentView: View? = this.currentFocus
         val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -196,14 +227,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mMap.isMyLocationEnabled = true
 
-        /* Kanskje dette bare ikke funker på emulator?
-        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-            if (location != null) {
-                lastLocation = location
-                val currentLatLng = LatLng(location.latitude, location.longitude)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
-            }
-        }
-        */
     }
 }
