@@ -1,4 +1,6 @@
 *.iml
+misc.xml
+/.idea/misc.xml
 .gradle
 /local.properties
 /.idea/encodings.xml

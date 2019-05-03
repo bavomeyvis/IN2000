@@ -61,9 +61,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
 
-
-
-
         //getMapASYNC
         mapFragment.getMapAsync(this)
         getData(59.915780, 10.752913)
