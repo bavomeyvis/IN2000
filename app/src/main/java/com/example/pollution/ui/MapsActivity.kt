@@ -2,6 +2,7 @@ package com.example.pollution.ui
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.location.Address
 import android.location.Geocoder
 import android.support.v7.app.AppCompatActivity
@@ -92,6 +93,36 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
         setUpMap()
+
+        try
+        {
+            val success = mMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+            if (!success)
+            {
+                println("FAILURE")
+            }
+        }
+        catch (e: Resources.NotFoundException) {
+            println("EXCEPTION")
+        }
+
+        //mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.mapStyle))
+
+        mMap.setOnMapClickListener(object: GoogleMap.OnMapClickListener {
+            override fun onMapClick(point:LatLng) {
+                //gets coordinates from touch event on map in point.lat and point.lon
+                println("")
+                println("CLICK LATIDUDE: " + point.latitude)
+                println("CLICK LONGITUDE: " + point.longitude)
+                //gets air quality data from met using the lat lon from the touch event
+                //send this to activity showing aqi
+                getData(point.latitude, point.longitude)
+
+            }
+        })
+
+        
     }
 
     fun getData(lat: Double, lon: Double) {
@@ -104,6 +135,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
             val weather = client.getWeather(lat, lon).execute().body()
             println(weather)
+            //return weather?
         }
     }
 
