@@ -3,6 +3,7 @@ package com.example.pollution.ui
 // Our stuff
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -16,6 +17,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.PopupMenu
 import android.widget.Toast
 
@@ -45,8 +47,10 @@ import java.io.IOException
 
 private const val TAG = "MapsActivity"
 
+
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuItemClickListener {
 
+    val myPref = "darkMode"
     //Google Maps
     private lateinit var mMap: GoogleMap
     private lateinit var lastLocation: android.location.Location
@@ -109,6 +113,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         setUpMap()
     }
 
+    // https://www.youtube.com/watch?v=xv_JJbjDQ3M
+    // test
+    fun saveInfo(str : String) {
+        var sharedPref : SharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE)
+
+        var editor : SharedPreferences.Editor = sharedPref.edit()
+        editor.putString("theme", str)
+        editor.apply()
+    }
+
+    fun displayData() {
+        var sharedPref : SharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE)
+
+        var name = sharedPref.getString("theme", "Could not find value")
+        var tekst = findViewById<EditText>(R.id.search_input)
+        tekst.setText(name)
+    }
 
     fun getData(lat: Double, lon: Double) {
         doAsync {
@@ -180,9 +201,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val intent = Intent(this, SettingsActivity::class.java)
 
         when(item?.itemId) {
-            R.id.item1 -> Toast.makeText(this, "Item 1 clicked", Toast.LENGTH_SHORT).show()
-            R.id.item2 -> Toast.makeText(this, "Item 2 clicked", Toast.LENGTH_SHORT).show()
-            R.id.item3 -> Toast.makeText(this, "Item 3 clicked", Toast.LENGTH_SHORT).show()
+            R.id.item1 -> saveInfo("darkTheme")
+            R.id.item2 -> saveInfo("lightTheme")
+            R.id.item3 -> displayData()
             R.id.item4 -> startActivity(intent)
         }
         return true
