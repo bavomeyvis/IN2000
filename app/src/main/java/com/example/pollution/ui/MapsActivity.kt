@@ -1,13 +1,21 @@
 
 package com.example.pollution.ui
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.NotificationBuilderWithBuilderAccessor
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -44,7 +52,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
+    private var mBuilder = NotificationCompat.Builder(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +65,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         getData(59.915780, 10.752913)
         init()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        createChannel()
     }
 
     private fun init() {
@@ -90,7 +100,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.setLatLngBoundsForCameraTarget(bounds)
         // Add a marker in Oslo and move the camera
         val oslo = LatLng(59.915780, 10.752913)
-        mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
+        mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
         setUpMap()
     }
@@ -184,6 +194,37 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val currentLatLng = LatLng(location.latitude, location.longitude)
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
             }
+        }
+    }
+
+    private fun createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.notification_title)
+            val descriptionText = getString(R.string.notification_desc)
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+        val intent = Intent(this, AlertDetails::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.notification_icon)
+            .setContentTitle("My notification")
+            .setContentText("Hello World!")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(this)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(notificationId, builder.build())
         }
     }
 }
