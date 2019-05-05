@@ -1,9 +1,7 @@
 package com.example.pollution.settings
 
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +9,6 @@ import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import com.example.pollution.R
-import com.example.pollution.ui.SettingsActivity
 
 class ListAdapter(val titles: ArrayList<String>, val desc: ArrayList<String>, private val context: Context) : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
@@ -21,7 +18,7 @@ class ListAdapter(val titles: ArrayList<String>, val desc: ArrayList<String>, pr
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListAdapter.ViewHolder {
         // create a new view
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.settings_element, parent, false) as View
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.old_settings_element, parent, false) as View
         return ViewHolder(itemView)
 
     }

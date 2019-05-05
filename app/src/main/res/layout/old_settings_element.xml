@@ -27,6 +27,7 @@
     />
     <Switch
             android:id="@+id/switchBtn"
+            android:onClick="set_theme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@id/elem_desc"

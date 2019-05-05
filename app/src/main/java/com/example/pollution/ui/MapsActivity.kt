@@ -3,13 +3,11 @@ package com.example.pollution.ui
 // Our stuff
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.KeyEvent
@@ -17,9 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.PopupMenu
-import android.widget.Toast
+import android.widget.*
 
 // Maps stuff
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -29,7 +25,6 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
-import com.example.pollution.data.Location
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -38,7 +33,6 @@ import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.runOnUiThread
 
 // Retrofit imports
 import retrofit2.Retrofit
@@ -47,23 +41,30 @@ import java.io.IOException
 
 private const val TAG = "MapsActivity"
 
-
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuItemClickListener {
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+        val sharedPref = "settings"
 
-    val myPref = "darkMode"
+    }
+
     //Google Maps
     private lateinit var mMap: GoogleMap
     private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-
+    //On create stuff
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
+        dostuff()
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
+
+
 
         //getMapASYNC
         mapFragment.getMapAsync(this)
@@ -72,6 +73,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
+    // ???
     private fun init() {
         search_input.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE
@@ -88,6 +90,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
+    //???
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -111,26 +114,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
         setUpMap()
+
     }
 
-    // https://www.youtube.com/watch?v=xv_JJbjDQ3M
-    // test
-    fun saveInfo(str : String) {
-        var sharedPref : SharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE)
-
-        var editor : SharedPreferences.Editor = sharedPref.edit()
-        editor.putString("theme", str)
-        editor.apply()
-    }
-
-    fun displayData() {
-        var sharedPref : SharedPreferences = getSharedPreferences("userInfo", Context.MODE_PRIVATE)
-
-        var name = sharedPref.getString("theme", "Could not find value")
-        var tekst = findViewById<EditText>(R.id.search_input)
-        tekst.setText(name)
-    }
-
+    // Get data from API
     fun getData(lat: Double, lon: Double) {
         doAsync {
             val client = Retrofit.Builder()
@@ -144,7 +131,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
-    // find location
+    // ????
     private fun addMarkerColoured(address: Address) {
         val lat = address.latitude
         val lon = address.longitude
@@ -177,6 +164,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
+    // ???
     fun searchLocation() {
         val searchAddress = search_input.text.toString()
         val geocoder = Geocoder(this)
@@ -198,20 +186,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     // the different menu items' actions
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         // this should be in item4...
-        val intent = Intent(this, SettingsActivity::class.java)
+        val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
 
         when(item?.itemId) {
-            R.id.item1 -> saveInfo("darkTheme")
-            R.id.item2 -> saveInfo("lightTheme")
-            R.id.item3 -> displayData()
-            R.id.item4 -> startActivity(intent)
+            R.id.menu_1_home -> Toast.makeText(this, "darkTheme", Toast.LENGTH_LONG).show()
+            R.id.menu_2_alert -> Toast.makeText(this, "saveInfo", Toast.LENGTH_LONG).show()
+            R.id.menu_3_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_LONG).show()
+            R.id.menu_4_settings -> startActivity(settingsActivityIntent)
         }
         return true
     }
 
-    // https://www.youtube.com/watch?v=ncHjCsoj0Ws
-    // https://developer.android.com/guide/topics/ui/menus
-    // https://stackoverflow.com/questions/36876720/android-studio-2-0-not-showing-menu-icons-in-preview
     // shows popup as well as icons
     /*TODO: only popup.show() should be necessary*/
     fun showPopup(v:View) {
@@ -234,16 +219,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
+    // ???
     private fun closeKeyboard() {
         val currentView: View? = this.currentFocus
         val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(currentView?.windowToken, 0)
     }
 
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    // Bavo's do stuff for themes
+    private fun dostuff() {
+        val str = getAppTheme()
+        Toast.makeText(this, str.toString() ,Toast.LENGTH_LONG).show()
     }
 
+    // ???
+    private fun getAppTheme() : Boolean {
+        val sp = getSharedPreferences(sharedPref, 0)
+        return sp.getBoolean("theme", false)
+    }
+    // ???
     private fun setUpMap() {
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

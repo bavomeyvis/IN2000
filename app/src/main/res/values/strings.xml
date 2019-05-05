@@ -11,4 +11,10 @@
     <string name="menu_item_home">Home</string>
     <string name="menu">menu</string>
     <string name="marker_oslo">Oslo</string>
+    <string name="settings_theme_desc">Turn on Dark Mode.</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_alert_desc">Get notified when values are above threshold.</string>
+    <string name="settings_alert_title">Alerts</string>
+    <string name="settings_language_title">Language</string>
+    <string name="settings_language_desc">The displayed language of the app</string>
 </resources>

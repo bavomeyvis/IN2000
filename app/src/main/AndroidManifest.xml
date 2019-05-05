@@ -33,9 +33,10 @@
 
 
         <!-- List Activity -->
-        <activity android:name=".ui.SettingsActivity"
-                  android:label="@string/list_title"
-                  android:parentActivityName=".ui.MapsActivity">
+        <activity android:parentActivityName=".ui.MapsActivity"
+                  android:name=".ui.SettingsActivity"
+                  android:label="Settings"
+                  >
 
         </activity>
    </application>
