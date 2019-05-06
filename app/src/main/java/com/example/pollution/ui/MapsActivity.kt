@@ -9,6 +9,7 @@ import android.location.Geocoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AppCompatDelegate
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
+import com.example.pollution.data.APIData
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -43,9 +45,9 @@ private const val TAG = "MapsActivity"
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuItemClickListener {
     companion object {
+        var mapsActivity : MapsActivity? = null
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
         val sharedPref = "settings"
-
     }
 
     //Google Maps
@@ -55,24 +57,40 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     //On create stuff
     override fun onCreate(savedInstanceState: Bundle?) {
+        mapsActivity = this
+        // Turns on dark mode
+        darkMode()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-
-        dostuff()
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
 
-
-
         //getMapASYNC
         mapFragment.getMapAsync(this)
-        getData(59.915780, 10.752913)
+        val data : APIData? = getData(59.915780, 10.752913)
         init()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
+    /*
+    override fun onResume() {
+        super.onResume()
+        recreate()
+    }*/
+
+    private fun darkMode() {
+        if(getSharedPreferenceValue("theme")) {
+            setTheme(R.style.DarkTheme)
+            Toast.makeText(this, "Dark theme applied.", Toast.LENGTH_LONG).show()
+
+        } else {
+            setTheme(R.style.AppTheme)
+            Toast.makeText(this, "Light theme applied.", Toast.LENGTH_LONG).show()
+        }
+    }
     // ???
     private fun init() {
         search_input.setOnEditorActionListener { _, actionId, event ->
@@ -118,7 +136,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     }
 
     // Get data from API
-    fun getData(lat: Double, lon: Double) {
+    fun getData(lat: Double, lon: Double) : APIData? {
+        var weather : APIData? = null
         doAsync {
             val client = Retrofit.Builder()
                 .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
@@ -126,9 +145,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                 .build()
                 .create(WeatherService::class.java)
 
-            val weather = client.getWeather(lat, lon).execute().body()
+            weather = client.getWeather(lat, lon).execute().body()
             println(weather)
         }
+        return weather
     }
 
     // ????
@@ -188,6 +208,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // this should be in item4...
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
 
+
         when(item?.itemId) {
             R.id.menu_1_home -> Toast.makeText(this, "darkTheme", Toast.LENGTH_LONG).show()
             R.id.menu_2_alert -> Toast.makeText(this, "saveInfo", Toast.LENGTH_LONG).show()
@@ -226,17 +247,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         imm.hideSoftInputFromWindow(currentView?.windowToken, 0)
     }
 
-    // Bavo's do stuff for themes
-    private fun dostuff() {
-        val str = getAppTheme()
-        Toast.makeText(this, str.toString() ,Toast.LENGTH_LONG).show()
-    }
-
-    // ???
-    private fun getAppTheme() : Boolean {
-        val sp = getSharedPreferences(sharedPref, 0)
-        return sp.getBoolean("theme", false)
-    }
     // ???
     private fun setUpMap() {
         if (ActivityCompat.checkSelfPermission(this,
@@ -255,5 +265,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
             }
         }
+    }
+
+    // Returns value found at key in sharedPref
+    private fun getSharedPreferenceValue(prefKey: String):Boolean {
+        val sp = getSharedPreferences(sharedPref, 0)
+        return sp.getBoolean(prefKey, false)
     }
 }

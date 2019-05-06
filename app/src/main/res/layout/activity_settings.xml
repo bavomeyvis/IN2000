@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              tools:context=".ui.SettingsActivity"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <include layout="@layout/toolbar" android:id="@+id/settings_toolbar"/>
-    <!-- Dark mode -->
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        tools:context=".ui.SettingsActivity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/backgroundColor">
+
+    <include
+            layout="@layout/toolbar"
+            android:id="@+id/settings_toolbar"/>
+
+
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?attr/cardBackground">
         <TextView
                 android:id="@+id/settingsThemeTitle"
                 android:text="@string/settings_theme_title"
+                android:textColor="?attr/textColor"
                 android:layout_width="wrap_content"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -26,6 +35,8 @@
         <TextView
                 android:id="@+id/settings_theme_desc"
                 android:text="@string/settings_theme_desc"
+                android:textColor="?attr/textColor"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
@@ -38,6 +49,7 @@
         />
         <Switch
                 android:id="@+id/settingsThemeBtn"
+                android:textColor="?attr/textColor"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -55,6 +67,7 @@
                 android:layout_width="wrap_content"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:textColor="?attr/textColor"
 
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -67,6 +80,7 @@
                 android:text="@string/settings_alert_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/textColor"
 
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -82,6 +96,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
+                android:textColor="?attr/textColor"
         />
     </android.support.constraint.ConstraintLayout>
 
@@ -94,6 +110,7 @@
                 android:layout_width="wrap_content"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:textColor="?attr/textColor"
 
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -106,6 +123,7 @@
                 android:text="@string/settings_language_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/textColor"
 
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -121,6 +139,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/textColor"
         />
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>

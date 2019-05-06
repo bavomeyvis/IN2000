@@ -26,6 +26,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:paddingEnd="12dp"
                 android:paddingStart="12dp"
+                android:background="?attr/cardBackground"
 
                 android:onClick="showPopup"
                 android:src="@drawable/menu_icon"
@@ -42,14 +43,13 @@
                 android:importantForAutofill="no"
                 tools:targetApi="o"
 
-                android:background="@android:color/transparent"
+                android:textColor="?attr/textColor"
+                android:background="?attr/cardBackground"
                 android:imeOptions="actionSearch"
                 android:hint="@string/enter_a_city_name"
                 android:inputType="text"
                 android:textSize="20sp"
-                android:textColor="#000"
                 android:cursorVisible="false"/>
-
 
         <ImageView
                 android:id="@+id/search_icon"
@@ -59,6 +59,7 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:layout_alignEnd="@+id/search_input"
+                android:background="?attr/cardBackground"
 
                 android:src="@drawable/ic_search_icon"
                 android:contentDescription="@string/picture_of_magnifying_glass"/>
