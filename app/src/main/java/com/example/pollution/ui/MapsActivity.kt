@@ -21,21 +21,20 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
-import com.example.pollution.data.Location
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.runOnUiThread
 
 // Retrofit imports
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
 
 private const val TAG = "MapsActivity"
 
@@ -90,14 +89,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.setLatLngBoundsForCameraTarget(bounds)
         // Add a marker in Oslo and move the camera
         val oslo = LatLng(59.915780, 10.752913)
+
         mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
         setUpMap()
 
         try
         {
             val success = mMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+                MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
             if (!success)
             {
                 println("FAILURE")
@@ -123,6 +124,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
         
+    }
+    fun getPositionData(lat: Double, lon: Double): String {
+        lateinit var returnInfo: String
+        try {
+            var geocoder = Geocoder(this@MapsActivity, Locale.getDefault())
+            val addresses = geocoder.getFromLocation(lat, lon, 1)
+            returnInfo = addresses.get(0).getAddressLine(0)
+        } catch (e: IOException) {
+            return ""
+        }
+        return returnInfo
     }
 
     fun getData(lat: Double, lon: Double) {
