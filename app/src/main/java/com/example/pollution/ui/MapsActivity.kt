@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
+import android.location.LocationManager
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -52,7 +53,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var mBuilder = NotificationCompat.Builder(this)
+    private val user_limit: Double? = null // User-inputted value. If current location's air quality goes below user_limit, the app alerts the user.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,8 +66,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         getData(59.915780, 10.752913)
         init()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        createChannel()
     }
 
     private fun init() {
@@ -178,53 +177,60 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 
-    private fun setUpMap() {
-        if (ActivityCompat.checkSelfPermission(this,
+    private fun setUpMap() { // The purpose of this function is to start the app zoomed in on current location.
+        getLocation()
+        val currentLatLng = LatLng(lastLocation.latitude, lastLocation.longitude)
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
+    }
+
+    private fun getLocation(): Location? {
+        if (ActivityCompat.checkSelfPermission(this, // First, assure permission is granted.
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-            return
+            return null // Location could not be fetched; access not granted.
         }
 
         mMap.isMyLocationEnabled = true
 
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-            if (location != null) {
-                lastLocation = location
-                val currentLatLng = LatLng(location.latitude, location.longitude)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
-            }
+            if (location != null)
+                lastLocation = location // Update lastLocation.
         }
+        return null // Location could not be fetched; something went wrong.
     }
 
-    private fun createChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.notification_title)
-            val descriptionText = getString(R.string.notification_desc)
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-        val intent = Intent(this, AlertDetails::class.java).apply {
+    private fun getLatLon(): DoubleArray { // Return current location's latitude and longitude, in the form of an array with two indexes.
+        getLocation() // Call to make sure the location is updated.
+        if (lastLocation == null)
+            return doubleArrayOf(0.0, 0.0) // Location could not be fetched, return latitude and longitude of 0.0 0.0.
+        return doubleArrayOf(lastLocation.latitude, lastLocation.longitude)
+    }
+
+    /* A dummy function that illustrate how an alert is sent.
+    private fun check() {
+        if (getData(getLatLon()[0], getLatLon()[1]) < user_limit)
+            dangerAlert()
+    }
+    */
+
+    // Send the alert.
+    private fun dangerAlert() {
+        val intent = Intent(this, MapsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
-        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.notification_icon)
-            .setContentTitle("My notification")
-            .setContentText("Hello World!")
+        val builder = NotificationCompat.Builder(this, "0") // The builder contains the notification attributes.
+            .setSmallIcon(R.drawable.menu_item_alert)
+            .setContentTitle(getString(R.string.notification_title))
+            .setContentText(getString(R.string.notification_desc))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)) {
-            // notificationId is a unique int for each notification that you must define
-            notify(notificationId, builder.build())
+            notify(0, builder.build()) // Send the notification with the builder defined above.
         }
     }
 }
