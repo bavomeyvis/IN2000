@@ -4,6 +4,7 @@ package com.example.pollution.ui
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.location.Address
 import android.location.Geocoder
 import android.support.v7.app.AppCompatActivity
@@ -35,11 +36,14 @@ import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.runOnUiThread
 
 // Retrofit imports
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
 
 private const val TAG = "MapsActivity"
 
@@ -131,13 +135,37 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
-        setUpMap()
 
+        try
+        {
+            val success = mMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
+            if (!success)
+            {
+                println("FAILURE")
+            }
+        }
+        catch (e: Resources.NotFoundException) {
+            println("EXCEPTION")
+        }
+
+        setUpMap()
     }
 
-    // Get data from API
-    fun getData(lat: Double, lon: Double) : APIData? {
-        var weather : APIData? = null
+    fun getPositionData(lat: Double, lon: Double): String {
+        lateinit var returnInfo: String
+        try {
+            var geocoder = Geocoder(this@MapsActivity, Locale.getDefault())
+            val addresses = geocoder.getFromLocation(lat, lon, 1)
+            returnInfo = addresses.get(0).getAddressLine(0)
+        } catch (e: IOException) {
+            return ""
+        }
+        return returnInfo
+    }
+
+    fun getData(lat: Double, lon: Double): APIData? {
+        var weather: APIData? = null
         doAsync {
             val client = Retrofit.Builder()
                 .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
@@ -146,7 +174,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                 .create(WeatherService::class.java)
 
             weather = client.getWeather(lat, lon).execute().body()
-            println(weather)
+            //println(weather)
         }
         return weather
     }
