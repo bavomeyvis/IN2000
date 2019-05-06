@@ -37,6 +37,7 @@ dependencies {
     // Async
     // https://github.com/kotlin/anko
     implementation "org.jetbrains.anko:anko-commons:0.10.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
 
     // Constraints
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
