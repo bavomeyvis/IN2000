@@ -21,13 +21,16 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
+import com.example.pollution.data.APIData
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_maps.*
+import kotlinx.coroutines.delay
 
 // Async imports
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.doAsyncResult
 
 // Retrofit imports
 import retrofit2.Retrofit
@@ -89,8 +92,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.setLatLngBoundsForCameraTarget(bounds)
         // Add a marker in Oslo and move the camera
         val oslo = LatLng(59.915780, 10.752913)
-
-        mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
+        addCityMarkers(mMap)
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
         setUpMap()
@@ -113,13 +115,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.setOnMapClickListener(object: GoogleMap.OnMapClickListener {
             override fun onMapClick(point:LatLng) {
                 //gets coordinates from touch event on map in point.lat and point.lon
-                println("")
+                println(" ")
                 println("CLICK LATIDUDE: " + point.latitude)
                 println("CLICK LONGITUDE: " + point.longitude)
                 //gets air quality data from met using the lat lon from the touch event
                 //send this to activity showing aqi
-                getData(point.latitude, point.longitude)
+                //getData(point.latitude, point.longitude)
 
+                var weather: APIData? = getData(point.latitude, point.longitude)
+                //Thread.sleep(5000)
+
+
+
+
+                val aqi = weather?.data?.time?.get(0)?.variables?.aQI?.value
+                println(aqi)
+
+                println(weather)
+
+                println(getPositionData(point.latitude, point.longitude))
             }
         })
 
@@ -137,7 +151,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return returnInfo
     }
 
-    fun getData(lat: Double, lon: Double) {
+    fun getData(lat: Double, lon: Double): APIData? {
+        var weather: APIData? = null
         doAsync {
             val client = Retrofit.Builder()
                 .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
@@ -145,10 +160,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .build()
                 .create(WeatherService::class.java)
 
-            val weather = client.getWeather(lat, lon).execute().body()
-            println(weather)
-            //return weather?
+            weather = client.getWeather(lat, lon).execute().body()
+            //println(weather)
         }
+        return weather
     }
 
     private fun addMarkerColoured(address: Address) {
@@ -230,5 +245,45 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         */
+    }
+
+    private fun addCityMarkers(mMap: GoogleMap) {
+        val oslo = LatLng(59.915780, 10.752913)
+        val bergen = LatLng(60.393975, 5.324937)
+        val trondheim = LatLng(63.433465, 10.395516)
+        val stavanger = LatLng(58.979964, 5.729269)
+        val sandvika = LatLng(59.891695, 10.528088)
+        val kristiansand = LatLng(58.162897, 8.018848)
+        val fredrikstad = LatLng(59.224392, 10.933630)
+        val tromso = LatLng(69.653412, 18.953360)
+        val drammen = LatLng(59.747642, 10.205377)
+        val sandnes = LatLng(58.852107, 5.732697)
+        val skien = LatLng(58.852107, 5.732697)
+        val sarpsborg = LatLng(59.286260, 11.109056)
+        val bodo = LatLng(67.282654, 14.404968)
+        val larvik = LatLng(59.056636, 10.028874)
+        val sandefjord = LatLng(59.056636, 10.028874)
+        val lillestrom = LatLng(59.956639, 11.050240)
+        val arendal = LatLng(58.463660, 8.772121)
+        val alesund = LatLng(62.476929, 6.149429)
+
+        mMap.addMarker(MarkerOptions().position(oslo).title("OSLO"))
+        mMap.addMarker(MarkerOptions().position(bergen).title("BERGEN"))
+        mMap.addMarker(MarkerOptions().position(trondheim).title("TRONDHEIM"))
+        mMap.addMarker(MarkerOptions().position(stavanger).title("STAVANGER"))
+        mMap.addMarker(MarkerOptions().position(sandvika).title("SANDVIKA"))
+        mMap.addMarker(MarkerOptions().position(kristiansand).title("KRISTIANSAND"))
+        mMap.addMarker(MarkerOptions().position(fredrikstad).title("FREDRIKSTAD"))
+        mMap.addMarker(MarkerOptions().position(tromso).title("TROMSØ"))
+        mMap.addMarker(MarkerOptions().position(drammen).title("DRAMMEN"))
+        mMap.addMarker(MarkerOptions().position(sandnes).title("SANDNES"))
+        mMap.addMarker(MarkerOptions().position(skien).title("SKIEN"))
+        mMap.addMarker(MarkerOptions().position(sarpsborg).title("SARPSBORG"))
+        mMap.addMarker(MarkerOptions().position(bodo).title("BODØ"))
+        mMap.addMarker(MarkerOptions().position(larvik).title("LARVIK"))
+        mMap.addMarker(MarkerOptions().position(sandefjord).title("SANDEFJORD"))
+        mMap.addMarker(MarkerOptions().position(lillestrom).title("LILLESTRØM"))
+        mMap.addMarker(MarkerOptions().position(arendal).title("ARENDAL"))
+        mMap.addMarker(MarkerOptions().position(alesund).title("ÅLESUND"))
     }
 }

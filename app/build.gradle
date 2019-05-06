@@ -37,6 +37,7 @@ dependencies {
     // Async
     // https://github.com/kotlin/anko
     implementation "org.jetbrains.anko:anko-commons:0.10.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
 
     // Retrofit dependencies
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
