@@ -147,22 +147,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
-        /*
-        try
-        {
-            val success = mMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
-            if (!success)
-            {
-                println("FAILURE")
-            }
-        }
-        catch (e: Resources.NotFoundException) {
-            println("EXCEPTION")
-        }*/
-        if (getSharedPreferenceValue("theme")) {
-            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
-        }
+
+        if (getSharedPreferenceValue("theme")) mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
         else mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
 
         setUpMap()
@@ -195,7 +181,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         return weather
     }
 
-    // ????
+    // find location
     private fun addMarkerColoured(address: Address) {
         val lat = address.latitude
         val lon = address.longitude
@@ -251,14 +237,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         // this should be in item4...
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
-        startActivityForResult(settingsActivityIntent, 1)
-
-
+        //Todo: Move starting of GraphActivity
+        val intent1 = Intent(this, GraphActivity::class.java)
 
         when(item?.itemId) {
             R.id.menu_1_home -> Toast.makeText(this, "darkTheme", Toast.LENGTH_LONG).show()
             R.id.menu_2_alert -> Toast.makeText(this, "saveInfo", Toast.LENGTH_LONG).show()
-            R.id.menu_3_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_LONG).show()
+            R.id.menu_3_favorites -> startActivity(intent1)
             R.id.menu_4_settings -> {
                 startActivityForResult(settingsActivityIntent, 1)
                 recreate()
@@ -289,7 +274,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
-    // ???
+    // Closes the keyboard properly
     private fun closeKeyboard() {
         val currentView: View? = this.currentFocus
         val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
