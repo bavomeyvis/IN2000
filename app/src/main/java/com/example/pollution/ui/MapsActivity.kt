@@ -46,6 +46,8 @@ import org.jetbrains.anko.runOnUiThread
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
 
 private const val TAG = "MapsActivity"
 
@@ -217,7 +219,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     /* A dummy function that illustrate how an alert is sent.
     private fun check() {
-        if (getData(lastLocation.latitude, lastLocation.longitude)?.data?.time?.get(4)?.variables?.aQI?.value < user_limit)
+        if (getData(lastLocation.latitude, lastLocation.longitude)?.data?.time?.get(Calendar.getInstance().getTime().hours)?.variables?.aQI?.value < user_limit)
             dangerAlert()
     }
     */
