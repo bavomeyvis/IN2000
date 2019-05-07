@@ -4,6 +4,7 @@
     <string name="enter_a_city_name">Enter a city name</string>
     <string name="picture_of_magnifying_glass">Picture of magnifying glass</string>
     <string name="marker_oslo">Oslo</string>
+    <string name="channel_desc">Alerts</string>
     <string name="enter_limit">Enter limit</string>
     <string name="notification_title">Current air quality is exceeding your limit!</string>
     <string name="notification_desc">Consider planning an escape route!</string>

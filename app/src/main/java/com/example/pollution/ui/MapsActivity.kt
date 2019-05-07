@@ -53,6 +53,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val channel_id = "channel0"
     private val user_limit: Double? = null // User-inputted value. If current location's air quality goes below user_limit, the app alerts the user.
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +66,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         getData(59.915780, 10.752913)
         init()
+        createNotificationChannel() // Create a notification channel for future use.
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
@@ -173,12 +175,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         imm.hideSoftInputFromWindow(currentView?.windowToken, 0)
     }
 
+    private fun createNotificationChannel() { // Create the channel. All notifications will be sent through this channel, because we only ever use one alert.
+        if (Build.VERSION.SDK_INT >= 26) {
+            val channel0 = NotificationChannel(
+                channel_id,
+                "Channel 0",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channel0.description = getString(R.string.channel_desc)
+
+            val manager: NotificationManager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel0)
+        }
+    }
+
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 
     private fun setUpMap() {
-        if (ActivityCompat.checkSelfPermission(this,
+        if (ActivityCompat.checkSelfPermission(this, // Assure permission to access GPS is granted.
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
@@ -188,13 +204,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.isMyLocationEnabled = true
 
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-            if (location != null) {
+            if (location != null) { // Update last location and make the map zoom into current location.
                 lastLocation = location
                 val currentLatLng = LatLng(location.latitude, location.longitude)
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
             }
         }
-        //dangerAlert()
+        dangerAlert()
     }
 
     /* A dummy function that illustrate how an alert is sent.
@@ -204,18 +220,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     */
 
-    // Send the alert.
-    private fun dangerAlert() { // This function makes the app crash.
+    private fun dangerAlert() { // Send the alert.
         val intent = Intent(this, MapsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
-        val builder = NotificationCompat.Builder(this, "0") // The builder contains the notification attributes.
-            //.setSmallIcon(R.drawable.menu_item_alert) The icon for the notification is not yet determined.
+        val builder = NotificationCompat.Builder(this, channel_id) // The builder contains the notification attributes.
+            .setSmallIcon(R.drawable.menu_item_alert)
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(getString(R.string.notification_desc))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
