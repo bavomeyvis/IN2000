@@ -94,14 +94,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     }
 
     private fun darkMode() {
-        if(getSharedPreferenceValue("theme")) {
-            setTheme(R.style.DarkTheme)
-            Toast.makeText(this, "Dark theme applied.", Toast.LENGTH_LONG).show()
-
-        } else {
-            setTheme(R.style.AppTheme)
-            Toast.makeText(this, "Light theme applied.", Toast.LENGTH_LONG).show()
-        }
+        if(getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
+        else setTheme(R.style.AppTheme)
     }
 
     // ???

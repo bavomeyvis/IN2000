@@ -10,6 +10,7 @@ import com.example.pollution.R
 // RecyclerView
 import android.support.v7.widget.Toolbar
 import android.widget.Switch
+import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_settings.*
 
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_settings.*
 //SettingsActivity: Represents UI of the settings menu
 // Guidelines: https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 class SettingsActivity : AppCompatActivity() {
+    private var bravo = 0
     private var changed = false
     private val returnIntent = Intent()
 
@@ -26,11 +28,9 @@ class SettingsActivity : AppCompatActivity() {
         if(getSharedPreferenceValue("theme")) {
             setTheme(R.style.DarkTheme)
             MapsActivity.mapsActivity?.setTheme(R.style.DarkTheme)
-            Toast.makeText(this, "Dark theme applied.", Toast.LENGTH_LONG).show()
         } else {
             setTheme(R.style.AppTheme)
             MapsActivity.mapsActivity?.setTheme(R.style.AppTheme)
-            Toast.makeText(this, "Light theme applied.", Toast.LENGTH_LONG).show()
         }
         // Displays activity_settings
         super.onCreate(savedInstanceState)
@@ -51,6 +51,12 @@ class SettingsActivity : AppCompatActivity() {
         val alertBtn : Switch = findViewById(R.id.settingsAlertBtn)
         alertBtn.setOnCheckedChangeListener { _, isChecked ->
             writeToPreference("alert", isChecked)
+        }
+
+        findViewById<TextView>(R.id.settingsVersionDesc)
+        alertBtn.setOnClickListener {
+            bravo++
+            if(bravo == 3) Toast.makeText(this,R.string.bravo, Toast.LENGTH_LONG).show()
         }
 
         // Toolbar
