@@ -94,25 +94,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val oslo = LatLng(59.915780, 10.752913)
 
-        val builder = LatLngBounds.Builder()
+        val builder = LatLngBounds.Builder() // Set the boundaries for movement.
         builder.include(LatLng(62.740234, 9.858139))
         builder.include(LatLng(67.648627, 22.191212))
 
-        val bounds = builder.build()
+        val bounds = builder.build() // These are the coordinates of two corners.
 
         val width = resources.displayMetrics.widthPixels
         val height = resources.displayMetrics.heightPixels
 
         val padding = width * 0.2
 
-        mMap.setLatLngBoundsForCameraTarget(bounds)
+        mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in. TODO
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt())) // Move the camera to the appropriate place.
+        mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
+        mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
 
         mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
-        mMap.setMinZoomPreference(4.8f)
-        mMap.setMaxZoomPreference(12.0f)
-        setUpMap()
+        setUpMap() // Set up for my location to work properly.
     }
 
     fun getData(lat: Double, lon: Double): APIData? {
