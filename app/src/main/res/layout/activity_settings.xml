@@ -9,10 +9,10 @@
         android:layout_height="match_parent"
         android:background="?attr/backgroundColor">
 
+    <!--
     <include
             layout="@layout/toolbar"
-            android:id="@+id/settings_toolbar"/>
-
+            android:id="@+id/settings_toolbar"/>-->
 
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -56,6 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
         />
+
     </android.support.constraint.ConstraintLayout>
 
     <!-- Alerts -->

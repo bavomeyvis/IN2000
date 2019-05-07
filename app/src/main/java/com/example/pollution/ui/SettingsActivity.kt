@@ -45,28 +45,22 @@ class SettingsActivity : AppCompatActivity() {
         themeBtn.setOnCheckedChangeListener { _, isChecked ->
             writeToPreference("theme", isChecked)
             recreate()
+
         }
 
         val alertBtn : Switch = findViewById(R.id.settingsAlertBtn)
         alertBtn.setOnCheckedChangeListener { _, isChecked ->
             writeToPreference("alert", isChecked)
-            savePreferences()
         }
 
         // Toolbar
+        /*
         val toolbar : Toolbar = findViewById(R.id.settings_toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar) */
 
         // if apply is pressed return true
         // otherwise result canceled
 
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if(changed) setResult(Activity.RESULT_OK, returnIntent)
-        else setResult(Activity.RESULT_CANCELED, returnIntent)
-        finish()
     }
 
     // Gets the key from the static variable in sharedPref in MapsActivity
@@ -81,11 +75,10 @@ class SettingsActivity : AppCompatActivity() {
         val editor = getSharedPreferences(MapsActivity.sharedPref, 0).edit()
         editor.putBoolean(prefKey, prefValue)
         editor.apply()
-    }
-
-    private fun savePreferences() {
+        // set intent
         changed = true
         setResult(Activity.RESULT_OK, returnIntent)
         finish()
     }
+
 }
