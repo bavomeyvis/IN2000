@@ -92,20 +92,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        val boundOne = LatLng(57.696784, 3.601294)
-        val boundTwo = LatLng(71.214304, 34.476990)
+        val oslo = LatLng(59.915780, 10.752913)
 
         val builder = LatLngBounds.Builder()
-        builder.include(boundOne)
-        builder.include(boundTwo)
+        builder.include(LatLng(62.740234, 9.858139))
+        builder.include(LatLng(67.648627, 22.191212))
 
         val bounds = builder.build()
 
+        val width = resources.displayMetrics.widthPixels
+        val height = resources.displayMetrics.heightPixels
+
+        val padding = width * 0.2
+
         mMap.setLatLngBoundsForCameraTarget(bounds)
-        // Add a marker in Oslo and move the camera
-        val oslo = LatLng(59.915780, 10.752913)
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
+
         mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
+        mMap.setMinZoomPreference(4.8f)
+        mMap.setMaxZoomPreference(12.0f)
         setUpMap()
     }
 
@@ -180,7 +186,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun createNotificationChannel() { // Create the channel. All notifications will be sent through this channel, because we only ever use one alert.
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= 26) { // This feature is not supported on earlier devices.
             val channel0 = NotificationChannel(
                 channel_id,
                 "Channel 0",
@@ -205,7 +211,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             return
         }
 
-        mMap.isMyLocationEnabled = true
+        mMap.isMyLocationEnabled = true // This enables your location on the map; it will appear as a blue dot.
 
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
             if (location != null) // Update last location and make the map zoom into current location.
