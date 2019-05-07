@@ -177,6 +177,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     // the different menu items' actions
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         // this should be in item4...
+        //Todo: Move starting of GraphActivity
         val intent1 = Intent(this, GraphActivity::class.java)
         val intent = Intent(this, SettingsActivity::class.java)
 
