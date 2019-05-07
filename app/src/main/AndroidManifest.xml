@@ -36,7 +36,12 @@
         <activity android:name=".ui.SettingsActivity"
                   android:label="@string/list_title"
                   android:parentActivityName=".ui.MapsActivity">
-
+        </activity>
+        
+        <!-- Graph Activity -->
+        <activity android:name=".ui.GraphActivity"
+                  android:label="Graph"
+                  android:parentActivityName=".ui.MapsActivity">
         </activity>
    </application>
 

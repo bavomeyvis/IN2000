@@ -177,12 +177,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     // the different menu items' actions
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         // this should be in item4...
+        val intent1 = Intent(this, GraphActivity::class.java)
         val intent = Intent(this, SettingsActivity::class.java)
 
         when(item?.itemId) {
             R.id.item1 -> Toast.makeText(this, "Item 1 clicked", Toast.LENGTH_SHORT).show()
             R.id.item2 -> Toast.makeText(this, "Item 2 clicked", Toast.LENGTH_SHORT).show()
-            R.id.item3 -> Toast.makeText(this, "Item 3 clicked", Toast.LENGTH_SHORT).show()
+            R.id.item3 -> startActivity(intent1)
             R.id.item4 -> startActivity(intent)
         }
         return true
