@@ -101,6 +101,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
+        getLocation()
         setUpMap()
     }
 
@@ -178,26 +179,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setUpMap() { // The purpose of this function is to start the app zoomed in on current location.
-        getLocation()
+        if (lastLocation == null)
+            return
         val currentLatLng = LatLng(lastLocation.latitude, lastLocation.longitude)
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
     }
 
-    private fun getLocation(): Location? {
+    private fun getLocation() {
         if (ActivityCompat.checkSelfPermission(this, // First, assure permission is granted.
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-            return null // Location could not be fetched; access not granted.
+            return // Location could not be fetched; access not granted.
         }
 
         mMap.isMyLocationEnabled = true
 
-        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location -> // Program never enters this code. This is why the app crashes.
+            Log.d("tag", "hello")
             if (location != null)
                 lastLocation = location // Update lastLocation.
         }
-        return null // Location could not be fetched; something went wrong.
+        return // Location could not be fetched; something went wrong.
     }
 
     private fun getLatLon(): DoubleArray { // Return current location's latitude and longitude, in the form of an array with two indexes.
