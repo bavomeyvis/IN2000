@@ -210,7 +210,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
             }
         }
-        dangerAlert() // This is just for testing, the call should never be in this function.
+        dangerAlert() // This is just for testing, the call should never be in this function. TODO
     }
 
     /* A dummy function that illustrate how an alert is sent.
