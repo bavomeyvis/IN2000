@@ -135,7 +135,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
-
+        /*
         try
         {
             val success = mMap.setMapStyle(
@@ -147,7 +147,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
         catch (e: Resources.NotFoundException) {
             println("EXCEPTION")
+        }*/
+        if (getSharedPreferenceValue("theme")) {
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
         }
+        else mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
 
         setUpMap()
     }
@@ -235,13 +239,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         // this should be in item4...
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
+        startActivityForResult(settingsActivityIntent, 1)
+
 
 
         when(item?.itemId) {
             R.id.menu_1_home -> Toast.makeText(this, "darkTheme", Toast.LENGTH_LONG).show()
             R.id.menu_2_alert -> Toast.makeText(this, "saveInfo", Toast.LENGTH_LONG).show()
             R.id.menu_3_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_LONG).show()
-            R.id.menu_4_settings -> startActivity(settingsActivityIntent)
+            R.id.menu_4_settings -> {
+                startActivityForResult(settingsActivityIntent, 1)
+                recreate()
+            }
         }
         return true
     }

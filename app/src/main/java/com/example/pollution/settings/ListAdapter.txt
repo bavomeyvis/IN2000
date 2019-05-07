@@ -1,4 +1,4 @@
-package com.example.pollution.settings
+/*package com.example.pollution.settings
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -41,4 +41,4 @@ class ListAdapter(val titles: ArrayList<String>, val desc: ArrayList<String>, pr
         val elemDesc: TextView = view.findViewById(R.id.elem_desc)
         val switchBtn: Switch = view.findViewById(R.id.switchBtn)
     }
-}
+}*/

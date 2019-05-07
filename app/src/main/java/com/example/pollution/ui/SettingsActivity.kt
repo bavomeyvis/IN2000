@@ -1,13 +1,12 @@
 package com.example.pollution.ui
 
 // Main imports
+import android.app.Activity
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AppCompatDelegate
-// R = Resource. R.layout.x refers to layout in res.
 import com.example.pollution.R
-
-
 // RecyclerView
 import android.support.v7.widget.Toolbar
 import android.widget.Switch
@@ -19,6 +18,9 @@ import kotlinx.android.synthetic.main.activity_settings.*
 //SettingsActivity: Represents UI of the settings menu
 // Guidelines: https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 class SettingsActivity : AppCompatActivity() {
+    private var changed = false
+    private val returnIntent = Intent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Set theme
         if(getSharedPreferenceValue("theme")) {
@@ -44,9 +46,21 @@ class SettingsActivity : AppCompatActivity() {
             writeToPreference("theme", isChecked)
             recreate()
         }
+
         // Toolbar
         val toolbar : Toolbar = findViewById(R.id.settings_toolbar)
         setSupportActionBar(toolbar)
+
+        // if apply is pressed return true
+        // otherwise result canceled
+
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if(changed) setResult(Activity.RESULT_OK, returnIntent)
+        else setResult(Activity.RESULT_CANCELED, returnIntent)
+        finish()
     }
 
     // Gets the key from the static variable in sharedPref in MapsActivity
@@ -61,5 +75,11 @@ class SettingsActivity : AppCompatActivity() {
         val editor = getSharedPreferences(MapsActivity.sharedPref, 0).edit()
         editor.putBoolean(prefKey, prefValue)
         editor.apply()
+    }
+
+    private fun savePreferences() {
+        changed = true
+        setResult(Activity.RESULT_OK, returnIntent)
+        finish()
     }
 }
