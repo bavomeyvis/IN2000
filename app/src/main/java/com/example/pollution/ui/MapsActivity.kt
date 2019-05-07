@@ -30,6 +30,7 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
+import com.example.pollution.data.APIData
 import com.example.pollution.data.Location
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -54,7 +55,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val channel_id = "channel0"
-    private val user_limit: Double? = null // User-inputted value. If current location's air quality goes below user_limit, the app alerts the user.
+    private val user_limit: Double = 0.0 // User-inputted value. If current location's air quality goes below user_limit, the app alerts the user.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +107,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setUpMap()
     }
 
-    fun getData(lat: Double, lon: Double) {
+    fun getData(lat: Double, lon: Double): APIData? {
+        var weather: APIData? = null
         doAsync {
             val client = Retrofit.Builder()
                 .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
@@ -114,9 +116,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .build()
                 .create(WeatherService::class.java)
 
-            val weather = client.getWeather(lat, lon).execute().body()
-            println(weather)
+            weather = client.getWeather(lat, lon).execute().body()
         }
+        return weather
     }
 
     private fun addMarkerColoured(address: Address) {
@@ -215,7 +217,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     /* A dummy function that illustrate how an alert is sent.
     private fun check() {
-        if (getData(lastLocation.latitude, lastLocation.longitude).AQI < user_limit)
+        if (getData(lastLocation.latitude, lastLocation.longitude)?.data?.time?.get(4)?.variables?.aQI?.value < user_limit)
             dangerAlert()
     }
     */
