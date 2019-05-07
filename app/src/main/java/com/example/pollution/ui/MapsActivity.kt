@@ -114,6 +114,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mMap.setOnMapClickListener(object: GoogleMap.OnMapClickListener {
             override fun onMapClick(point:LatLng) {
+                var weather: APIData? = getData(point.latitude, point.longitude)
+                println(weather)
+
+
+
                 //gets coordinates from touch event on map in point.lat and point.lon
                 println(" ")
                 println("CLICK LATIDUDE: " + point.latitude)
@@ -122,18 +127,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 //send this to activity showing aqi
                 //getData(point.latitude, point.longitude)
 
-                var weather: APIData? = getData(point.latitude, point.longitude)
+
                 //Thread.sleep(5000)
 
+                //val aqi = weather?.data?.time?.get(0)?.variables?.aQI?.value
+                //println(aqi)
 
 
 
-                val aqi = weather?.data?.time?.get(0)?.variables?.aQI?.value
-                println(aqi)
-
-                println(weather)
-
-                println(getPositionData(point.latitude, point.longitude))
+                //println(getPositionData(point.latitude, point.longitude))
             }
         })
 
@@ -161,7 +163,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .create(WeatherService::class.java)
 
             weather = client.getWeather(lat, lon).execute().body()
-            //println(weather)
+            println(weather)
         }
         return weather
     }
@@ -261,7 +263,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val skien = LatLng(58.852107, 5.732697)
         val sarpsborg = LatLng(59.286260, 11.109056)
         val bodo = LatLng(67.282654, 14.404968)
-        val larvik = LatLng(59.056636, 10.028874)
+        val larvik = LatLng(59.056636, 10.02887)
         val sandefjord = LatLng(59.056636, 10.028874)
         val lillestrom = LatLng(59.956639, 11.050240)
         val arendal = LatLng(58.463660, 8.772121)
