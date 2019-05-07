@@ -101,7 +101,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(oslo, 8.0f))
-        getLocation()
         setUpMap()
     }
 
@@ -178,59 +177,49 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 
-    private fun setUpMap() { // The purpose of this function is to start the app zoomed in on current location.
-        if (lastLocation == null)
-            return
-        val currentLatLng = LatLng(lastLocation.latitude, lastLocation.longitude)
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
-    }
-
-    private fun getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, // First, assure permission is granted.
+    private fun setUpMap() {
+        if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
-            return // Location could not be fetched; access not granted.
+            return
         }
 
         mMap.isMyLocationEnabled = true
 
-        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location -> // Program never enters this code. This is why the app crashes.
-            Log.d("tag", "hello")
-            if (location != null)
-                lastLocation = location // Update lastLocation.
+        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+            if (location != null) {
+                lastLocation = location
+                val currentLatLng = LatLng(location.latitude, location.longitude)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
+            }
         }
-        return // Location could not be fetched; something went wrong.
-    }
-
-    private fun getLatLon(): DoubleArray { // Return current location's latitude and longitude, in the form of an array with two indexes.
-        getLocation() // Call to make sure the location is updated.
-        if (lastLocation == null)
-            return doubleArrayOf(0.0, 0.0) // Location could not be fetched, return latitude and longitude of 0.0 0.0.
-        return doubleArrayOf(lastLocation.latitude, lastLocation.longitude)
+        //dangerAlert()
     }
 
     /* A dummy function that illustrate how an alert is sent.
     private fun check() {
-        if (getData(getLatLon()[0], getLatLon()[1]) < user_limit)
+        if (getData(lastLocation.latitude, lastLocation.longitude).AQI < user_limit)
             dangerAlert()
     }
     */
 
     // Send the alert.
-    private fun dangerAlert() {
+    private fun dangerAlert() { // This function makes the app crash.
         val intent = Intent(this, MapsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
         val builder = NotificationCompat.Builder(this, "0") // The builder contains the notification attributes.
-            .setSmallIcon(R.drawable.menu_item_alert)
+            //.setSmallIcon(R.drawable.menu_item_alert) The icon for the notification is not yet determined.
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(getString(R.string.notification_desc))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
+
+        Log.d("tag", "hello")
 
         with(NotificationManagerCompat.from(this)) {
             notify(0, builder.build()) // Send the notification with the builder defined above.
