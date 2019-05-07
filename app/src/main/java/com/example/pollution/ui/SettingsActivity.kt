@@ -47,6 +47,12 @@ class SettingsActivity : AppCompatActivity() {
             recreate()
         }
 
+        val alertBtn : Switch = findViewById(R.id.settingsAlertBtn)
+        alertBtn.setOnCheckedChangeListener { _, isChecked ->
+            writeToPreference("alert", isChecked)
+            savePreferences()
+        }
+
         // Toolbar
         val toolbar : Toolbar = findViewById(R.id.settings_toolbar)
         setSupportActionBar(toolbar)

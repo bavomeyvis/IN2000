@@ -1,6 +1,7 @@
 package com.example.pollution.ui
 
 // Our stuff
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -79,11 +80,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
-    /*
-    override fun onResume() {
-        super.onResume()
-        recreate()
-    }*/
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK) {
+                print("Recreating!!!!!!!!!!")
+                recreate()
+            }
+            if(resultCode == Activity.RESULT_CANCELED) {
+                print("Nothing special happened......")
+            }
+        }
+    }
 
     private fun darkMode() {
         if(getSharedPreferenceValue("theme")) {
@@ -95,6 +103,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             Toast.makeText(this, "Light theme applied.", Toast.LENGTH_LONG).show()
         }
     }
+
     // ???
     private fun init() {
         search_input.setOnEditorActionListener { _, actionId, event ->
