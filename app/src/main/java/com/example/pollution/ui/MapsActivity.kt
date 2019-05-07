@@ -125,10 +125,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
+
         // https://stackoverflow.com/questions/6250325/hide-google-logo-from-mapview/6250405
         // Turns off the two buttons in the bottom right (directions and open maps)
         mMap.uiSettings.isMapToolbarEnabled = false
-        mMap.uiSettings.isMyLocationButtonEnabled = true
+        mMap.uiSettings.isMyLocationButtonEnabled = false
+        mMap.uiSettings.isCompassEnabled = false
+        mMap.uiSettings.isZoomControlsEnabled = false
 
         val boundOne = LatLng(57.696784, 3.601294)
         val boundTwo = LatLng(71.214304, 34.476990)
