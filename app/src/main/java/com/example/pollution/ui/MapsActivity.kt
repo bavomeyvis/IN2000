@@ -208,11 +208,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.isMyLocationEnabled = true
 
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-            if (location != null) { // Update last location and make the map zoom into current location.
+            if (location != null) // Update last location and make the map zoom into current location.
                 lastLocation = location
-                val currentLatLng = LatLng(location.latitude, location.longitude)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
-            }
         }
         dangerAlert() // This is just for testing, the call should never be in this function. TODO
     }
