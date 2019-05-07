@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AppCompatDelegate
 import com.example.pollution.R
-// RecyclerView
 import android.support.v7.widget.Toolbar
 import android.widget.Switch
 import android.widget.TextView
@@ -22,6 +21,11 @@ class SettingsActivity : AppCompatActivity() {
     private var bravo = 0
     private var changed = false
     private val returnIntent = Intent()
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Set theme
@@ -60,12 +64,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Toolbar
-        /*
-        val toolbar : Toolbar = findViewById(R.id.settings_toolbar)
+        /*val toolbar : Toolbar = findViewById(R.id.settings_toolbar)
         setSupportActionBar(toolbar) */
-
-        // if apply is pressed return true
-        // otherwise result canceled
 
     }
 
@@ -84,7 +84,6 @@ class SettingsActivity : AppCompatActivity() {
         // set intent
         changed = true
         setResult(Activity.RESULT_OK, returnIntent)
-        finish()
     }
 
 }

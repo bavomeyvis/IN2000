@@ -62,6 +62,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     //On create stuff
     override fun onCreate(savedInstanceState: Bundle?) {
+        // When object is created. Static variable mapsActivity is set
         mapsActivity = this
         // Turns on dark mode
         darkMode()

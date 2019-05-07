@@ -12,10 +12,7 @@ import com.github.mikephil.charting.components.*
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import com.github.mikephil.charting.listener.OnChartGestureListener
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.Utils
 import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
@@ -99,7 +96,6 @@ class GraphActivity: AppCompatActivity() {
             val xAxis = graph.xAxis
             xAxis.granularity = 1f
             xAxis.position = XAxis.XAxisPosition.TOP
-
         }
     }
 }
