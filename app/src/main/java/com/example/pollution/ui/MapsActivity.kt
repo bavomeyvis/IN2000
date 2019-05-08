@@ -120,11 +120,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     private fun darkMode() {
         if(getSharedPreferenceValue("theme")) {
             setTheme(R.style.DarkTheme)
-            camo_dark()
-
+            //camo_dark()
         } else {
             setTheme(R.style.AppTheme)
-            camo_light()
+            //camo_light()
         }
     }
 
@@ -179,6 +178,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
         if (getSharedPreferenceValue("theme")) mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
         else mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
+
+        camo_light()
 
         setUpMap()
 

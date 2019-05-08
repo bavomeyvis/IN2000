@@ -42,7 +42,7 @@
   },
   {
     "featureType": "administrative.country",
-    "elementType": "labels.text.fill",
+    "elementType": "labels",
     "stylers": [
       {
         "visibility": "off"
