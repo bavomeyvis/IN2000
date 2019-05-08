@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
@@ -37,11 +38,13 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.data.geojson.GeoJsonLayer
+import com.google.maps.android.data.geojson.GeoJsonPolygonStyle
 import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.runOnUiThread
+import org.json.JSONException
 
 // Retrofit imports
 import retrofit2.Retrofit
@@ -99,15 +102,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val bounds = builder.build() // These are the coordinates of two corners.
 
-        val curScreen = mMap.getProjection().getVisibleRegion().latLngBounds
-
         val width = resources.displayMetrics.widthPixels
         val height = resources.displayMetrics.heightPixels
         val padding = width * 0.2
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt())) // Move the camera to the appropriate place.
 
-        mMap.setLatLngBoundsForCameraTarget(curScreen) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in. TODO
+        mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in. TODO
 
         mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
         mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
@@ -115,11 +116,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
 
-        /*
-        try {
-            val layer = GeoJsonLayer(mMap, R.raw.sweden, applicationContext)
+        try { // Colour surrounding countries in order to exert attention to Norway.
+            var layer = GeoJsonLayer(mMap, R.raw.europe, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
+            var style = layer.defaultPolygonStyle
+            style.fillColor = Color.rgb(170, 211, 241)
+            style.strokeColor = Color.rgb(170, 211, 241)
+            style.strokeWidth = 1F
+            layer.addLayerToMap()
+            layer = GeoJsonLayer(mMap, R.raw.russia, applicationContext) // Add Russia.
+            style = layer.defaultPolygonStyle
+            style.fillColor = Color.rgb(170, 211, 241)
+            style.strokeColor = Color.rgb(170, 211, 241)
+            style.strokeWidth = 1F
+            layer.addLayerToMap()
+
+        } catch (ioe: IOException) {
+            Log.e("IOException", ioe.localizedMessage)
+        } catch (jsone: JSONException) {
+            Log.e("JSONException", jsone.localizedMessage)
         }
-        */
         setUpMap() // Set up for my location to work properly.
     }
 
