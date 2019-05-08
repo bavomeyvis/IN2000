@@ -25,6 +25,7 @@ class GraphActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_graph)
+        //Gets the data from the intent (lat, lon)
         val intent = intent
         val lat = intent.getDoubleExtra(MapsActivity.LAT, 0.0)
         val lon = intent.getDoubleExtra(MapsActivity.LON, 0.0)
