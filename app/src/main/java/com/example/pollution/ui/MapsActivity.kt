@@ -98,7 +98,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         else setTheme(R.style.AppTheme)
     }
 
-    // ???
+    // Sets up a listener for the enter button on the keyboard
     private fun init() {
         search_input.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE
@@ -160,6 +160,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         return returnInfo
     }
 
+    // Function that gets data from api
     fun getData(lat: Double, lon: Double): APIData? {
         var weather: APIData? = null
         doAsync {
@@ -208,7 +209,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
-    // ???
+    // Function that searches for a location
     fun searchLocation() {
         val searchAddress = search_input.text.toString()
         val geocoder = Geocoder(this)
