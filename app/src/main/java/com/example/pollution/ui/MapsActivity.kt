@@ -36,6 +36,7 @@ import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
+import com.google.maps.android.data.geojson.GeoJsonLayer
 import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
@@ -92,26 +93,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        val oslo = LatLng(59.915780, 10.752913)
-
         val builder = LatLngBounds.Builder() // Set the boundaries for movement.
         builder.include(LatLng(62.740234, 9.858139))
         builder.include(LatLng(67.648627, 22.191212))
 
         val bounds = builder.build() // These are the coordinates of two corners.
 
+        val curScreen = mMap.getProjection().getVisibleRegion().latLngBounds
+
         val width = resources.displayMetrics.widthPixels
         val height = resources.displayMetrics.heightPixels
-
         val padding = width * 0.2
 
-        mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in. TODO
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt())) // Move the camera to the appropriate place.
+
+        mMap.setLatLngBoundsForCameraTarget(curScreen) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in. TODO
+
         mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
         mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
 
+        val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
+
+        /*
+        try {
+            val layer = GeoJsonLayer(mMap, R.raw.sweden, applicationContext)
+        }
+        */
         setUpMap() // Set up for my location to work properly.
     }
 
