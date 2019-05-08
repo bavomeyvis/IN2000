@@ -25,6 +25,10 @@ class GraphActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_graph)
+        val intent = intent
+        val lat = intent.getDoubleExtra(MapsActivity.LAT, 0.0)
+        val lon = intent.getDoubleExtra(MapsActivity.LON, 0.0)
+
 
         //Must draw graph in background thread because of the apidata
         doAsync {
@@ -35,7 +39,7 @@ class GraphActivity: AppCompatActivity() {
                 .build()
                 .create(WeatherService::class.java)
 
-            weather = client.getWeather(59.915780, 10.752913).execute().body()!!
+            weather = client.getWeather(lat, lon).execute().body()!!
 
 
             //Setting different settings for the graph

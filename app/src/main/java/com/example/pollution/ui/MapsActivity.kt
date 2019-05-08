@@ -5,13 +5,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.location.Address
 import android.location.Geocoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatDelegate
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
@@ -37,7 +35,6 @@ import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.runOnUiThread
 
 // Retrofit imports
 import retrofit2.Retrofit
@@ -50,9 +47,11 @@ private const val TAG = "MapsActivity"
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuItemClickListener {
     companion object {
-        var mapsActivity : MapsActivity? = null
+        lateinit var mapsActivity : MapsActivity
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
         val sharedPref = "settings"
+        val LAT = "com.example.pollution.ui.LAT"
+        val LON = "com.example.pollution.ui.LON"
     }
 
     //Google Maps
@@ -233,18 +232,40 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // this should be in item4...
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
         //Todo: Move starting of GraphActivity
-        val intent1 = Intent(this, GraphActivity::class.java)
+        val testLat = 59.915780
+        val testLon = 10.752913
+        /*graphActivityIntent.putExtra(LAT, testLat)
+        graphActivityIntent.putExtra(LON, testLon)*/
 
         when(item?.itemId) {
             R.id.menu_1_home -> Toast.makeText(this, "darkTheme", Toast.LENGTH_LONG).show()
             R.id.menu_2_alert -> Toast.makeText(this, "saveInfo", Toast.LENGTH_LONG).show()
-            R.id.menu_3_favorites -> startActivity(intent1)
+            R.id.menu_3_favorites -> runGraphActivity(testLat, testLon)
             R.id.menu_4_settings -> {
+                //Starting SettingsActivity and waits for the result back
                 startActivityForResult(settingsActivityIntent, 1)
                 recreate()
             }
         }
         return true
+    }
+
+    //TODO: Move to Bjørn's activity
+    //Method that runs GraphActivity with extra parameters
+    fun runGraphActivity(lat: Double, lon: Double) {
+        val graphActivityIntent = Intent(this, GraphActivity::class.java)
+        graphActivityIntent.putExtra(LAT, lat)
+        graphActivityIntent.putExtra(LON, lon)
+        startActivity(graphActivityIntent)
+    }
+
+    //TODO: Change the name of class Bjørn (vet ikke hva den heter)
+    //Method that runs ForecastActivity with extra parameters
+    fun runForecastActivity(lat: Double, lon: Double) {
+        val forecastActivityIntent = Intent(this, GraphActivity::class.java) //<--- Change this
+        forecastActivityIntent.putExtra(LAT, lat)
+        forecastActivityIntent.putExtra(LON, lon)
+        startActivity(forecastActivityIntent)
     }
 
     // shows popup as well as icons
