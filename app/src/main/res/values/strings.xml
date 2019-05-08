@@ -29,4 +29,9 @@
     <string name="enter_limit">Enter limit</string>
     <string name="notification_title">Current air quality is exceeding your limit!</string>
     <string name="notification_desc">Consider planning an escape route!</string>
+    <string name="forecast_card1_title">Add a location</string>
+    <string name="forecast_card2_title">Add a location:</string>
+    <string name="card_comp_title">Difference</string>
+    <string name="menu_4_graph">Graph</string>
+    <string name="menu_stats">Stats</string>
 </resources>

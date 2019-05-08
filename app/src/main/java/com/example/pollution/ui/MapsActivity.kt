@@ -11,12 +11,10 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
-import android.location.LocationManager
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.NotificationBuilderWithBuilderAccessor
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.util.Log
@@ -36,19 +34,16 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
-import com.example.pollution.classes.Storby
-import com.example.pollution.data.Location
+import com.example.pollution.classes.City
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.data.geojson.GeoJsonLayer
-import com.google.maps.android.data.geojson.GeoJsonPolygonStyle
 import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.runOnUiThread
 import org.json.JSONException
 
 // Retrofit imports
@@ -57,6 +52,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 private const val TAG = "MapsActivity"
 
@@ -74,12 +70,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    //Todo: Move starting of GraphActivity
+    /*graphActivityIntent.putExtra(LAT, testLat)
+    graphActivityIntent.putExtra(LON, testLon)*/
+    // Test lats
+    val testLat = 59.915780
+    val testLon = 10.752913
+
     private val channel_id = "channel0"
     // User-inputted value. If current location's air quality goes below user_limit, the app alerts the user.
     private val user_limit: Double = 0.0
 
-    //list of Storby class objects containing name, coordinates and the marker for each large city
-    var storbyList = arrayListOf<Storby>()
+    //list of City class objects containing name, coordinates and the marker for each large city
+    var cities = arrayListOf<City>()
 
     //On create stuff
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,38 +100,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
         //getMapASYNC
         mapFragment.getMapAsync(this)
-        init()
+        // TODO: Explain what this does
+        setKeyboardFinishedListener()
         // Create a notification channel for future use.
         createNotificationChannel()
 
+        // TODO: ???
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK) {
-                print("Recreating!!!!!!!!!!")
-                recreate()
-            }
-            if(resultCode == Activity.RESULT_CANCELED) {
-                print("Nothing special happened......")
-            }
-        }
-    }
-
-    private fun darkMode() {
-        if(getSharedPreferenceValue("theme")) {
-            setTheme(R.style.DarkTheme)
-            //camo_dark()
-        } else {
-            setTheme(R.style.AppTheme)
-            //camo_light()
-        }
-    }
-
-    // Sets up a listener for the enter button on the keyboard
-    private fun init() {
+    // TODO: Consider migrating into object
+    // Sets up a listener for the enter button on the keyboard.
+    // TODO: Isn't this an app for mobiles? What is KEYCODE_ENTER?
+    private fun setKeyboardFinishedListener() {
         search_input.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE
                 || actionId == EditorInfo.IME_ACTION_SEARCH
@@ -143,45 +127,60 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             false
         }
     }
+    // Closes the keyboard properly
+    private fun closeKeyboard() {
+        val currentView: View? = this.currentFocus
+        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentView?.windowToken, 0)
+    }
 
-    //???
+    // Recreates when startActivityForResult gets OK_Signal (.e.g from settings)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 1) { if(resultCode == Activity.RESULT_OK) recreate() }
+    }
+
+    private fun darkMode() {
+        if(getSharedPreferenceValue("theme")) {
+            setTheme(R.style.DarkTheme)
+            // TODO: camo_dark()
+        } else {
+            setTheme(R.style.AppTheme)
+            // TODO: camo_light()
+        }
+    }
+
+    // Sets Map preferences (e.g. theme, boundaries)
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
-
-
-        // https://stackoverflow.com/questions/6250325/hide-google-logo-from-mapview/6250405
-        // Turns off the two buttons in the bottom right (directions and open maps)
+        // Turns off most of Google Maps widgets
         mMap.uiSettings.isMapToolbarEnabled = false
         mMap.uiSettings.isMyLocationButtonEnabled = false
         mMap.uiSettings.isCompassEnabled = false
         mMap.uiSettings.isZoomControlsEnabled = false
-
-        val builder = LatLngBounds.Builder() // Set the boundaries for movement.
-        builder.include(LatLng(62.740234, 9.858139))
-        builder.include(LatLng(67.648627, 22.191212))
-
-        val bounds = builder.build() // These are the coordinates of two corners.
-
-        val width = resources.displayMetrics.widthPixels
-        val height = resources.displayMetrics.heightPixels
-        val padding = width * 0.2
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt())) // Move the camera to the appropriate place.
-
-        mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
-        // TODO Ideally, panning freely should be allowed, provided it takes place within the predefined boundaries.
-
-        mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
-        mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
-
-
+        // Sets darkMode on map
         if (getSharedPreferenceValue("theme")) mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
         else mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
 
+        // Set the boundaries for movement.
+        val builder = LatLngBounds.Builder()
+        builder.include(LatLng(62.740234, 9.858139))
+        builder.include(LatLng(67.648627, 22.191212))
+        val bounds = builder.build() // These are the coordinates of two corners.
+        // ???
+        val width = resources.displayMetrics.widthPixels
+        val height = resources.displayMetrics.heightPixels
+        val padding = width * 0.2
+        // Move the camera to the appropriate place.
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
+        mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
+        // TODO Ideally, panning freely should be allowed, provided it takes place within the predefined boundaries.
+        mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
+        mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
+        // TODO: camo_light() and camo_dark() not working.
         camo_light()
-
-        setUpMap()
+        // Assures location is set
+        setMyLocation()
 
         mMap.setOnMapClickListener(object: GoogleMap.OnMapClickListener {
             override fun onMapClick(point:LatLng) {
@@ -190,11 +189,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             }
         })
 
-
-
         addCityMarkers(mMap)
     }
 
+    // TODO: Jørgen's code (make private?)
     fun getPositionData(lat: Double, lon: Double): String {
         lateinit var returnInfo: String
         try {
@@ -207,7 +205,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         return returnInfo
     }
 
-    // find location
+    // Find location
     private fun addMarkerColoured(address: Address) {
         val lat = address.latitude
         val lon = address.longitude
@@ -221,13 +219,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         doAsync {
             val weather = client.getWeather(lat, lon).execute().body()
             val aqi = weather?.data?.time?.get(0)?.variables?.aQI?.value
+            // TODO: Remove print (J)
             println(aqi)
 
             var markerColor = BitmapDescriptorFactory.HUE_RED
 
-            if (aqi != null && aqi < 1.75) {
-                markerColor = BitmapDescriptorFactory.HUE_GREEN
-            }
+            if (aqi != null && aqi < 1.75) markerColor = BitmapDescriptorFactory.HUE_GREEN
 
             runOnUiThread {
                 mMap.addMarker(
@@ -241,8 +238,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     }
 
     // Function that searches for a location
-    fun searchLocation() {
-        val searchAddress = search_input.text.toString()
+    private fun searchLocation() {
+        val searchAddress: String = search_input.text.toString()
         val geocoder = Geocoder(this)
         var addressList = arrayListOf<Address>()
         try {
@@ -256,8 +253,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
             addMarkerColoured(address)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(addressLatLng, 15F))
-
-
             //Open ForecastActivity when searched
             val intent = Intent(this, ForecastActivity::class.java)
             intent.putExtra("address", address)
@@ -265,25 +260,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
-    // the different menu items' actions
+    // The menu items' listener
     override fun onMenuItemClick(item: MenuItem?): Boolean {
-        // this should be in item4...
-        val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
-        //Todo: Move starting of GraphActivity
-        val testLat = 59.915780
-        val testLon = 10.752913
-        /*graphActivityIntent.putExtra(LAT, testLat)
-        graphActivityIntent.putExtra(LON, testLon)*/
-
         when(item?.itemId) {
-            R.id.menu_1_home -> Toast.makeText(this, "darkTheme", Toast.LENGTH_LONG).show()
-            R.id.menu_2_alert -> Toast.makeText(this, "saveInfo", Toast.LENGTH_LONG).show()
-            R.id.menu_3_favorites -> runGraphActivity(testLat, testLon)
-            R.id.menu_4_settings -> {
-                //Starting SettingsActivity and waits for the result back
-                startActivityForResult(settingsActivityIntent, 1)
-                recreate()
-            }
+            R.id.menu_home -> recreate()
+            R.id.menu_alert -> Toast.makeText(this, "alerts", Toast.LENGTH_SHORT).show()
+            R.id.menu_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_SHORT).show()
+            R.id.menu_graph -> runGraphActivity(testLat, testLon)
+            R.id.menu_stats -> Toast.makeText(this, "stats", Toast.LENGTH_SHORT).show()
+            R.id.menu_settings -> runSettingsActivity()
         }
         return true
     }
@@ -306,13 +291,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         startActivity(forecastActivityIntent)
     }
 
+    fun runSettingsActivity() {
+        val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
+        startActivityForResult(settingsActivityIntent, 1)
+        recreate()
+    }
     // shows popup as well as icons
     /*TODO: only popup.show() should be necessary*/
     fun showPopup(v:View) {
         val popup = PopupMenu(this, v)
         popup.setOnMenuItemClickListener(this)
         popup.inflate(R.menu.popup_menu)
-        // Lots of bullshit due to PopupMenu not coming with icons
+        // TODO: Lots of bullshit due to PopupMenu not coming with icons
         // Consider using your own defined menu
         try {
             val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
@@ -323,19 +313,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                 .invoke(mPopup, true)
         } catch (e: Exception){
             Log.e("Main", "Error showing menu icons.", e)
-        } finally {
-            popup.show()
-        }
+        } finally { popup.show() }
     }
 
-    // Closes the keyboard properly
-    private fun closeKeyboard() {
-        val currentView: View? = this.currentFocus
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentView?.windowToken, 0)
-    }
-
-    // ???
+    // TODO: ???
     private fun createNotificationChannel() { // Create the channel. All notifications will be sent through this channel, because we only ever use one alert.
         if (Build.VERSION.SDK_INT >= 26) { // This feature is not supported on earlier devices.
             val channel0 = NotificationChannel(
@@ -350,22 +331,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
+    // TODO: Consider migrating into object
     // Assure permission to access GPS is granted.
-    private fun setUpMap() {
+    private fun setMyLocation() {
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             return
         }
-
         mMap.isMyLocationEnabled = true
-
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
             if (location != null) lastLocation = location
         }
     }
 
+    // TODO: Consider migrating into object
     private fun dangerAlert() { // Send the alert.
         val intent = Intent(this, MapsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -385,53 +366,66 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
+
     // Returns value found at key in sharedPref
     private fun getSharedPreferenceValue(prefKey: String):Boolean {
         val sp = getSharedPreferences(sharedPref, 0)
         return sp.getBoolean(prefKey, false)
     }
 
+    // TODO: Shorten fantastic code :)
     //creates and adds markers for large cities on the googleMap
     //Does an api request for the LatLng of the marker and gives it an appropriate colour
     private fun addCityMarkers(mMap: GoogleMap) {
 
         //store all LatLng to large cities in Norway to add markers
-        val oslo = LatLng(59.915780, 10.752913)
+        // TODO: Make a hashmap of every place with its cooordinate
+
+        /*
+        val citiesList : HashMap<String, String> = hashMapOf(
+            "oslo" to "Oslo", "bergen" to "Bergen", "trondheim" to "Trondheim", "stavanger" to "Stavanger",
+            "sandvika" to "Sandvika", "kristiansand" to "Kristiansand", "fredrikstad" to "Fredrikstad", "tromsø" to "Tromsø",
+            "drammen" to "Drammen", "sandnes" to "Sandnes", "skien" to "Skien", "sarpsborg" to "Sarpsborg", "skien" to "Skien",
+            "bodø" to "Bodø", "larvik" to "Larvik","sandefjord" to "Sandefjord", "arendal" to "Arendal", "ålesund" to "Ålesund")*/
+
         val osloName = "Oslo"
-        val bergen = LatLng(60.393975, 5.324937)
         val bergenName = "Bergen"
-        val trondheim = LatLng(63.433465, 10.395516)
         val trondheimName = "Trondheim"
-        val stavanger = LatLng(58.979964, 5.729269)
         val stavangerName = "Stavanger"
-        val sandvika = LatLng(59.891695, 10.528088)
         val sandvikaName = "Sandvika"
-        val kristiansand = LatLng(58.162897, 8.018848)
         val kristiansandName = "Kristiansand"
-        val fredrikstad = LatLng(59.224392, 10.933630)
         val fredrikstadName = "Fredrikstad"
-        val tromso = LatLng(69.653412, 18.953360)
         val tromsoName = "Tromsø"
-        val drammen = LatLng(59.747642, 10.205377)
         val drammenName = "Drammen"
-        val sandnes = LatLng(58.852107, 5.732697)
         val sandnesName = "Sandnes"
-        val skien = LatLng(58.852107, 5.732697)
         val skienName = "Skien"
-        val sarpsborg = LatLng(59.286260, 11.109056)
         val sarpsborgName = "Sarpsborg"
-        val bodo = LatLng(67.282654, 14.404968)
         val bodoName = "Bodø"
-        val larvik = LatLng(59.056636, 10.02887)
         val larvikName = "Larvik"
-        val sandefjord = LatLng(59.056636, 10.028874)
         val sandefjordName = "Sandefjord"
-        val lillestrom = LatLng(59.956639, 11.050240)
         val lillestromName = "Lillestrøm"
-        val arendal = LatLng(58.463660, 8.772121)
         val arendalName = "Arendal"
-        val alesund = LatLng(62.476929, 6.149429)
         val alesundName = "Ålesund"
+
+        val oslo = LatLng(59.915780, 10.752913)
+        val bergen = LatLng(60.393975, 5.324937)
+        val trondheim = LatLng(63.433465, 10.395516)
+        val stavanger = LatLng(58.979964, 5.729269)
+        val sandvika = LatLng(59.891695, 10.528088)
+        val kristiansand = LatLng(58.162897, 8.018848)
+        val fredrikstad = LatLng(59.224392, 10.933630)
+        val tromso = LatLng(69.653412, 18.953360)
+        val drammen = LatLng(59.747642, 10.205377)
+        val sandnes = LatLng(58.852107, 5.732697)
+        val skien = LatLng(58.852107, 5.732697)
+        val sarpsborg = LatLng(59.286260, 11.109056)
+        val bodo = LatLng(67.282654, 14.404968)
+        val larvik = LatLng(59.056636, 10.02887)
+        val sandefjord = LatLng(59.056636, 10.028874)
+        val lillestrom = LatLng(59.956639, 11.050240)
+        val arendal = LatLng(58.463660, 8.772121)
+        val alesund = LatLng(62.476929, 6.149429)
+
 
         val cityCoordList = listOf(oslo, bergen, trondheim, stavanger, sandvika,
             kristiansand, fredrikstad, tromso, drammen, sandnes, skien, sarpsborg,
@@ -440,6 +434,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val cityNameList = listOf(osloName, bergenName, trondheimName, stavangerName, sandvikaName,
             kristiansandName, fredrikstadName, tromsoName, drammenName, sandnesName, skienName, sarpsborgName,
             bodoName, larvikName, sandefjordName, lillestromName, arendalName, alesundName)
+
+        // cityCoordList = {LatLng(59.056636, 10.028874), LatLng(59.056636, 10.028874)}
+        // cityNameList = {Oslo, Bergen....}
 
         //creating a client to fetch AQI data from api
         val client = Retrofit.Builder()
@@ -467,8 +464,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                             .addMarker(MarkerOptions()
                                 .position(cityCoordList.get(i))
                                 .title(cityNameList.get(i)))
-                        val storby = Storby(cityNameList.get(i), cityCoordList.get(i), marker)
-                        storbyList.add(storby)
+                        val storby = City(cityNameList.get(i), cityCoordList.get(i), marker)
+                        cities.add(storby)
                     } else if (aqi < 1.5) {
                         marker = mMap
                             .addMarker(MarkerOptions()
@@ -477,8 +474,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                                 .icon(BitmapDescriptorFactory
                                     .defaultMarker(BitmapDescriptorFactory
                                         .HUE_GREEN)))
-                        val storby = Storby(cityNameList.get(i), cityCoordList.get(i), marker)
-                        storbyList.add(storby)
+                        val storby = City(cityNameList.get(i), cityCoordList.get(i), marker)
+                        cities.add(storby)
                     } else if (aqi < 2.0 && aqi > 1.5) {
                         marker = mMap
                             .addMarker(MarkerOptions()
@@ -487,8 +484,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                                 .icon(BitmapDescriptorFactory
                                     .defaultMarker(BitmapDescriptorFactory
                                         .HUE_YELLOW)))
-                        val storby = Storby(cityNameList.get(i), cityCoordList.get(i), marker)
-                        storbyList.add(storby)
+                        val storby = City(cityNameList.get(i), cityCoordList.get(i), marker)
+                        cities.add(storby)
                     } else if (aqi < 2.5 && aqi > 2.0) {
                         marker = mMap
                             .addMarker(MarkerOptions()
@@ -497,8 +494,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                                 .icon(BitmapDescriptorFactory
                                     .defaultMarker(BitmapDescriptorFactory
                                         .HUE_ORANGE)))
-                        val storby = Storby(cityNameList.get(i), cityCoordList.get(i), marker)
-                        storbyList.add(storby)
+                        val storby = City(cityNameList.get(i), cityCoordList.get(i), marker)
+                        cities.add(storby)
                     } else if (aqi > 2.5) {
                         marker = mMap
                             .addMarker(MarkerOptions()
@@ -507,8 +504,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                                 .icon(BitmapDescriptorFactory
                                     .defaultMarker(BitmapDescriptorFactory
                                         .HUE_RED)))
-                        val storby = Storby(cityNameList.get(i), cityCoordList.get(i), marker)
-                        storbyList.add(storby)
+                        val storby = City(cityNameList.get(i), cityCoordList.get(i), marker)
+                        cities.add(storby)
                     }
                 }
             }
