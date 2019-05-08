@@ -157,6 +157,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                 //point.Latitude & point.Longitude
             }
         })
+
+        addCityMarkers(mMap)
     }
 
     fun getPositionData(lat: Double, lon: Double): String {
