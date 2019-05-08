@@ -45,6 +45,13 @@
                   android:label="Graph"
                   android:parentActivityName=".ui.MapsActivity">
         </activity>
+
+        <!-- Forecast Activity -->
+        <activity android:name=".ui.ForecastActivity"
+                  android:parentActivityName=".ui.MapsActivity"
+                  android:label="Forecast"
+                  >
+        </activity>
    </application>
 
 </manifest>

@@ -81,7 +81,6 @@ class GraphActivity: AppCompatActivity() {
             //Adding the data to the graph
             val data = LineData(dataSets)
             graph.data = data
-            graph.invalidate()
 
             //Setting different settings for the legend
             val legend = graph.legend
