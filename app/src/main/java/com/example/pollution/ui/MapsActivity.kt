@@ -62,7 +62,7 @@ private const val TAG = "MapsActivity"
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuItemClickListener {
     companion object {
-        lateinit var mapsActivity : MapsActivity
+        var mapsActivity : MapsActivity? = null
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
         val sharedPref = "settings"
         val LAT = "com.example.pollution.ui.LAT"
