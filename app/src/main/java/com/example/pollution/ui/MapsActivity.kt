@@ -259,8 +259,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         try { // Colour surrounding countries in order to exert attention to Norway.
             val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
             val style = layer.defaultPolygonStyle
-            style.fillColor = Color.rgb(158, 158, 158)
-            style.strokeColor = Color.rgb(158, 158, 158)
+            style.fillColor = Color.rgb(201, 201, 201)
+            style.strokeColor = Color.rgb(201, 201, 201)
             style.strokeWidth = 1F
             layer.addLayerToMap()
 
@@ -275,8 +275,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         try { // Colour surrounding countries in order to exert attention to Norway.
             val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
             val style = layer.defaultPolygonStyle
-            style.fillColor = Color.rgb(61, 61, 61)
-            style.strokeColor = Color.rgb(61, 61, 61)
+            style.fillColor = Color.rgb(0, 0, 0)
+            style.strokeColor = Color.rgb(0, 0, 0)
             style.strokeWidth = 1F
             layer.addLayerToMap()
 
