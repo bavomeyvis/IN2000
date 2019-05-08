@@ -2,14 +2,23 @@ package com.example.pollution.ui
 
 // Our stuff
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
+import android.location.LocationManager
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.NotificationBuilderWithBuilderAccessor
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
@@ -17,6 +26,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import android.widget.Toast
 
 // Maps stuff
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,15 +37,19 @@ import com.google.android.gms.maps.SupportMapFragment
 // Packages' class imports
 import com.example.pollution.R
 import com.example.pollution.classes.Storby
-import com.example.pollution.data.APIData
+import com.example.pollution.data.Location
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
+import com.google.maps.android.data.geojson.GeoJsonLayer
+import com.google.maps.android.data.geojson.GeoJsonPolygonStyle
 import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.runOnUiThread
+import org.json.JSONException
 
 // Retrofit imports
 import retrofit2.Retrofit
@@ -60,6 +74,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private val channel_id = "channel0"
+    // User-inputted value. If current location's air quality goes below user_limit, the app alerts the user.
+    private val user_limit: Double = 0.0
+
     //list of Storby class objects containing name, coordinates and the marker for each large city
     var storbyList = arrayListOf<Storby>()
 
@@ -80,6 +98,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         //getMapASYNC
         mapFragment.getMapAsync(this)
         init()
+        // Create a notification channel for future use.
+        createNotificationChannel()
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
@@ -97,8 +118,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     }
 
     private fun darkMode() {
-        if(getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
-        else setTheme(R.style.AppTheme)
+        if(getSharedPreferenceValue("theme")) {
+            setTheme(R.style.DarkTheme)
+            camo_dark()
+
+        } else {
+            setTheme(R.style.AppTheme)
+            camo_light()
+        }
     }
 
     // Sets up a listener for the enter button on the keyboard
@@ -123,6 +150,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         mMap = googleMap
 
 
+
         // https://stackoverflow.com/questions/6250325/hide-google-logo-from-mapview/6250405
         // Turns off the two buttons in the bottom right (directions and open maps)
         mMap.uiSettings.isMapToolbarEnabled = false
@@ -133,7 +161,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val builder = LatLngBounds.Builder() // Set the boundaries for movement.
         builder.include(LatLng(62.740234, 9.858139))
         builder.include(LatLng(67.648627, 22.191212))
-        val bounds = builder.build()
+
+        val bounds = builder.build() // These are the coordinates of two corners.
 
         val width = resources.displayMetrics.widthPixels
         val height = resources.displayMetrics.heightPixels
@@ -141,10 +170,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt())) // Move the camera to the appropriate place.
 
-        mMap.setLatLngBoundsForCameraTarget(bounds)
-        // Add a marker in Oslo and move the camera
-        val oslo = LatLng(59.915780, 10.752913)
-        mMap.addMarker(MarkerOptions().position(oslo).title("Marker in Oslo"))
+        mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
+        // TODO Ideally, panning freely should be allowed, provided it takes place within the predefined boundaries.
+
+        mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
+        mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
+
 
         if (getSharedPreferenceValue("theme")) mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
         else mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
@@ -157,6 +188,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                 //point.Latitude & point.Longitude
             }
         })
+
+
 
         addCityMarkers(mMap)
     }
@@ -171,22 +204,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             return ""
         }
         return returnInfo
-    }
-
-    // Function that gets data from api
-    fun getData(lat: Double, lon: Double): APIData? {
-        var weather: APIData? = null
-        doAsync {
-            val client = Retrofit.Builder()
-                .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(WeatherService::class.java)
-
-            weather = client.getWeather(lat, lon).execute().body()
-            //println(weather)
-        }
-        return weather
     }
 
     // find location
@@ -318,6 +335,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     }
 
     // ???
+    private fun createNotificationChannel() { // Create the channel. All notifications will be sent through this channel, because we only ever use one alert.
+        if (Build.VERSION.SDK_INT >= 26) { // This feature is not supported on earlier devices.
+            val channel0 = NotificationChannel(
+                channel_id,
+                "Channel 0",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channel0.description = getString(R.string.channel_desc)
+
+            val manager: NotificationManager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel0)
+        }
+    }
+
+    // Assure permission to access GPS is granted.
     private fun setUpMap() {
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -330,6 +362,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
             if (location != null) lastLocation = location
+        }
+    }
+
+    private fun dangerAlert() { // Send the alert.
+        val intent = Intent(this, MapsActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+        val builder = NotificationCompat.Builder(this, channel_id) // The builder contains the notification attributes.
+            .setSmallIcon(R.drawable.menu_item_alert)
+            .setContentTitle(getString(R.string.notification_title))
+            .setContentText(getString(R.string.notification_desc))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(this)) {
+            notify(0, builder.build()) // Send the notification with the builder defined above.
         }
     }
 
@@ -460,6 +511,46 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                     }
                 }
             }
+        }
+    }
+
+    /*
+    The below functions colour the surrounding area of Norway with the same colour the water has, appropriate to current theme.
+    The camo.geojson file is an API containing polygons of the relevant area: Sweden, Denmark, Germany, Faroe Islands, United Kingdom,
+    Poland, Lithuania, Latvia, Estonia, Finland and the following Russian municipalities: Murmansk, Karelia, St. Petersburg,
+    Leningrad, Novgorod, Tver, Pskov and Kaliningrad. The original files were one containing all of Europe except Russia,
+    the other one contained just Russia. These unnecessarily big files inflicted delay in the app launch, and therefor I deemed
+    it necessary to trim them to a relevant size. App launch time decreased by about four to five seconds.
+    */
+    private fun camo_light() {
+        try { // Colour surrounding countries in order to exert attention to Norway.
+            val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
+            val style = layer.defaultPolygonStyle
+            style.fillColor = Color.rgb(201, 201, 201)
+            style.strokeColor = Color.rgb(201, 201, 201)
+            style.strokeWidth = 1F
+            layer.addLayerToMap()
+
+        } catch (ioe: IOException) {
+            Log.e("IOException", ioe.localizedMessage)
+        } catch (jsone: JSONException) {
+            Log.e("JSONException", jsone.localizedMessage)
+        }
+    }
+
+    private fun camo_dark() {
+        try { // Colour surrounding countries in order to exert attention to Norway.
+            val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
+            val style = layer.defaultPolygonStyle
+            style.fillColor = Color.rgb(0, 0, 0)
+            style.strokeColor = Color.rgb(0, 0, 0)
+            style.strokeWidth = 1F
+            layer.addLayerToMap()
+
+        } catch (ioe: IOException) {
+            Log.e("IOException", ioe.localizedMessage)
+        } catch (jsone: JSONException) {
+            Log.e("JSONException", jsone.localizedMessage)
         }
     }
 }

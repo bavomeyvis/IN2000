@@ -25,4 +25,8 @@
     <string name="forecast_value_2">2</string>
     <string name="forecast_value_3">3</string>
     <string name="forecast_unit_time">Unit Time</string>
+    <string name="channel_desc">Alerts</string>
+    <string name="enter_limit">Enter limit</string>
+    <string name="notification_title">Current air quality is exceeding your limit!</string>
+    <string name="notification_desc">Consider planning an escape route!</string>
 </resources>
