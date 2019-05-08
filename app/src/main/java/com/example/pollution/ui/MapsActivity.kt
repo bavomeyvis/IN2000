@@ -225,6 +225,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
             addMarkerColoured(address)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(addressLatLng, 15F))
+
+
+            //Open ForecastActivity when searched
+            val intent = Intent(this, ForecastActivity::class.java)
+            intent.putExtra("address", address)
+            startActivity(intent)
         }
     }
 
