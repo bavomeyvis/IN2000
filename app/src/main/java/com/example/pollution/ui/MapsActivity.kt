@@ -130,13 +130,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         mMap.uiSettings.isCompassEnabled = false
         mMap.uiSettings.isZoomControlsEnabled = false
 
-        val boundOne = LatLng(57.696784, 3.601294)
-        val boundTwo = LatLng(71.214304, 34.476990)
-
-        val builder = LatLngBounds.Builder()
-        builder.include(boundOne)
-        builder.include(boundTwo)
-
+        val builder = LatLngBounds.Builder() // Set the boundaries for movement.
+        builder.include(LatLng(62.740234, 9.858139))
+        builder.include(LatLng(67.648627, 22.191212))
         val bounds = builder.build()
 
         val width = resources.displayMetrics.widthPixels
