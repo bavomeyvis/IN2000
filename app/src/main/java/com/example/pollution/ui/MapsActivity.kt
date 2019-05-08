@@ -109,7 +109,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt())) // Move the camera to the appropriate place.
 
-        mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in. TODO
+        mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
+        // TODO Ideally, panning freely should be allowed, provided it takes place within the predefined boundaries.
 
         mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
         mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
@@ -117,13 +118,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
 
-        setTheme(R.style.DarkTheme)
-        Toast.makeText(this, "Dark theme applied.", Toast.LENGTH_LONG).show()
+        // TODO The below lines have no other purpose than testing. Many additional files in the raw and values directories will overlap and conflict with other branches.
+        //setTheme(R.style.DarkTheme)
+        //Toast.makeText(this, "Dark theme applied.", Toast.LENGTH_LONG).show()
 
-        //setTheme(R.style.AppTheme)
-        //Toast.makeText(this, "Light theme applied.", Toast.LENGTH_LONG).show()
+        setTheme(R.style.AppTheme)
+        Toast.makeText(this, "Light theme applied.", Toast.LENGTH_LONG).show()
 
-        camo_dark()
+        camo_light()
 
         setUpMap() // Set up for my location to work properly.
     }
@@ -254,14 +256,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
-        Log.d("tag", "hello")
-
         with(NotificationManagerCompat.from(this)) {
             notify(0, builder.build()) // Send the notification with the builder defined above.
         }
     }
 
-    // The below functions colour the surrounding countries of Norway with the same colour the water has, appropriate to current theme.
+    /*
+    The below functions colour the surrounding area of Norway with the same colour the water has, appropriate to current theme.
+    The camo.geojson file is an API containing polygons of the relevant area: Sweden, Denmark, Germany, Faroe Islands, United Kingdom,
+    Poland, Lithuania, Latvia, Estonia, Finland and the following Russian municipalities: Murmansk, Karelia, St. Petersburg,
+    Leningrad, Novgorod, Tver, Pskov and Kaliningrad. The original files were one containing all of Europe except Russia,
+    the other one contained just Russia. These unnecessarily big files inflicted delay in the app launch, and therefor I deemed
+    it necessary to trim them to a relevant size. App launch time decreased by about four to five seconds.
+    */
     private fun camo_light() {
         try { // Colour surrounding countries in order to exert attention to Norway.
             val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
