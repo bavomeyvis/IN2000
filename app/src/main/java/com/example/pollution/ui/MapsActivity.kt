@@ -23,6 +23,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -115,6 +116,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
+
+        //setTheme(R.raw.map_style_dark)
+        //Toast.makeText(this, "Dark theme applied.", Toast.LENGTH_LONG).show()
+
+        setTheme(R.style.AppTheme)
+        Toast.makeText(this, "Light theme applied.", Toast.LENGTH_LONG).show()
 
         camo_light()
 
