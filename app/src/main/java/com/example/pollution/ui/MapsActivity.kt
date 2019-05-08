@@ -117,13 +117,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
 
-        //setTheme(R.raw.map_style_dark)
-        //Toast.makeText(this, "Dark theme applied.", Toast.LENGTH_LONG).show()
+        setTheme(R.style.DarkTheme)
+        Toast.makeText(this, "Dark theme applied.", Toast.LENGTH_LONG).show()
 
-        setTheme(R.style.AppTheme)
-        Toast.makeText(this, "Light theme applied.", Toast.LENGTH_LONG).show()
+        //setTheme(R.style.AppTheme)
+        //Toast.makeText(this, "Light theme applied.", Toast.LENGTH_LONG).show()
 
-        camo_light()
+        camo_dark()
 
         setUpMap() // Set up for my location to work properly.
     }
