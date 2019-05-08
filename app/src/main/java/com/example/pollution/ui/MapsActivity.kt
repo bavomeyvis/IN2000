@@ -116,25 +116,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val oslo = LatLng(59.915780, 10.752913)
         mMap.addMarker(MarkerOptions().position(oslo).title(getString(R.string.marker_oslo)))
 
-        try { // Colour surrounding countries in order to exert attention to Norway.
-            var layer = GeoJsonLayer(mMap, R.raw.europe, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
-            var style = layer.defaultPolygonStyle
-            style.fillColor = Color.rgb(170, 211, 241)
-            style.strokeColor = Color.rgb(170, 211, 241)
-            style.strokeWidth = 1F
-            layer.addLayerToMap()
-            layer = GeoJsonLayer(mMap, R.raw.russia, applicationContext) // Add Russia.
-            style = layer.defaultPolygonStyle
-            style.fillColor = Color.rgb(170, 211, 241)
-            style.strokeColor = Color.rgb(170, 211, 241)
-            style.strokeWidth = 1F
-            layer.addLayerToMap()
+        camo_light()
 
-        } catch (ioe: IOException) {
-            Log.e("IOException", ioe.localizedMessage)
-        } catch (jsone: JSONException) {
-            Log.e("JSONException", jsone.localizedMessage)
-        }
         setUpMap() // Set up for my location to work properly.
     }
 
@@ -268,6 +251,39 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         with(NotificationManagerCompat.from(this)) {
             notify(0, builder.build()) // Send the notification with the builder defined above.
+        }
+    }
+
+    // The below functions colour the surrounding countries of Norway with the same colour the water has, appropriate to current theme.
+    private fun camo_light() {
+        try { // Colour surrounding countries in order to exert attention to Norway.
+            val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
+            val style = layer.defaultPolygonStyle
+            style.fillColor = Color.rgb(158, 158, 158)
+            style.strokeColor = Color.rgb(158, 158, 158)
+            style.strokeWidth = 1F
+            layer.addLayerToMap()
+
+        } catch (ioe: IOException) {
+            Log.e("IOException", ioe.localizedMessage)
+        } catch (jsone: JSONException) {
+            Log.e("JSONException", jsone.localizedMessage)
+        }
+    }
+
+    private fun camo_dark() {
+        try { // Colour surrounding countries in order to exert attention to Norway.
+            val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
+            val style = layer.defaultPolygonStyle
+            style.fillColor = Color.rgb(61, 61, 61)
+            style.strokeColor = Color.rgb(61, 61, 61)
+            style.strokeWidth = 1F
+            layer.addLayerToMap()
+
+        } catch (ioe: IOException) {
+            Log.e("IOException", ioe.localizedMessage)
+        } catch (jsone: JSONException) {
+            Log.e("JSONException", jsone.localizedMessage)
         }
     }
 }
