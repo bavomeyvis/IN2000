@@ -41,6 +41,15 @@
     ]
   },
   {
+    "featureType": "administrative.country",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
     "featureType": "administrative.land_parcel",
     "stylers": [
       {
