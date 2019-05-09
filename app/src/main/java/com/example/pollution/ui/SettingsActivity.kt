@@ -8,10 +8,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatDelegate
 import com.example.pollution.R
 import android.support.v7.widget.Toolbar
-import android.widget.Switch
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import kotlinx.android.synthetic.main.activity_settings.*
+import org.jetbrains.anko.find
 
 
 //AppCompatActivity: Base class for activities that use the support library action bar features.
@@ -43,7 +42,6 @@ class SettingsActivity : AppCompatActivity() {
         themeBtn.setOnCheckedChangeListener { _, isChecked ->
             writeToPreference("theme", isChecked)
             recreate()
-
         }
 
         val alertBtn : Switch = findViewById(R.id.settingsAlertBtn)
@@ -53,9 +51,14 @@ class SettingsActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.settingsVersionDesc)
         alertBtn.setOnClickListener {
-            bravo++
-            if(bravo == 3) Toast.makeText(this,R.string.bravo, Toast.LENGTH_LONG).show()
+            if(++bravo == 3) Toast.makeText(this,R.string.bravo, Toast.LENGTH_LONG).show()
         }
+
+        // Language drop-down menu.
+        val dropdown: Spinner = findViewById(R.id.spinner)
+        val languages = listOf("English", "Norsk (bokmål)", "Norsk (nynorsk)", "Nederlands", "Afrikaans")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, languages)
+        dropdown.adapter = adapter
 
         // Toolbar
         /*val toolbar : Toolbar = findViewById(R.id.settings_toolbar)
