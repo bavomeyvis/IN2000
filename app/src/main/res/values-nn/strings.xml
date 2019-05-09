@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Forureining</string>
+    <string name="title_activity_maps">Kart</string>
+    <string name="enter_a_city_name">Skriv eit bynavn</string>
+    <string name="picture_of_magnifying_glass">Bilde av forstørringsglas</string>
+    <string name="list_title">Innstillinger</string>
+    <string name="bravo">Balansert. Slik alt bør vere.</string>
+    <string name="settings">Instillinger</string>
+    <string name="menu_item_favorites">Favoritter</string>
+    <string name="menu_item_settings">Innstillinger</string>
+    <string name="menu_item_alerts">Varslingar</string>
+    <string name="menu_item_home">Heim</string>
+    <string name="menu">meny</string>
+    <string name="marker_oslo">Oslo</string>
+    <string name="settings_theme_desc">Skrue på nattmodus.</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_alert_desc">Få varsel når verdier er over ei grense.</string>
+    <string name="settings_alert_title">Varsler</string>
+    <string name="settings_language_title">Språk</string>
+    <string name="settings_language_desc">Det gitte språket på appen.</string>
+    <string name="settings_version_desc">Gjeldande utgåve: 0.03</string>
+    <string name="forecast_example_text">TextView</string>
+    <string name="forecast_value_1">1</string>
+    <string name="forecast_value_2">2</string>
+    <string name="forecast_value_3">3</string>
+    <string name="forecast_unit_time">Unit Time</string>
+    <string name="channel_desc">Varsler</string>
+    <string name="enter_limit">Sett ei avgrensning</string>
+    <string name="notification_title">Gjeldande luftkvalitet overstiger grensa!</string>
+    <string name="notification_desc">Vurder å planleggje ein rømmingsveg!</string>
+    <string name="forecast_card1_title">Legg til eit stad</string>
+    <string name="forecast_card2_title">Legg til eit stad:</string>
+    <string name="card_comp_title">Forskjell</string>
+    <string name="menu_4_graph">Graf</string>
+    <string name="menu_stats">Statistikk</string>
+</resources>

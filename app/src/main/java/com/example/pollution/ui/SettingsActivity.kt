@@ -5,12 +5,18 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatDelegate
 import com.example.pollution.R
 import android.support.v7.widget.Toolbar
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_settings.*
 import org.jetbrains.anko.find
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.util.Log
+import android.view.View
+import java.util.*
 
 
 //AppCompatActivity: Base class for activities that use the support library action bar features.
@@ -59,11 +65,48 @@ class SettingsActivity : AppCompatActivity() {
         val languages = listOf("English", "Norsk (bokmål)", "Norsk (nynorsk)", "Nederlands", "Afrikaans")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, languages)
         dropdown.adapter = adapter
+        // Set the default selection to be the previously selected one.
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val language = preferences.getString("language", "")
+        if (!language.equals("", true)) {
+            val pos = adapter.getPosition(language)
+            dropdown.setSelection(pos)
+        }
+        var current = dropdown.selectedItemPosition
+        // On usage:
+        dropdown.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                // Apply selected change.
+                val editor = preferences.edit()
+                editor.putString("language", dropdown.selectedItem.toString())
+                editor.apply()
+                // Switch to selected language.
+                when (position) {
+                    0 -> changeLocalisation("")
+                    1 -> changeLocalisation("no")
+                    2 -> changeLocalisation("nn")
+                    3 -> changeLocalisation("nl")
+                    4 -> changeLocalisation("af")
+                }
+                // Refresh the activity, if a new language is selected.
+                if (current != position) recreate()
+                current = position
+            }
+        }
 
         // Toolbar
         /*val toolbar : Toolbar = findViewById(R.id.settings_toolbar)
         setSupportActionBar(toolbar) */
 
+    }
+
+    // Change local strings.
+    private fun changeLocalisation(language: String) {
+        val locale = Locale(language)
+        val config = baseContext.resources.configuration
+        config.locale = locale
+        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
     }
 
     // Gets the key from the static variable in sharedPref in MapsActivity
