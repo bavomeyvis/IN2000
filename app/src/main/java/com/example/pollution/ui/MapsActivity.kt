@@ -186,10 +186,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             override fun onMapClick(point:LatLng) {
                 //map is clicked latlng can be accessed from
                 //point.Latitude & point.Longitude
+
+
+            }
+        })
+        addCityMarkers(mMap)
+
+        //marker is clicked and we find the marker's corresponding City class object
+        mMap.setOnMarkerClickListener(object : GoogleMap.OnMarkerClickListener {
+            override fun onMarkerClick(marker: Marker): Boolean {
+                //argument marker is clicked marker
+                for (city in cities) {
+                    if (city.cityName.equals(marker.title)) {
+                        println("FANT: ${city.cityName}")
+                    }
+                }
+                return false
             }
         })
 
-        addCityMarkers(mMap)
     }
 
     // TODO: Jørgen's code (make private?)
