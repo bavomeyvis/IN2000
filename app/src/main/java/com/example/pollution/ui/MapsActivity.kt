@@ -146,11 +146,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // Move the camera to the appropriate place.
         //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
         //mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
-        // TODO Ideally, panning freely should be allowed, provided it takes place within the predefined boundaries.
         //mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
         //mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
-        // TODO: camo_light() and darkenSurroundings() not working.
-        darkenSurroundings(false)
+         //get latlong for corners for specified city
+
+        darkenSurroundings(getSharedPreferenceValue("theme"))
         // Assures location is set
         setMyLocation()
 
@@ -412,7 +412,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         try {
             val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) //.geojson APIs for data on countries' boundaries.
             val style = layer.defaultPolygonStyle
-            style.strokeWidth = 1F
+            style.strokeWidth = 50F
             if(dark) {
                 style.fillColor = Color.rgb(0, 0, 0)
                 style.strokeColor = Color.rgb(0, 0, 0)
