@@ -182,21 +182,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // Assures location is set
         setMyLocation()
 
-        mMap.setOnMapClickListener(object: GoogleMap.OnMapClickListener {
-            override fun onMapClick(point:LatLng) {
-                runForecastActivity(point.latitude, point.longitude, getPositionData(point.latitude, point.longitude))
-            }
-        })
+        mMap.setOnMapClickListener { point ->
+            //map is clicked latlng can be accessed from
+            //point.Latitude & point.Longitude
+            runForecastActivity(point.latitude, point.longitude, getPositionData(point.latitude, point.longitude))
+        }
         addCityMarkers(mMap)
 
         //marker is clicked and we find the marker's corresponding City class object
-        mMap.setOnMarkerClickListener(object : GoogleMap.OnMarkerClickListener {
-            override fun onMarkerClick(marker: Marker): Boolean {
-                val city: City? = getCity(marker)
-                runForecastActivity(marker.position.latitude, marker.position.longitude, city!!.cityName)
-                return false
-            }
-        })
+        mMap.setOnMarkerClickListener { marker ->
+            val city: City? = getCity(marker)
+            runForecastActivity(marker.position.latitude, marker.position.longitude, city!!.cityName)
+            false
+        }
     }
 
     //Takes a city marker as argument and returns the corresponding City object
@@ -272,12 +270,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             val address = addressList[0]
             val addressLatLng = LatLng(address.latitude, address.longitude)
 
-            addMarkerColoured(address)
+            //TODO: Hvis man klikker på markeren som lages her krasjer appen
+            //addMarkerColoured(address)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(addressLatLng, 15F))
             //Open ForecastActivity when searched
-            val intent = Intent(this, ForecastActivity::class.java)
-            intent.putExtra("address", address)
-            startActivity(intent)
+            runForecastActivity(address.latitude, address.longitude, address.getAddressLine(0))
         }
     }
 
@@ -287,26 +284,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             R.id.menu_home -> recreate()
             R.id.menu_alert -> Toast.makeText(this, "alerts", Toast.LENGTH_SHORT).show()
             R.id.menu_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_SHORT).show()
-            R.id.menu_graph -> runGraphActivity(testLat, testLon)
+            R.id.menu_graph -> Toast.makeText(this, "graph", Toast.LENGTH_SHORT).show()
             R.id.menu_stats -> Toast.makeText(this, "stats", Toast.LENGTH_SHORT).show()
             R.id.menu_settings -> runSettingsActivity()
         }
         return true
     }
 
-    //TODO: Move to Bjørn's activity
-    //Method that runs GraphActivity with extra parameters
-    fun runGraphActivity(lat: Double, lon: Double) {
-        val graphActivityIntent = Intent(this, GraphActivity::class.java)
-        graphActivityIntent.putExtra(LAT, lat)
-        graphActivityIntent.putExtra(LON, lon)
-        startActivity(graphActivityIntent)
-    }
-
-
     //Method that runs ForecastActivity with extra parameters
     fun runForecastActivity(lat: Double, lon: Double, title: String) {
-        val forecastActivityIntent = Intent(this, ForecastActivity::class.java) //<--- Change this
+        val forecastActivityIntent = Intent(this, ForecastActivity::class.java)
         forecastActivityIntent.putExtra(LAT, lat)
         forecastActivityIntent.putExtra(LON, lon)
         forecastActivityIntent.putExtra(TITLE, title)

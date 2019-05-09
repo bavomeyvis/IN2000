@@ -29,7 +29,6 @@ class GraphActivity: AppCompatActivity() {
         val intent = intent
         val lat = intent.getDoubleExtra(MapsActivity.LAT, 0.0)
         val lon = intent.getDoubleExtra(MapsActivity.LON, 0.0)
-        val title = intent.getStringExtra(MapsActivity.TITLE)
 
 
         //Must draw graph in background thread because of the apidata
