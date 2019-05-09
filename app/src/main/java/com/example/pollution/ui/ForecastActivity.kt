@@ -27,6 +27,10 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private lateinit var timeTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Sets UI theme
+        if(getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
+        else setTheme(R.style.AppTheme)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
 
@@ -68,7 +72,6 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
                 aqiValues[i] = weather?.data?.time?.get(i)?.variables?.aQI?.value
                 pm25Values[i] = weather?.data?.time?.get(i)?.variables?.pm25Concentration?.value
                 println(pm25Values[i])
-
                 timeValues[i] = weather?.data?.time?.get(i)?.from
             }
 
@@ -90,7 +93,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
     }
 
-
+// TODO: This should be the specified values
     fun updateColorViews2(value: Double?, view: View) {
         if (value != null) {
             if (value >= 4) {
@@ -109,11 +112,16 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         timeTextView.text = timeValues[progress]?.substring(11, 16)
 
         val aqi = aqiValues[progress]
-        val aqi2 = aqiValues[progress + 1]
+        //  val aqi2 = aqiValues[progress + 1] caused error. Bravo
+        val aqi2 = aqiValues[progress]
         val pm25 = pm25Values[progress]
 
         updateColorViews2(aqi, aqiRectangle)
         updateColorViews2(pm25, pm25Rectangle)
 
+    }
+    private fun getSharedPreferenceValue(prefKey: String):Boolean {
+        val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
+        return sp.getBoolean(prefKey, false)
     }
 }

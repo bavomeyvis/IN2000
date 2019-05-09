@@ -88,8 +88,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     override fun onCreate(savedInstanceState: Bundle?) {
         // When object is created. Static variable mapsActivity is set
         mapsActivity = this
-        // Turns on dark mode
-        darkMode()
+        // Sets UI theme
+        if(getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
+        else setTheme(R.style.AppTheme)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -127,6 +128,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             false
         }
     }
+    // TODO: Consider migrating into object
     // Closes the keyboard properly
     private fun closeKeyboard() {
         val currentView: View? = this.currentFocus
@@ -140,16 +142,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         if(requestCode == 1) { if(resultCode == Activity.RESULT_OK) recreate() }
     }
 
-    private fun darkMode() {
-        if(getSharedPreferenceValue("theme")) {
-            setTheme(R.style.DarkTheme)
-            // TODO: camo_dark()
-        } else {
-            setTheme(R.style.AppTheme)
-            // TODO: camo_light()
-        }
-    }
-
     // Sets Map preferences (e.g. theme, boundaries)
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -158,9 +150,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         mMap.uiSettings.isMyLocationButtonEnabled = false
         mMap.uiSettings.isCompassEnabled = false
         mMap.uiSettings.isZoomControlsEnabled = false
-        // Sets darkMode on map
-        if (getSharedPreferenceValue("theme")) mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
-        else mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
+        // Sets map theme and surroundings
+        if (getSharedPreferenceValue("theme")){
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
+            darkenSurroundings(true)
+        }
+        else {
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
+            darkenSurroundings(false)
+        }
+
 
         // Set the boundaries for movement.
         val builder = LatLngBounds.Builder()
@@ -172,13 +171,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val height = resources.displayMetrics.heightPixels
         val padding = width * 0.2
         // Move the camera to the appropriate place.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
-        mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
+        //mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
         // TODO Ideally, panning freely should be allowed, provided it takes place within the predefined boundaries.
-        mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
-        mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
-        // TODO: camo_light() and camo_dark() not working.
-        camo_light()
+        //mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
+        //mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
+        // TODO: camo_light() and darkenSurroundings() not working.
+        darkenSurroundings(false)
         // Assures location is set
         setMyLocation()
 
@@ -192,6 +191,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         addCityMarkers(mMap)
     }
 
+    // TODO: Consider migrating into object
     // TODO: Jørgen's code (make private?)
     fun getPositionData(lat: Double, lon: Double): String {
         lateinit var returnInfo: String
@@ -205,6 +205,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         return returnInfo
     }
 
+    // TODO: Consider migrating into object
     // Find location
     private fun addMarkerColoured(address: Address) {
         val lat = address.latitude
@@ -237,6 +238,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
+    // TODO: Consider migrating into object
     // Function that searches for a location
     private fun searchLocation() {
         val searchAddress: String = search_input.text.toString()
@@ -316,16 +318,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         } finally { popup.show() }
     }
 
-    // TODO: ???
+    // TODO: comment please ???
     private fun createNotificationChannel() { // Create the channel. All notifications will be sent through this channel, because we only ever use one alert.
         if (Build.VERSION.SDK_INT >= 26) { // This feature is not supported on earlier devices.
-            val channel0 = NotificationChannel(
-                channel_id,
-                "Channel 0",
-                NotificationManager.IMPORTANCE_HIGH
-            )
+            val channel0 = NotificationChannel(channel_id, "Channel 0", NotificationManager.IMPORTANCE_HIGH)
             channel0.description = getString(R.string.channel_desc)
-
             val manager: NotificationManager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel0)
         }
@@ -366,185 +363,71 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
-
     // Returns value found at key in sharedPref
     private fun getSharedPreferenceValue(prefKey: String):Boolean {
         val sp = getSharedPreferences(sharedPref, 0)
         return sp.getBoolean(prefKey, false)
     }
 
-    // TODO: Shorten fantastic code :)
-    //creates and adds markers for large cities on the googleMap
-    //Does an api request for the LatLng of the marker and gives it an appropriate colour
+    // Adds (colored, depending on AQI value, ) markers to "cityMarkers" using API request (with LatLng)
     private fun addCityMarkers(mMap: GoogleMap) {
-
-        //store all LatLng to large cities in Norway to add markers
-        // TODO: Make a hashmap of every place with its cooordinate
-
-        /*
-        val citiesList : HashMap<String, String> = hashMapOf(
-            "oslo" to "Oslo", "bergen" to "Bergen", "trondheim" to "Trondheim", "stavanger" to "Stavanger",
-            "sandvika" to "Sandvika", "kristiansand" to "Kristiansand", "fredrikstad" to "Fredrikstad", "tromsø" to "Tromsø",
-            "drammen" to "Drammen", "sandnes" to "Sandnes", "skien" to "Skien", "sarpsborg" to "Sarpsborg", "skien" to "Skien",
-            "bodø" to "Bodø", "larvik" to "Larvik","sandefjord" to "Sandefjord", "arendal" to "Arendal", "ålesund" to "Ålesund")*/
-
-        val osloName = "Oslo"
-        val bergenName = "Bergen"
-        val trondheimName = "Trondheim"
-        val stavangerName = "Stavanger"
-        val sandvikaName = "Sandvika"
-        val kristiansandName = "Kristiansand"
-        val fredrikstadName = "Fredrikstad"
-        val tromsoName = "Tromsø"
-        val drammenName = "Drammen"
-        val sandnesName = "Sandnes"
-        val skienName = "Skien"
-        val sarpsborgName = "Sarpsborg"
-        val bodoName = "Bodø"
-        val larvikName = "Larvik"
-        val sandefjordName = "Sandefjord"
-        val lillestromName = "Lillestrøm"
-        val arendalName = "Arendal"
-        val alesundName = "Ålesund"
-
-        val oslo = LatLng(59.915780, 10.752913)
-        val bergen = LatLng(60.393975, 5.324937)
-        val trondheim = LatLng(63.433465, 10.395516)
-        val stavanger = LatLng(58.979964, 5.729269)
-        val sandvika = LatLng(59.891695, 10.528088)
-        val kristiansand = LatLng(58.162897, 8.018848)
-        val fredrikstad = LatLng(59.224392, 10.933630)
-        val tromso = LatLng(69.653412, 18.953360)
-        val drammen = LatLng(59.747642, 10.205377)
-        val sandnes = LatLng(58.852107, 5.732697)
-        val skien = LatLng(58.852107, 5.732697)
-        val sarpsborg = LatLng(59.286260, 11.109056)
-        val bodo = LatLng(67.282654, 14.404968)
-        val larvik = LatLng(59.056636, 10.02887)
-        val sandefjord = LatLng(59.056636, 10.028874)
-        val lillestrom = LatLng(59.956639, 11.050240)
-        val arendal = LatLng(58.463660, 8.772121)
-        val alesund = LatLng(62.476929, 6.149429)
-
-
-        val cityCoordList = listOf(oslo, bergen, trondheim, stavanger, sandvika,
-            kristiansand, fredrikstad, tromso, drammen, sandnes, skien, sarpsborg,
-            bodo, larvik, sandefjord, lillestrom, arendal, alesund)
-
-        val cityNameList = listOf(osloName, bergenName, trondheimName, stavangerName, sandvikaName,
-            kristiansandName, fredrikstadName, tromsoName, drammenName, sandnesName, skienName, sarpsborgName,
-            bodoName, larvikName, sandefjordName, lillestromName, arendalName, alesundName)
-
-        // cityCoordList = {LatLng(59.056636, 10.028874), LatLng(59.056636, 10.028874)}
-        // cityNameList = {Oslo, Bergen....}
-
+        val coordinates : HashMap<String, LatLng> = hashMapOf(
+            "oslo" to LatLng(59.915780, 10.752913), "bergen" to LatLng(60.393975, 5.324937),
+            "trondheim" to LatLng(63.433465, 10.395516), "stavanger" to LatLng(63.433465, 10.395516),
+            "sandvika" to LatLng(59.891695, 10.528088), "kristiansand" to LatLng(58.162897, 8.018848),
+            "fredrikstad" to LatLng(59.224392, 10.933630), "tromsø" to LatLng(69.653412, 18.953360),
+            "drammen" to LatLng(59.747642, 10.205377), "sandnes" to LatLng(58.852107, 5.732697),
+            "skien" to LatLng(58.852107, 5.732697), "sarpsborg" to LatLng(59.286260, 11.109056),
+            "bodø" to LatLng(67.282654, 14.404968), "larvik" to LatLng(59.056636, 10.02887),
+            "sandefjord" to LatLng(59.056636, 10.028874), "lillestrøm" to LatLng(59.956639, 11.050240),
+            "arendal" to LatLng(58.463660, 8.772121), "ålesund" to LatLng(62.476929, 6.149429))
         //creating a client to fetch AQI data from api
         val client = Retrofit.Builder()
             .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(WeatherService::class.java)
-
-        //for each city's coordinates in list over large cities' coordinates
-        //we check the air quality index for the coordinates, and add a marker coloured
-        //with a colour indicating the returned index
-        //All markers are added to the global list cityMarkers after creation
-
-        for (i in cityCoordList.indices) {
-            //for (city in cityCoordList) {
+        // Add a colored marker according to checked AQ index (if any)
+        for ((key, value) in coordinates) {
             doAsync {
                 lateinit var marker: Marker
-                val weather = client.getWeather(cityCoordList.get(i).latitude, cityCoordList.get(i).longitude).execute().body()
+                val weather = client.getWeather(value.latitude, value.longitude).execute().body()
                 val aqi = weather?.data?.time?.get(0)?.variables?.aQI?.value
-                //println(aqi)
                 runOnUiThread {
-                    //checks if aqi returned value is null
-                    if (aqi == null) {
-                        marker = mMap
-                            .addMarker(MarkerOptions()
-                                .position(cityCoordList.get(i))
-                                .title(cityNameList.get(i)))
-                        val storby = City(cityNameList.get(i), cityCoordList.get(i), marker)
-                        cities.add(storby)
-                    } else if (aqi < 1.5) {
-                        marker = mMap
-                            .addMarker(MarkerOptions()
-                                .position(cityCoordList.get(i))
-                                .title(cityNameList.get(i))
-                                .icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory
-                                        .HUE_GREEN)))
-                        val storby = City(cityNameList.get(i), cityCoordList.get(i), marker)
-                        cities.add(storby)
-                    } else if (aqi < 2.0 && aqi > 1.5) {
-                        marker = mMap
-                            .addMarker(MarkerOptions()
-                                .position(cityCoordList.get(i))
-                                .title(cityNameList.get(i))
-                                .icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory
-                                        .HUE_YELLOW)))
-                        val storby = City(cityNameList.get(i), cityCoordList.get(i), marker)
-                        cities.add(storby)
-                    } else if (aqi < 2.5 && aqi > 2.0) {
-                        marker = mMap
-                            .addMarker(MarkerOptions()
-                                .position(cityCoordList.get(i))
-                                .title(cityNameList.get(i))
-                                .icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory
-                                        .HUE_ORANGE)))
-                        val storby = City(cityNameList.get(i), cityCoordList.get(i), marker)
-                        cities.add(storby)
-                    } else if (aqi > 2.5) {
-                        marker = mMap
-                            .addMarker(MarkerOptions()
-                                .position(cityCoordList.get(i))
-                                .title(cityNameList.get(i))
-                                .icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory
-                                        .HUE_RED)))
-                        val storby = City(cityNameList.get(i), cityCoordList.get(i), marker)
-                        cities.add(storby)
-                    }
+                    marker = mMap
+                        .addMarker(MarkerOptions()
+                            .position(value)
+                            .title(key))
+                    if(aqi != null) {
+                        when {
+                            aqi < 1.5 -> marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                            aqi < 2.0 && aqi > 1.5 -> marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                            aqi < 2.5 && aqi > 2.0 -> marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                            aqi > 2.5 ->  marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                        }
+                    } // Marker added to "cityMarkers"
+                    val city = City(key, value, marker)
+                    cities.add(city)
                 }
             }
         }
     }
 
-    /*
-    The below functions colour the surrounding area of Norway with the same colour the water has, appropriate to current theme.
-    The camo.geojson file is an API containing polygons of the relevant area: Sweden, Denmark, Germany, Faroe Islands, United Kingdom,
-    Poland, Lithuania, Latvia, Estonia, Finland and the following Russian municipalities: Murmansk, Karelia, St. Petersburg,
-    Leningrad, Novgorod, Tver, Pskov and Kaliningrad. The original files were one containing all of Europe except Russia,
-    the other one contained just Russia. These unnecessarily big files inflicted delay in the app launch, and therefor I deemed
-    it necessary to trim them to a relevant size. App launch time decreased by about four to five seconds.
-    */
-    private fun camo_light() {
-        try { // Colour surrounding countries in order to exert attention to Norway.
-            val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
+    // TODO: Bravo integrate this
+    //Colors surrounding area of Norway as water, TODO: appropriate to current theme.
+    private fun darkenSurroundings(dark : Boolean) {
+        try {
+            val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) //.geojson APIs for data on countries' boundaries.
             val style = layer.defaultPolygonStyle
-            style.fillColor = Color.rgb(201, 201, 201)
-            style.strokeColor = Color.rgb(201, 201, 201)
             style.strokeWidth = 1F
+            if(dark) {
+                style.fillColor = Color.rgb(0, 0, 0)
+                style.strokeColor = Color.rgb(0, 0, 0)
+            } else {
+                style.fillColor = Color.rgb(201, 201, 201)
+                style.strokeColor = Color.rgb(201, 201, 201)
+            }
             layer.addLayerToMap()
-
-        } catch (ioe: IOException) {
-            Log.e("IOException", ioe.localizedMessage)
-        } catch (jsone: JSONException) {
-            Log.e("JSONException", jsone.localizedMessage)
-        }
-    }
-
-    private fun camo_dark() {
-        try { // Colour surrounding countries in order to exert attention to Norway.
-            val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) // Use .geojson APIs to get the data on the countries' boundaries.
-            val style = layer.defaultPolygonStyle
-            style.fillColor = Color.rgb(0, 0, 0)
-            style.strokeColor = Color.rgb(0, 0, 0)
-            style.strokeWidth = 1F
-            layer.addLayerToMap()
-
         } catch (ioe: IOException) {
             Log.e("IOException", ioe.localizedMessage)
         } catch (jsone: JSONException) {
