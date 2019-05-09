@@ -112,7 +112,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     // TODO: Consider migrating into object
     // Sets up a listener for the enter button on the keyboard.
-    // TODO: Isn't this an app for mobiles? What is KEYCODE_ENTER?
     private fun setKeyboardFinishedListener() {
         search_input.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE
@@ -128,6 +127,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             false
         }
     }
+
     // TODO: Consider migrating into object
     // Closes the keyboard properly
     private fun closeKeyboard() {
@@ -173,11 +173,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // Move the camera to the appropriate place.
         //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
         //mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
-        // TODO Ideally, panning freely should be allowed, provided it takes place within the predefined boundaries.
         //mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
         //mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
-        // TODO: camo_light() and darkenSurroundings() not working.
-        darkenSurroundings(false)
+         //get latlong for corners for specified city
+
+
+
+
+        darkenSurroundings(getSharedPreferenceValue("theme"))
         // Assures location is set
         setMyLocation()
 
