@@ -422,7 +422,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         try {
             val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) //.geojson APIs for data on countries' boundaries.
             val style = layer.defaultPolygonStyle
-            style.strokeWidth = 1F
+            style.strokeWidth = 50F
             if(dark) {
                 style.fillColor = Color.rgb(0, 0, 0)
                 style.strokeColor = Color.rgb(0, 0, 0)
