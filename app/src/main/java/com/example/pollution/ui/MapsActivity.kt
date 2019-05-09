@@ -136,15 +136,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
         // Set the boundaries for movement.
         val builder = LatLngBounds.Builder()
-        builder.include(LatLng(62.740234, 9.858139))
-        builder.include(LatLng(67.648627, 22.191212))
+        builder.include(LatLng(60.443184, 8.052995))
+        builder.include(LatLng(70.012997, 24.316675))
         val bounds = builder.build() // These are the coordinates of two corners.
         // ???
         val width = resources.displayMetrics.widthPixels
         val height = resources.displayMetrics.heightPixels
         val padding = width * 0.2
         // Move the camera to the appropriate place.
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
         //mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
         //mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
         //mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
