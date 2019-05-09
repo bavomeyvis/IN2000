@@ -69,6 +69,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     private lateinit var mMap: GoogleMap
     private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    val coordinates : HashMap<String, LatLng> = hashMapOf(
+        "oslo" to LatLng(59.915780, 10.752913), "bergen" to LatLng(60.393975, 5.324937),
+        "trondheim" to LatLng(63.433465, 10.395516), "stavanger" to LatLng(63.433465, 10.395516),
+        "sandvika" to LatLng(59.891695, 10.528088), "kristiansand" to LatLng(58.162897, 8.018848),
+        "fredrikstad" to LatLng(59.224392, 10.933630), "tromsø" to LatLng(69.653412, 18.953360),
+        "drammen" to LatLng(59.747642, 10.205377), "sandnes" to LatLng(58.852107, 5.732697),
+        "skien" to LatLng(58.852107, 5.732697), "sarpsborg" to LatLng(59.286260, 11.109056),
+        "bodø" to LatLng(67.282654, 14.404968), "larvik" to LatLng(59.056636, 10.02887),
+        "sandefjord" to LatLng(59.056636, 10.028874), "lillestrøm" to LatLng(59.956639, 11.050240),
+        "arendal" to LatLng(58.463660, 8.772121), "ålesund" to LatLng(62.476929, 6.149429))
 
     //Todo: Move starting of GraphActivity
     /*graphActivityIntent.putExtra(LAT, testLat)
@@ -301,7 +311,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     // Runs activity "Statistics"
     private fun runStatsActivity() {
-
+        val statsActivity = Intent(this, StatsActivity::class.java).putExtra("hashMap", coordinates)
+        startActivity(statsActivity)
+        recreate()
 
     }
 
@@ -377,7 +389,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
         val builder = NotificationCompat.Builder(this, channel_id) // The builder contains the notification attributes.
-            .setSmallIcon(R.drawable.menu_item_alert)
+            .setSmallIcon(R.drawable.menu_alert)
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(getString(R.string.notification_desc))
             .setPriority(NotificationCompat.PRIORITY_HIGH)

@@ -40,10 +40,10 @@
 
         </activity>
 
-        <!-- Graph Activity -->
+        <!-- Graph Activity. Parent Forecast if I understood correctly. TODO: right? -->
         <activity android:name=".ui.GraphActivity"
                   android:label="Graph"
-                  android:parentActivityName=".ui.MapsActivity">
+                  android:parentActivityName=".ui.ForecastActivity">
         </activity>
 
         <!-- Forecast Activity -->
@@ -51,6 +51,13 @@
                   android:parentActivityName=".ui.MapsActivity"
                   android:label="Forecast"
                   >
+        </activity>
+
+        <!-- Stats Activity -->
+        <activity android:name=".ui.StatsActivity"
+                  android:parentActivityName=".ui.MapsActivity"
+                  android:label="Stats"
+        >
         </activity>
    </application>
 

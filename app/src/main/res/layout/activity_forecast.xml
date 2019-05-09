@@ -26,7 +26,7 @@
         <TextView
                 android:text="@string/forecast_card1_title"
                 app:showAsAction="ifRoom|withText"
-                android:icon="@drawable/menu_item_favorites"
+                android:icon="@drawable/menu_favorites"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/forecast_card1_title"
