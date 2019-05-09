@@ -31,12 +31,19 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         if(getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
         else setTheme(R.style.AppTheme)
 
+        val intent = intent
+        val inputLat = intent.getDoubleExtra(MapsActivity.LAT, 0.0)
+        val inputLon = intent.getDoubleExtra(MapsActivity.LON, 0.0)
+        val title = intent.getStringExtra(MapsActivity.TITLE)
+
+        println(title)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
 
         this.forecast_time_scroller!!.setOnSeekBarChangeListener(this)
 
-        val address: Address = intent?.extras?.getParcelable("address")!!
+        //val address: Address = intent?.extras?.getParcelable("address")!!
 
         timeTextView = findViewById<TextView>(R.id.forecast_card2_time)
         aqiRectangle = findViewById<View>(R.id.card2_unit1)
@@ -45,14 +52,14 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 //        aqiRectangle2.alpha = (0.5).toFloat()
 
         val placeNameTextView = findViewById<TextView>(R.id.textView2)
-        placeNameTextView.text = address.featureName
+        placeNameTextView.text = title  //address.featureName
 
-        println(address)
+        //println(address)
 
 
 
-        val lat = address.latitude
-        val lon = address.longitude
+        //val lat = address.latitude
+        //val lon = address.longitude
 
         val client = Retrofit.Builder()
             .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
@@ -62,16 +69,16 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
 
         doAsync {
-            val weather = client.getWeather(lat, lon).execute().body()
+            val weather = client.getWeather(inputLat, inputLon).execute().body()
             val time = 0
             val aqi = weather?.data?.time?.get(time)?.variables?.aQI?.value
-            println(aqi)
-            println(weather)
+            //println(aqi)
+            //println(weather)
 
             for (i in aqiValues.indices) {
                 aqiValues[i] = weather?.data?.time?.get(i)?.variables?.aQI?.value
                 pm25Values[i] = weather?.data?.time?.get(i)?.variables?.pm25Concentration?.value
-                println(pm25Values[i])
+                //println(pm25Values[i])
                 timeValues[i] = weather?.data?.time?.get(i)?.from
             }
 
