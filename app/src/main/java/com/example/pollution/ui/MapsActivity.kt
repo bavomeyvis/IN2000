@@ -285,22 +285,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             R.id.menu_alert -> Toast.makeText(this, "alerts", Toast.LENGTH_SHORT).show()
             R.id.menu_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_SHORT).show()
             R.id.menu_graph -> runGraphActivity(testLat, testLon)
-            R.id.menu_stats -> Toast.makeText(this, "stats", Toast.LENGTH_SHORT).show()
+            R.id.menu_stats -> runStatsActivity()
             R.id.menu_settings -> runSettingsActivity()
         }
         return true
     }
 
     //Method that runs GraphActivity with extra parameters
-    fun runGraphActivity(lat: Double, lon: Double) {
+    private fun runGraphActivity(lat: Double, lon: Double) {
         val graphActivityIntent = Intent(this, GraphActivity::class.java)
         graphActivityIntent.putExtra(LAT, lat)
         graphActivityIntent.putExtra(LON, lon)
         startActivity(graphActivityIntent)
     }
 
+    // Runs activity "Statistics"
+    private fun runStatsActivity() {
+
+
+    }
+
     // Runs ForecastActivity with extra parameters
-    fun runForecastActivity(lat: Double, lon: Double) {
+    private fun runForecastActivity(lat: Double, lon: Double) {
         val forecastActivityIntent = Intent(this, GraphActivity::class.java) //<--- Change this
         forecastActivityIntent.putExtra(LAT, lat)
         forecastActivityIntent.putExtra(LON, lon)
@@ -308,7 +314,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     }
 
     // Runs settingsActivity
-    fun runSettingsActivity() {
+    private fun runSettingsActivity() {
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
         startActivityForResult(settingsActivityIntent, 1)
         recreate()
