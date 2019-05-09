@@ -3,6 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:background="?attr/backgroundColor"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -10,6 +11,7 @@
     <!-- CARD 1 -->
     <android.support.constraint.ConstraintLayout
             android:id="@+id/forecast_card1"
+            android:background="?attr/cardBackground"
             android:layout_margin="20dp"
             android:elevation="10dp"
             android:padding="8dp"
@@ -21,8 +23,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp" android:layout_marginEnd="8dp">
 
+        <TextView
+                android:text="@string/forecast_card1_title"
+                app:showAsAction="ifRoom|withText"
+                android:icon="@drawable/menu_item_favorites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/forecast_card1_title"
+                android:textColor="?attr/textColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"/>
 
         <!-- CARD 1 UNITS -->
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/forecast_compare_cards"
+                android:id="@+id/forecast_card1_replace" app:layout_constraintStart_toEndOf="@+id/forecast_card1_title"
+                android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"/>
         <include android:id="@+id/forecast_card1_units"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
@@ -36,6 +56,7 @@
         <TextView
                 android:id="@+id/forecast_card1_time"
                 android:text="0"
+                android:textColor="?attr/textColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="6dp"
@@ -97,16 +118,63 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@id/card1_unit4"
                 app:layout_constraintStart_toEndOf="@id/forecast_card1_units"/>
-        <TextView
-                android:text="TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/forecast_card1_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="parent"/>
 
+        <TextView android:id="@+id/card1_comp_title"
+                  android:text="@string/card_comp_title"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_card1_time"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card1_comp2"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp_title"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card1_comp3"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp2"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card1_comp4"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp3"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card1_comp5"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp4"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card1_comp6"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp5"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card1_comp7"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp6"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
     </android.support.constraint.ConstraintLayout>
 
     <!--no use but looks cool-->
@@ -124,17 +192,29 @@
             android:layout_margin="20dp"
             android:elevation="20dp"
             android:padding="8dp"
-
+            android:background="?attr/cardBackground"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
             app:layout_constraintTop_toBottomOf="@id/forecast_card1"
             app:layout_constraintBottom_toBottomOf="@id/forecast_time_scroller"
-
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:background="#D1D1D1">
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView android:id="@+id/textView2"
+                  android:text="@string/forecast_card2_title"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                  app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                  android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
 
         <!-- CARD 2 UNITS -->
+        <ImageView android:layout_width="wrap_content"
+                 android:layout_height="wrap_content" app:srcCompat="@drawable/forecast_compare_cards"
+                  android:id="@+id/imageView2" android:layout_marginTop="8dp"
+                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/textView2"
+                 android:layout_marginStart="8dp"/>
         <include android:id="@+id/forecast_card2_units"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
@@ -144,72 +224,123 @@
                  android:layout_marginStart="24dp"/>
 
         <!-- CARD 2 TIME -->
-        <TextView
-                android:id="@+id/forecast_card2_time"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp"
-                app:layout_constraintTop_toTopOf="@id/forecast_card2_units"
-                app:layout_constraintStart_toEndOf="@id/forecast_card2_units"
-                android:layout_marginStart="8dp"/>
+        <TextView android:id="@+id/forecast_card2_time"
+                  android:text="0"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:paddingStart="6dp"
+                  android:paddingEnd="6dp"
+                  app:layout_constraintTop_toTopOf="@id/forecast_card2_units"
+                  app:layout_constraintStart_toEndOf="@id/forecast_card2_units"
+                  android:layout_marginStart="8dp"/>
 
         <!-- CARD 2 VALUES -->
-        <View
-                android:id="@+id/card2_unit1"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@id/forecast_card2_time"
-                app:layout_constraintStart_toEndOf="@id/forecast_card2_units"
-                android:background="#C5CDD1"/>
+        <View android:id="@+id/card2_unit1"
+              android:layout_width="19dp"
+              android:layout_height="19dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="8dp"
+              app:layout_constraintTop_toBottomOf="@id/forecast_card2_time"
+              app:layout_constraintStart_toEndOf="@id/forecast_card2_units"/>
 
-        <View
-                android:id="@+id/card2_unit2"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@id/card2_unit1"
-                app:layout_constraintStart_toEndOf="@id/forecast_card2_units"
-                android:background="#C5CDD1"/>
+        <View android:id="@+id/card2_unit2"
+              android:layout_width="19dp"
+              android:layout_height="19dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="8dp"
+              app:layout_constraintTop_toBottomOf="@id/card2_unit1"
+              app:layout_constraintStart_toEndOf="@id/forecast_card2_units"/>
 
-        <View
-                android:id="@+id/card2_unit3"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@id/card2_unit2"
-                app:layout_constraintStart_toEndOf="@id/forecast_card2_units"/>
+        <View android:id="@+id/card2_unit3"
+              android:layout_width="19dp"
+              android:layout_height="19dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="8dp"
+              app:layout_constraintTop_toBottomOf="@id/card2_unit2"
+              app:layout_constraintStart_toEndOf="@id/forecast_card2_units"/>
 
-        <View
-                android:id="@+id/card2_unit4"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/card2_unit3"
-                app:layout_constraintStart_toEndOf="@id/forecast_card2_units"
-                android:layout_marginStart="8dp"/>
+        <View android:id="@+id/card2_unit4"
+              android:layout_width="19dp"
+              android:layout_height="19dp"
+              android:layout_marginTop="8dp"
+              app:layout_constraintTop_toBottomOf="@+id/card2_unit3"
+              app:layout_constraintStart_toEndOf="@id/forecast_card2_units"
+              android:layout_marginStart="8dp"/>
 
-        <View
-                android:id="@+id/card2_unit5"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/card2_unit4"
-                app:layout_constraintStart_toEndOf="@id/forecast_card2_units"/>
+        <View android:id="@+id/card2_unit5"
+              android:layout_width="19dp"
+              android:layout_height="19dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="8dp"
+              app:layout_constraintTop_toBottomOf="@+id/card2_unit4"
+              app:layout_constraintStart_toEndOf="@id/forecast_card2_units"/>
 
+        <View android:id="@+id/card2_unit6"
+              android:layout_width="19dp"
+              android:layout_height="19dp"
+              android:layout_marginStart="8dp"
+              android:layout_marginTop="8dp"
+              app:layout_constraintTop_toBottomOf="@id/card2_unit5"
+              app:layout_constraintStart_toEndOf="@id/forecast_card2_units"/>
 
-        <TextView
-                android:text="TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView2" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
+        <!-- CARD 2 Compare -->
+        <TextView android:id="@+id/card2_comp_title"
+                  android:text="@string/card_comp_title"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_card2_time"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card2_comp2"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp_title"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card2_comp3"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp2"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card2_comp4"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp3"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card2_comp5"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp4"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card2_comp6"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp5"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
+        <TextView android:id="@+id/card2_comp7"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp6"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="24dp"/>
 
     </android.support.constraint.ConstraintLayout>
 

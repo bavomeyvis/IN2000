@@ -19,13 +19,7 @@ import kotlinx.android.synthetic.main.activity_settings.*
 // Guidelines: https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 class SettingsActivity : AppCompatActivity() {
     private var bravo = 0
-    private var changed = false
     private val returnIntent = Intent()
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Set theme
@@ -81,9 +75,11 @@ class SettingsActivity : AppCompatActivity() {
         val editor = getSharedPreferences(MapsActivity.sharedPref, 0).edit()
         editor.putBoolean(prefKey, prefValue)
         editor.apply()
-        // set intent
-        changed = true
+    }
+    // Forces main activity to always recreate()
+    override fun onBackPressed() {
         setResult(Activity.RESULT_OK, returnIntent)
+        finish()
     }
 
 }
