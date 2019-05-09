@@ -185,8 +185,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             override fun onMapClick(point:LatLng) {
                 //map is clicked latlng can be accessed from
                 //point.Latitude & point.Longitude
-
-
+                // TODO: START FORECASTACTIVITY
+                runForecastActivity(point.latitude, point.longitude, getPositionData(point.latitude, point.longitude))
             }
         })
         addCityMarkers(mMap)
@@ -194,16 +194,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         //marker is clicked and we find the marker's corresponding City class object
         mMap.setOnMarkerClickListener(object : GoogleMap.OnMarkerClickListener {
             override fun onMarkerClick(marker: Marker): Boolean {
-                //argument marker is clicked marker
-                for (city in cities) {
-                    if (city.cityName.equals(marker.title)) {
-                        println("FANT: ${city.cityName}")
-                    }
-                }
+                // TODO: START FORECASTACTIVITY
+                val city: City? = getCity(marker)
+                runForecastActivity(marker.position.latitude, marker.position.longitude, city!!.cityName)
                 return false
             }
         })
+    }
 
+    //Takes a city marker as argument and returns the corresponding City object
+    fun getCity(marker: Marker): City? {
+        var returnCity: City? = null
+        for (city in cities) {
+            if (city.cityName.equals(marker.title)) {
+                returnCity = city
+            }
+        }
+        return returnCity
     }
 
     // TODO: Consider migrating into object
@@ -301,10 +308,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     //TODO: Change the name of class Bjørn (vet ikke hva den heter)
     //Method that runs ForecastActivity with extra parameters
-    fun runForecastActivity(lat: Double, lon: Double) {
-        val forecastActivityIntent = Intent(this, GraphActivity::class.java) //<--- Change this
+    fun runForecastActivity(lat: Double, lon: Double, title: String) {
+        val forecastActivityIntent = Intent(this, ForecastActivity::class.java) //<--- Change this
         forecastActivityIntent.putExtra(LAT, lat)
         forecastActivityIntent.putExtra(LON, lon)
+        //forecastActivityIntent.putExtra(, title)
         startActivity(forecastActivityIntent)
     }
 
