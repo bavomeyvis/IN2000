@@ -34,4 +34,6 @@
     <string name="card_comp_title">Difference</string>
     <string name="menu_4_graph">Graph</string>
     <string name="menu_stats">Stats</string>
+
+    <!-- Please insert any new additions below -->
 </resources>
