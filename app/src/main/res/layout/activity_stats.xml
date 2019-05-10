@@ -53,4 +53,5 @@
         <include layout="@layout/stats_item" />
     </LinearLayout>
 
+
 </android.support.constraint.ConstraintLayout>
