@@ -1,11 +1,13 @@
 package com.example.pollution.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.location.Address
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -42,6 +44,8 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private lateinit var no2TextView: TextView
     private lateinit var o3TextView: TextView
 
+    private lateinit var graphButton: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Sets UI theme
         if(getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
@@ -74,6 +78,13 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         no2TextView.text = "NO2"
         o3TextView.text = "O3"
 
+        graphButton = findViewById(R.id.graphButton2)
+
+
+        graphButton.setOnClickListener{
+            val intent = Intent(this, GraphActivity::class.java)
+            startActivity(intent)
+        }
 //        forecast_time_scroller = findViewById<SeekBar>(R.id.forecast_time_scroller)
 
 //        aqiRectangle2.alpha = (0.5).toFloat()
