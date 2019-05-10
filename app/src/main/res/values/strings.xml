@@ -18,7 +18,6 @@
     <string name="settings_alert_title">Alerts</string>
     <string name="settings_language_title">Language</string>
     <string name="settings_language_desc">The displayed language of the app</string>
-    <string name="settings_version_title">Version</string>
     <string name="settings_version_desc">Current version: 0.03</string>
     <string name="forecast_example_text">TextView</string>
     <string name="forecast_value_1">1</string>
