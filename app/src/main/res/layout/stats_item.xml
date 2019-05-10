@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:orientation="horizontal"
+
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:showIn="@layout/activity_stats"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+        <TextView
+                android:id = "@+id/statsCountry"
+                android:background="@drawable/stats_item_bg"
+                android:text=""
+                android:textColor="?attr/textColor"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"/>
+        <TextView
+                android:id = "@+id/statsValue"
+                android:background="@drawable/stats_item_bg"
+                android:text=""
+                android:textColor="?attr/textColor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+</LinearLayout>
+

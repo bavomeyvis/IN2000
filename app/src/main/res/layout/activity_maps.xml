@@ -20,7 +20,8 @@
             android:layout_height="50dp"
             android:layout_margin="20dp"
             android:elevation="10dp"
-            android:background="@drawable/relative_layout_border">
+            android:background="?attr/cardBackground">
+            <!-- Fix this-->
 
         <ImageView
                 android:id="@+id/menu_0_btn"

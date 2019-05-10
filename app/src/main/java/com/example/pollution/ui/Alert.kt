@@ -15,7 +15,7 @@ object Alert {
         val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
         val builder = NotificationCompat.Builder(context, channel_id) // The builder contains the notification attributes.
-            .setSmallIcon(R.drawable.menu_item_alert)
+            .setSmallIcon(R.drawable.menu_alert)
             .setContentTitle(context.getString(R.string.notification_title))
             .setContentText(context.getString(R.string.notification_desc))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
