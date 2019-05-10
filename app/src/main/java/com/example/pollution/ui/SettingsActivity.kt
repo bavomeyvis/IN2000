@@ -17,6 +17,10 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.util.Log
 import android.view.View
 import java.util.*
+import android.widget.Toast
+import android.widget.SeekBar
+
+
 
 
 //AppCompatActivity: Base class for activities that use the support library action bar features.
@@ -101,6 +105,24 @@ class SettingsActivity : AppCompatActivity() {
         number_wheel.minValue = 0
         number_wheel.maxValue = data.size - 1
         number_wheel.displayedValues = data
+
+        val seekBar: SeekBar = findViewById(R.id.seekBar)
+        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seekBar: SeekBar, progress: Int,
+                fromUser: Boolean
+            ) {
+                Toast.makeText(applicationContext, "seekbar progress: $progress", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                Toast.makeText(applicationContext, "seekbar touch started!", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                Toast.makeText(applicationContext, "seekbar touch stopped!", Toast.LENGTH_SHORT).show()
+            }
+        })
 
 
         // Toolbar
