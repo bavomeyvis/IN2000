@@ -345,6 +345,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     // TODO: Consider migrating into object
     private fun dangerAlert() { // Send the alert.
+        // Do not proceed if user has turned off alerts in settings.
+        if (!getSharedPreferenceValue("alert")) return
         val intent = Intent(this, MapsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }

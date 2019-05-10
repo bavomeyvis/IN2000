@@ -33,4 +33,6 @@
     <string name="card_comp_title">Forskjell</string>
     <string name="menu_4_graph">Graf</string>
     <string name="menu_stats">Statistikk</string>
+
+    <string name="settings_threshold_title">Sett varslingsgrense</string>
 </resources>

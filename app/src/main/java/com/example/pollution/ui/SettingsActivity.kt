@@ -95,6 +95,14 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        // Number wheel for threshold.
+        val data = Array(100) {i -> (i + 1).toString()}
+        val number_wheel: NumberPicker = findViewById(R.id.wheelview)
+        number_wheel.minValue = 0
+        number_wheel.maxValue = data.size - 1
+        number_wheel.displayedValues = data
+
+
         // Toolbar
         /*val toolbar : Toolbar = findViewById(R.id.settings_toolbar)
         setSupportActionBar(toolbar) */
