@@ -47,7 +47,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         val inputLon = intent.getDoubleExtra(MapsActivity.LON, 0.0)
         val inputTitle = intent.getStringExtra(MapsActivity.TITLE)
         btnStartGraph.setOnClickListener {
-            runGraphActivity(inputLat, inputLon)
+            runGraphActivity(inputLat, inputLon, inputTitle)
         }
         //Makes an address object out of the title received from MapsActivity
         lateinit var address: Address
@@ -153,10 +153,11 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     //Method that runs GraphActivity with extra parameters
-    private fun runGraphActivity(lat: Double, lon: Double) {
+    private fun runGraphActivity(lat: Double, lon: Double, title: String) {
         val graphActivityIntent = Intent(this, GraphActivity::class.java)
         graphActivityIntent.putExtra(MapsActivity.LAT, lat)
         graphActivityIntent.putExtra(MapsActivity.LON, lon)
+        graphActivityIntent.putExtra(MapsActivity.TITLE, title)
         startActivity(graphActivityIntent)
     }
 }
