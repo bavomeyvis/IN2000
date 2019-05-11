@@ -22,7 +22,8 @@ import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
-import java.util.ArrayList
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val TAG = "GraphActivity"
 
@@ -61,6 +62,11 @@ class GraphActivity: AppCompatActivity() {
 
         doAsync {
             weather = client.getWeather(inputLat, inputLon).execute().body()!!
+            //Gets all the times from the weather object
+            /*val timeArray = Array(weather.data.time.size) { "n = $it"}
+            for (i in weather.data.time.indices) {
+                timeArray[i] = weather.data.time[i].from
+            }*/
 
             runOnUiThread {
                 //Setting different settings for the graph
@@ -85,7 +91,8 @@ class GraphActivity: AppCompatActivity() {
                 val pm10Data = arrayListOf<Entry>()
                 val no2Data = arrayListOf<Entry>()
                 val o3Data = arrayListOf<Entry>()
-                for (x in 0..48) {
+                for (x in weather.data.time.indices) {
+                    println("Size of array is: " + weather.data.time.size)
                     val aqi = weather.data.time[x].variables.aQI.value
                     val pm25 = weather.data.time[x].variables.aQIPm25.value
                     val pm10 = weather.data.time[x].variables.aQIPm10.value
@@ -176,17 +183,29 @@ class GraphActivity: AppCompatActivity() {
                 legend.yOffset = 5f
                 legend.xEntrySpace = 30f
 
-                val hours = arrayOf("0h", "1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h",
-                    "11h", "12h", "13h", "14h", "15h", "16h", "17h", "18h", "19h", "20h",
-                    "21h", "22h", "23h", "24h", "25h", "26h", "27h", "28h", "29h", "30h",
-                    "31h", "32h", "33h", "34h", "35h", "36h", "37h", "38h", "39h", "40h",
-                    "41h", "42h", "43h", "44h", "45h", "46h", "47h", "48h")
+                val hours = arrayOf("01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00",
+                    "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00",
+                    "23:00", "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00",
+                    "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00",
+                    "20:00", "21:00", "22:00", "23:00", "00:00", "01:00")
                 //Creating custom values for the x axis
                 val xFormatter = object: ValueFormatter() {
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
                         return hours[value.toInt()]
                     }
                 }
+
+                //Gets the current time and marks it on the x axis
+                val currentTime = Calendar.getInstance()
+                val format = SimpleDateFormat("HH", Locale.GERMAN)
+                val time: String = format.format(currentTime.time)
+
+                val currentTimeMark = LimitLine(time.toFloat()-1, "Current Time")
+                currentTimeMark.lineWidth = 1f
+                currentTimeMark.enableDashedLine(10f, 10f, 0f)
+                currentTimeMark.labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
+                currentTimeMark.textSize = 10f
+                currentTimeMark.textColor = Color.GRAY
 
                 //Setting different settings for the xAxis
                 val xAxis = graph.xAxis
@@ -195,6 +214,8 @@ class GraphActivity: AppCompatActivity() {
                 xAxis.textSize = 15f
                 xAxis.textColor = Color.GRAY
                 xAxis.valueFormatter = xFormatter
+                xAxis.addLimitLine(currentTimeMark)
+
 
                 val leftAxis = graph.axisLeft
                 leftAxis.textSize = 15f
