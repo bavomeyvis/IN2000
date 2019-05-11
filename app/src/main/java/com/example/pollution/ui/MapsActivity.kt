@@ -63,6 +63,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val sharedPref = "settings"
         val LAT = "com.example.pollution.ui.LAT"
         val LON = "com.example.pollution.ui.LON"
+        val TITLE = "com.example.pollution.ui.TITLE"
     }
 
     //Google Maps
@@ -164,14 +165,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // Assures location is set
         setMyLocation()
 
-        mMap.setOnMapClickListener(object: GoogleMap.OnMapClickListener {
-            override fun onMapClick(point:LatLng) {
-                //map is clicked latlng can be accessed from
-                //point.Latitude & point.Longitude
-            }
-        })
-
+        mMap.setOnMapClickListener { point ->
+            //map is clicked latlng can be accessed from
+            //point.Latitude & point.Longitude
+            runForecastActivity(point.latitude, point.longitude, getPositionData(point.latitude, point.longitude))
+        }
         addCityMarkers(mMap)
+
+        //marker is clicked and we find the marker's corresponding City class object
+        mMap.setOnMarkerClickListener { marker ->
+            val city: City? = getCity(marker)
+            runForecastActivity(marker.position.latitude, marker.position.longitude, city!!.cityName)
+            false
+        }
+    }
+
+    //Takes a city marker as argument and returns the corresponding City object
+    fun getCity(marker: Marker): City? {
+        var returnCity: City? = null
+        for (city in cities) {
+            if (city.cityName.equals(marker.title)) {
+                returnCity = city
+            }
+        }
+        return returnCity
     }
 
     // Adds (colored, depending on AQI value, ) markers to "cityMarkers" using API request (with LatLng)
@@ -279,12 +296,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             val address = addressList[0]
             val addressLatLng = LatLng(address.latitude, address.longitude)
 
-            addMarkerColoured(address)
+            //TODO: Hvis man klikker på markeren som lages her krasjer appen
+            //addMarkerColoured(address)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(addressLatLng, 15F))
             //Open ForecastActivity when searched
-            val intent = Intent(this, ForecastActivity::class.java)
-            intent.putExtra("address", address)
-            startActivity(intent)
+            runForecastActivity(address.latitude, address.longitude, address.getAddressLine(0))
         }
     }
 
@@ -317,12 +333,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     }
 
-    // Runs ForecastActivity with extra parameters
-    private fun runForecastActivity(lat: Double, lon: Double) {
-        val forecastActivityIntent = Intent(this, GraphActivity::class.java) //<--- Change this
-        forecastActivityIntent.putExtra(LAT, lat)
-        forecastActivityIntent.putExtra(LON, lon)
-        startActivity(forecastActivityIntent)
+        // Runs ForecastActivity with extra parameters
+        private fun runForecastActivity(lat: Double, lon: Double, title:String) {
+            val forecastActivityIntent = Intent(this, GraphActivity::class.java) //< --- Change this
+            forecastActivityIntent.putExtra(LAT, lat)
+            forecastActivityIntent.putExtra(LON, lon)
+            forecastActivityIntent.putExtra(TITLE, title)
+            startActivity(forecastActivityIntent)
     }
 
     // Runs settingsActivity
@@ -445,8 +462,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             Log.e("JSONException", jsone.localizedMessage)
         }
     }
-
-
-
-
 }

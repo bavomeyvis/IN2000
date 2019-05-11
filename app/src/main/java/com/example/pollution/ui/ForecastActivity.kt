@@ -1,20 +1,27 @@
 package com.example.pollution.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
 import com.example.pollution.R
 import com.example.pollution.response.WeatherService
 import kotlinx.android.synthetic.main.activity_forecast.*
+import kotlinx.android.synthetic.main.activity_maps.*
 import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 import java.util.*
+
+private const val TAG = "ForecastActivity"
 
 class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
@@ -34,9 +41,29 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
 
-        this.forecast_time_scroller!!.setOnSeekBarChangeListener(this)
+        //Receives data from MapsActivity
+        val intent = intent
+        val inputLat = intent.getDoubleExtra(MapsActivity.LAT, 0.0)
+        val inputLon = intent.getDoubleExtra(MapsActivity.LON, 0.0)
+        val inputTitle = intent.getStringExtra(MapsActivity.TITLE)
+        btnStartGraph.setOnClickListener {
+            runGraphActivity(inputLat, inputLon, inputTitle)
+        }
+        //Makes an address object out of the title received from MapsActivity
+        lateinit var address: Address
+        val geocoder = Geocoder(this)
+        var addressList = arrayListOf<Address>()
+        try {
+            addressList = geocoder.getFromLocationName(inputTitle, 1) as ArrayList<Address>
+        } catch (e: IOException) {
+            Log.e(TAG, "searchLocation: IOException: " + e.message)
+        }
+        if (addressList.size > 0) {
+            address = addressList[0]
+        }
 
-        val address: Address = intent?.extras?.getParcelable("address")!!
+
+        this.forecast_time_scroller!!.setOnSeekBarChangeListener(this)
 
         timeTextView = findViewById<TextView>(R.id.forecast_card2_time)
         aqiRectangle = findViewById<View>(R.id.card2_unit1)
@@ -45,7 +72,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 //        aqiRectangle2.alpha = (0.5).toFloat()
 
         val placeNameTextView = findViewById<TextView>(R.id.textView2)
-        placeNameTextView.text = address.featureName
+        placeNameTextView.text = address.getAddressLine(0)
 
         println(address)
 
@@ -123,5 +150,14 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private fun getSharedPreferenceValue(prefKey: String):Boolean {
         val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
         return sp.getBoolean(prefKey, false)
+    }
+
+    //Method that runs GraphActivity with extra parameters
+    private fun runGraphActivity(lat: Double, lon: Double, title: String) {
+        val graphActivityIntent = Intent(this, GraphActivity::class.java)
+        graphActivityIntent.putExtra(MapsActivity.LAT, lat)
+        graphActivityIntent.putExtra(MapsActivity.LON, lon)
+        graphActivityIntent.putExtra(MapsActivity.TITLE, title)
+        startActivity(graphActivityIntent)
     }
 }
