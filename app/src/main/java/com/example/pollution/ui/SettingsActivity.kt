@@ -116,11 +116,11 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
-                Toast.makeText(applicationContext, "seekbar touch started!", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(applicationContext, "seekbar touch started!", Toast.LENGTH_SHORT).show()
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                Toast.makeText(applicationContext, "seekbar touch stopped!", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(applicationContext, "seekbar touch stopped!", Toast.LENGTH_SHORT).show()
             }
         })
 
