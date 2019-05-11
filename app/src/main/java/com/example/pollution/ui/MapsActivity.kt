@@ -428,7 +428,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     //Colors surrounding area of Norway as water
     private fun darkenSurroundings(dark : Boolean) {
         try {
-            val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) //.geojson APIs for data on countries' boundaries.
+            val layer = GeoJsonLayer(mMap, R.raw.norway, applicationContext) //.geojson APIs for data on countries' boundaries.
             val style = layer.defaultPolygonStyle
             style.strokeWidth = 50F
             if(dark) {
