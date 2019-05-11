@@ -7,5 +7,11 @@
         android:elevation="4dp"
         android:textColor="?attr/textColor"
         android:theme="?attr/colorAccent">
+    <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textAllCaps="true"
+            android:textSize="20sp"
+            android:text="@string/settings"/>
 
 </android.support.v7.widget.Toolbar>

@@ -9,15 +9,15 @@
         android:layout_height="match_parent"
         android:background="?attr/backgroundColor">
 
-    <!--
+
     <include
             layout="@layout/toolbar"
-            android:id="@+id/settings_toolbar"/>-->
+            android:id="@+id/settings_toolbar">
+    </include>
 
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/cardBackground">
+            android:layout_height="wrap_content">
         <TextView
                 android:id="@+id/settingsThemeTitle"
                 android:text="@string/settings_theme_title"
