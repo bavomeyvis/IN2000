@@ -63,6 +63,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val sharedPref = "settings"
         val LAT = "com.example.pollution.ui.LAT"
         val LON = "com.example.pollution.ui.LON"
+        val TITLE = "com.example.pollution.ui.TITLE"
     }
 
     //Google Maps
@@ -112,6 +113,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     // TODO: Consider migrating into object
     // Sets up a listener for the enter button on the keyboard.
+    // TODO: Isn't this an app for mobiles? What is KEYCODE_ENTER?
     private fun setKeyboardFinishedListener() {
         search_input.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE
@@ -173,25 +175,38 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // Move the camera to the appropriate place.
         //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
         //mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
+        // TODO Ideally, panning freely should be allowed, provided it takes place within the predefined boundaries.
         //mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
         //mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
-         //get latlong for corners for specified city
-
-
-
-
-        darkenSurroundings(getSharedPreferenceValue("theme"))
+        // TODO: camo_light() and darkenSurroundings() not working.
+        darkenSurroundings(false)
         // Assures location is set
         setMyLocation()
 
-        mMap.setOnMapClickListener(object: GoogleMap.OnMapClickListener {
-            override fun onMapClick(point:LatLng) {
-                //map is clicked latlng can be accessed from
-                //point.Latitude & point.Longitude
-            }
-        })
-
+        mMap.setOnMapClickListener { point ->
+            //map is clicked latlng can be accessed from
+            //point.Latitude & point.Longitude
+            runForecastActivity(point.latitude, point.longitude, getPositionData(point.latitude, point.longitude))
+        }
         addCityMarkers(mMap)
+
+        //marker is clicked and we find the marker's corresponding City class object
+        mMap.setOnMarkerClickListener { marker ->
+            val city: City? = getCity(marker)
+            runForecastActivity(marker.position.latitude, marker.position.longitude, city!!.cityName)
+            false
+        }
+    }
+
+    //Takes a city marker as argument and returns the corresponding City object
+    fun getCity(marker: Marker): City? {
+        var returnCity: City? = null
+        for (city in cities) {
+            if (city.cityName.equals(marker.title)) {
+                returnCity = city
+            }
+        }
+        return returnCity
     }
 
     // TODO: Consider migrating into object
@@ -256,12 +271,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             val address = addressList[0]
             val addressLatLng = LatLng(address.latitude, address.longitude)
 
-            addMarkerColoured(address)
+            //TODO: Hvis man klikker på markeren som lages her krasjer appen
+            //addMarkerColoured(address)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(addressLatLng, 15F))
             //Open ForecastActivity when searched
-            val intent = Intent(this, ForecastActivity::class.java)
-            intent.putExtra("address", address)
-            startActivity(intent)
+            runForecastActivity(address.latitude, address.longitude, address.getAddressLine(0))
         }
     }
 
@@ -271,28 +285,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             R.id.menu_home -> recreate()
             R.id.menu_alert -> Toast.makeText(this, "alerts", Toast.LENGTH_SHORT).show()
             R.id.menu_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_SHORT).show()
-            R.id.menu_graph -> runGraphActivity(testLat, testLon)
+            R.id.menu_graph -> Toast.makeText(this, "graph", Toast.LENGTH_SHORT).show()
             R.id.menu_stats -> Toast.makeText(this, "stats", Toast.LENGTH_SHORT).show()
             R.id.menu_settings -> runSettingsActivity()
         }
         return true
     }
 
-    //TODO: Move to Bjørn's activity
-    //Method that runs GraphActivity with extra parameters
-    fun runGraphActivity(lat: Double, lon: Double) {
-        val graphActivityIntent = Intent(this, GraphActivity::class.java)
-        graphActivityIntent.putExtra(LAT, lat)
-        graphActivityIntent.putExtra(LON, lon)
-        startActivity(graphActivityIntent)
-    }
-
-    //TODO: Change the name of class Bjørn (vet ikke hva den heter)
     //Method that runs ForecastActivity with extra parameters
-    fun runForecastActivity(lat: Double, lon: Double) {
-        val forecastActivityIntent = Intent(this, GraphActivity::class.java) //<--- Change this
+    fun runForecastActivity(lat: Double, lon: Double, title: String) {
+        val forecastActivityIntent = Intent(this, ForecastActivity::class.java)
         forecastActivityIntent.putExtra(LAT, lat)
         forecastActivityIntent.putExtra(LON, lon)
+        forecastActivityIntent.putExtra(TITLE, title)
         startActivity(forecastActivityIntent)
     }
 
@@ -422,7 +427,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         try {
             val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) //.geojson APIs for data on countries' boundaries.
             val style = layer.defaultPolygonStyle
-            style.strokeWidth = 50F
+            style.strokeWidth = 1F
             if(dark) {
                 style.fillColor = Color.rgb(0, 0, 0)
                 style.strokeColor = Color.rgb(0, 0, 0)

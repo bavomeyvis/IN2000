@@ -3,9 +3,11 @@ package com.example.pollution.ui
 import android.content.Intent
 import android.graphics.Color
 import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ScrollView
@@ -14,11 +16,15 @@ import android.widget.TextView
 import com.example.pollution.R
 import com.example.pollution.response.WeatherService
 import kotlinx.android.synthetic.main.activity_forecast.*
-import kotlinx.android.synthetic.main.activity_forecast_units.*
+import kotlinx.android.synthetic.main.activity_forecast_card.view.*
+import kotlinx.android.synthetic.main.activity_maps.*
 import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 import java.util.*
+
+private const val TAG = "ForecastActivity"
 
 class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
@@ -38,6 +44,8 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private lateinit var no2Rectangle: View
     private lateinit var o3Rectangle: View
 
+    private lateinit var aqiValueText: TextView
+
     private lateinit var aqiTextView: TextView
     private lateinit var pm25TextView: TextView
     private lateinit var pm10TextView: TextView
@@ -45,6 +53,8 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private lateinit var o3TextView: TextView
 
     private lateinit var graphButton: ImageView
+
+    private lateinit var card2_star: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Sets UI theme
@@ -54,9 +64,45 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
 
+        //Receives data from MapsActivity
+        val intent = intent
+        val inputLat = intent.getDoubleExtra(MapsActivity.LAT, 0.0)
+        val inputLon = intent.getDoubleExtra(MapsActivity.LON, 0.0)
+        val inputTitle = intent.getStringExtra(MapsActivity.TITLE)
+        forecast_card2.graphButton2.setOnClickListener {
+            runGraphActivity(inputLat, inputLon, inputTitle)
+        }
+        //Makes an address object out of the title received from MapsActivity
+        lateinit var address: Address
+        val geocoder = Geocoder(this)
+        var addressList = arrayListOf<Address>()
+        try {
+            addressList = geocoder.getFromLocationName(inputTitle, 1) as ArrayList<Address>
+        } catch (e: IOException) {
+            Log.e(TAG, "searchLocation: IOException: " + e.message)
+        }
+        if (addressList.size > 0) {
+            address = addressList[0]
+        }
+
+
+//        card2_star = findViewById(R.id.forecast_card2.c) as ImageView
+//
+//        var isStarred: Boolean = false
+//        card2_star.setOnClickListener{
+//            println("CLICKEDDD")
+//            if (!isStarred) {
+//                card2_star.setBackgroundResource(R.drawable.btn_star_big_on)
+//            card2_star.setBackgroundResource(R.drawable.btn_star_big_on)
+//            } else {
+//                card2_star.setBackgroundResource(R.drawable.btn_star_big_off)
+//            }
+//            isStarred = !isStarred
+//        }
+
         this.forecast_time_scroller!!.setOnSeekBarChangeListener(this)
 
-        val address: Address = intent?.extras?.getParcelable("address")!!
+
 
         timeTextView = findViewById<TextView>(R.id.forecast_card2_time)
         aqiRectangle = findViewById<View>(R.id.card2_unit1)
@@ -64,6 +110,8 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         pm10Rectangle = findViewById<View>(R.id.card2_unit3)
         no2Rectangle = findViewById<View>(R.id.card2_unit4)
         o3Rectangle = findViewById<View>(R.id.card2_unit5)
+
+        aqiValueText = findViewById<TextView>(R.id.card2_unit1_value)
 
 
         aqiTextView = findViewById<View>(R.id.forecast_card2_units).findViewById<TextView>(R.id.textView3)
@@ -78,19 +126,13 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         no2TextView.text = "NO2"
         o3TextView.text = "O3"
 
-        graphButton = findViewById(R.id.graphButton2)
 
-
-        graphButton.setOnClickListener{
-            val intent = Intent(this, GraphActivity::class.java)
-            startActivity(intent)
-        }
 //        forecast_time_scroller = findViewById<SeekBar>(R.id.forecast_time_scroller)
 
 //        aqiRectangle2.alpha = (0.5).toFloat()
 
         val placeNameTextView = findViewById<TextView>(R.id.textView2)
-        placeNameTextView.text = address.featureName
+        placeNameTextView.text = address.getAddressLine(0)
 
         println(address)
 
@@ -108,22 +150,25 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
         doAsync {
             val weather = client.getWeather(lat, lon).execute().body()
+            val time = 0
+            val aqi = weather?.data?.time?.get(time)?.variables?.aQI?.value
+            println(aqi)
+            println(weather)
 
             println("timelength: " + weather?.data?.time?.size)
 
             for (i in aqiValues.indices + 1) {
                 aqiValues[i] = weather?.data?.time?.get(i)?.variables?.aQI?.value
-                pm25Values[i] = weather?.data?.time?.get(i)?.variables?.pm25Concentration?.value
-                pm10Values[i] = weather?.data?.time?.get(i)?.variables?.pm10Concentration?.value
-                no2Values[i] = weather?.data?.time?.get(i)?.variables?.no2Concentration?.value
-                o3Values[i] = weather?.data?.time?.get(i)?.variables?.o3Concentration?.value
+                pm25Values[i] = weather?.data?.time?.get(i)?.variables?.aQIPm25?.value
+                pm10Values[i] = weather?.data?.time?.get(i)?.variables?.aQIPm10?.value
+                no2Values[i] = weather?.data?.time?.get(i)?.variables?.aQINo2?.value
+                o3Values[i] = weather?.data?.time?.get(i)?.variables?.aQIO3?.value
 
                 println(pm25Values[i])
                 timeValues[i] = weather?.data?.time?.get(i)?.from
 
                 println("timevalues:" + timeValues[i] + "   " + i)
             }
-
 
             val rightNow = Calendar.getInstance()
             val currentHourIn24Format = rightNow.get(Calendar.HOUR_OF_DAY) - 1
@@ -164,7 +209,6 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         println("timeprogress: " + timeValues[progress])
 
         val aqi = aqiValues[progress]
-        val aqi2 = aqiValues[progress + 1]
         val pm25 = pm25Values[progress]
         val pm10 = pm10Values[progress]
         val no2 = no2Values[progress]
@@ -176,9 +220,24 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         updateColorViews2(no2, no2Rectangle)
         updateColorViews2(o3, o3Rectangle)
 
+        aqiValueText.text = aqiValues[progress].toString().substring(0, 3)
+//        aqiValueText.text = aqiValues[progress].toString()
+//        aqiValueText.text = String.format("%.1f",  aqiValues[progress])
+
+
+
     }
     private fun getSharedPreferenceValue(prefKey: String):Boolean {
         val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
         return sp.getBoolean(prefKey, false)
+    }
+
+    //Method that runs GraphActivity with extra parameters
+    private fun runGraphActivity(lat: Double, lon: Double, title: String) {
+        val graphActivityIntent = Intent(this, GraphActivity::class.java)
+        graphActivityIntent.putExtra(MapsActivity.LAT, lat)
+        graphActivityIntent.putExtra(MapsActivity.LON, lon)
+        graphActivityIntent.putExtra(MapsActivity.TITLE, title)
+        startActivity(graphActivityIntent)
     }
 }
