@@ -95,7 +95,7 @@
               app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
               app:layout_constraintTop_toTopOf="@+id/forecast_card2_time"
               android:layout_marginStart="24dp"/>
-    <TextView android:id="@+id/card2_comp2"
+    <TextView android:id="@+id/card2_comp1"
               android:textColor="?attr/textColor"
               android:layout_width="50dp"
               android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
-              app:layout_constraintTop_toBottomOf="@+id/card2_comp2"
+              app:layout_constraintTop_toBottomOf="@+id/card2_comp1"
               android:layout_marginTop="8dp"
               android:layout_marginStart="24dp"/>
     <TextView android:id="@+id/card2_comp4"
