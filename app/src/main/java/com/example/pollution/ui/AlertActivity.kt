@@ -11,6 +11,7 @@ import android.transition.Slide
 import android.transition.TransitionManager
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.*
 import com.example.pollution.R
 
@@ -142,6 +143,14 @@ class AlertActivity : AppCompatActivity() {
         }}
 
         // DnD Week
+        val buttonWeek = findViewById<Button>(R.id.buttonWeek)
+        buttonWeek.setOnClickListener(object: View.OnClickListener {
+            override fun onClick(view: View): Unit {
+                val weekActivityIntent = Intent(this@AlertActivity, WeekActivity::class.java)
+                startActivityForResult(weekActivityIntent, 1)
+                recreate()
+            }
+        })
 
     }
     // Forces main activity to always recreate()

@@ -59,6 +59,13 @@
                   android:label="@string/alert_title"
         >
         </activity>
+
+        <!-- Alert Activity -->
+        <activity android:name=".ui.WeekActivity"
+                  android:parentActivityName=".ui.AlertActivity"
+                  android:label="@string/week_title"
+        >
+        </activity>
    </application>
 
 </manifest>

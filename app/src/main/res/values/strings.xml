@@ -55,4 +55,22 @@
     <string name="dnd_exit">OK</string>
     <string name="alert_week_title">Time periods to ignore</string>
     <string name="alert_week_desc">Select specific time periods of days of the week for the app to be silent.</string>
+    <string name="week_title">Select time periods for the app to be silent:</string>
+    <string name="week_monday">Monday</string>
+    <string name="week_tuesday">Tuesday</string>
+    <string name="week_wednesday">Wednesday</string>
+    <string name="week_thursday">Thursday</string>
+    <string name="week_friday">Friday</string>
+    <string name="week_saturday">Saturday</string>
+    <string name="week_sunday">Sunday</string>
+    <string name="week_monday_pl">mondays</string>
+    <string name="week_tuesday_pl">tuesdays</string>
+    <string name="week_wednesday_pl">wednesdays</string>
+    <string name="week_thursday_pl">thursdays</string>
+    <string name="week_friday_pl">fridays</string>
+    <string name="week_saturday_pl">saturdays</string>
+    <string name="week_sunday_pl">sundays</string>
+    <string name="alert_time">Between %1$.2f and %2$.2f.</string>
+    <string name="no_alert_weekday">You won\'t be notified between %1$.2f and %2$.2f on %3$s.</string>
+    <string name="allow_alert_weekday">You can be notified anytime on %1$s.</string>
 </resources>
