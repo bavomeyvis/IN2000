@@ -44,6 +44,7 @@ import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.startActivityForResult
 import org.json.JSONException
 
 // Retrofit imports
@@ -266,7 +267,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when(item?.itemId) {
             R.id.menu_home -> recreate()
-            R.id.menu_alert -> Toast.makeText(this, "alerts", Toast.LENGTH_SHORT).show()
+            R.id.menu_alert -> runAlertActivity()
             R.id.menu_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_SHORT).show()
             R.id.menu_graph -> runGraphActivity(testLat, testLon)
             R.id.menu_stats -> Toast.makeText(this, "stats", Toast.LENGTH_SHORT).show()
@@ -298,6 +299,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         startActivityForResult(settingsActivityIntent, 1)
         recreate()
     }
+
+    fun runAlertActivity() {
+        val alertActivityIntent = Intent(this, AlertActivity::class.java)
+        startActivityForResult(alertActivityIntent, 1)
+        recreate()
+    }
+
     // shows popup as well as icons
     /*TODO: only popup.show() should be necessary*/
     fun showPopup(v:View) {

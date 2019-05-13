@@ -35,4 +35,24 @@
     <string name="menu_stats">Statistikk</string>
 
     <string name="settings_threshold_title">Sett varslingsgrense</string>
+    <string name="alert_title">Varsling</string>
+    <string name="alert_threshold_title">Sett varslingsgrense</string>
+    <string name="alert_threshold_desc">Overstiger den gjeldende AQI-verdien din varslingsgrense, sender appen en varsling.</string>
+    <string name="alert_dnd_title">Ikke forstyrr</string>
+    <string name="alert_dnd_desc">Ikke forstyrr for en kort tidsperiode.</string>
+    <string name="aqi_good">God</string>
+    <string name="aqi_moderate">Moderat</string>
+    <string name="aqi_potentially_unhealthy">Usunt for følsomme grupper</string>
+    <string name="aqi_unhealthy">Usunt</string>
+    <string name="aqi_very_unhealthy">Veldig usunt</string>
+    <string name="aqi_hazardous">Farlig</string>
+    <string name="dnd_title">How long would you like to disable alerts?</string>
+    <string name="one_hour">Ein time</string>
+    <string name="three_hours">Tre timar</string>
+    <string name="one_day">Ein dag</string>
+    <string name="one_week">Ei veke</string>
+    <string name="one_month">Ein månad</string>
+    <string name="dnd_exit">OK</string>
+    <string name="alert_week_title">Tidsperioder å ignorere</string>
+    <string name="alert_week_desc">Vel spesifikke tidsperioder for dagar i veka som appen skal vera stille i.</string>
 </resources>

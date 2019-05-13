@@ -52,6 +52,13 @@
                   android:label="Forecast"
                   >
         </activity>
+
+        <!-- Alert Activity -->
+        <activity android:name=".ui.AlertActivity"
+                  android:parentActivityName=".ui.MapsActivity"
+                  android:label="@string/alert_title"
+        >
+        </activity>
    </application>
 
 </manifest>
