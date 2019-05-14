@@ -46,13 +46,15 @@
     <string name="aqi_unhealthy">Usunt</string>
     <string name="aqi_very_unhealthy">Veldig usunt</string>
     <string name="aqi_hazardous">Farleg</string>
-    <string name="dnd_title">How long would you like to disable alerts?</string>
+    <string name="dnd_title">Kor lenge vil du avbryte varslingar?</string>
     <string name="one_hour">Ein time</string>
     <string name="three_hours">Tre timar</string>
     <string name="one_day">Ein dag</string>
     <string name="one_week">Ei veke</string>
     <string name="one_month">Ein månad</string>
     <string name="dnd_exit">OK</string>
+    <string name="disable_alerts">Varslingar er avbrote for %1$s.</string>
+    <string name="cancel_disable_alerts">Ikkje forstyrr er avbrote.</string>
     <string name="alert_week_title">Tidsperioder å ignorere</string>
     <string name="alert_week_desc">Vel spesifikke tidsperioder for dagar i veka som appen skal vera stille i.</string>
     <string name="week_title">Vel tidsperioder der appen skal vera stille:</string>
@@ -70,7 +72,7 @@
     <string name="week_friday_pl">fredagar</string>
     <string name="week_saturday_pl">laurdagar</string>
     <string name="week_sunday_pl">mondagar</string>
-    <string name="alert_time">Mellom %1$.2f og %2$.2f.</string>
-    <string name="no_alert_weekday">Du vil ikkje bli varsla mellom %1$.2f og %2$.2f på %3$s.</string>
+    <string name="alert_time">Mellom %1$d og %2$d.</string>
+    <string name="no_alert_weekday">Du vil ikkje bli varsla mellom %1$d og %2$d på %3$s.</string>
     <string name="allow_alert_weekday">Du kan bli varsla når som helst på %1$s.</string>
 </resources>

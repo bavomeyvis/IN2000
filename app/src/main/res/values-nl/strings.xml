@@ -53,6 +53,8 @@
     <string name="one_week">One Week</string>
     <string name="one_month">One Month</string>
     <string name="dnd_exit">OK</string>
+    <string name="disable_alerts">Alerts disabled for %1$s.</string>
+    <string name="cancel_disable_alerts">Do not disturb cancelled.</string>
     <string name="alert_week_title">Time periods to ignore</string>
     <string name="alert_week_desc">Select specific time periods of days of the week for the app to be silent.</string>
     <string name="week_title">Select time periods for the app to be silent:</string>
@@ -70,7 +72,7 @@
     <string name="week_friday_pl">fridays</string>
     <string name="week_saturday_pl">saturdays</string>
     <string name="week_sunday_pl">sundays</string>
-    <string name="alert_time">Between %1$.2f and %2$.2f.</string>
-    <string name="no_alert_weekday">You won\'t be notified between %1$.2f and %2$.2f on %3$s.</string>
+    <string name="alert_time">Between %1$d and %2$d.</string>
+    <string name="no_alert_weekday">You won\'t be notified between %1$d and %2$d on %3$s.</string>
     <string name="allow_alert_weekday">You can be notified anytime on %1$s.</string>
 </resources>
