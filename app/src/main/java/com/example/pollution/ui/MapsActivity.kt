@@ -335,7 +335,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
         // Runs ForecastActivity with extra parameters
         private fun runForecastActivity(lat: Double, lon: Double, title:String) {
-            val forecastActivityIntent = Intent(this, GraphActivity::class.java) //< --- Change this
+            val forecastActivityIntent = Intent(this, ForecastActivity::class.java) //< --- Change this
             forecastActivityIntent.putExtra(LAT, lat)
             forecastActivityIntent.putExtra(LON, lon)
             forecastActivityIntent.putExtra(TITLE, title)
