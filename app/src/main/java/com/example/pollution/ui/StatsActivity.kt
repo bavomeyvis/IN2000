@@ -17,9 +17,9 @@ import java.math.RoundingMode
 
 class StatsActivity : AppCompatActivity() {
     companion object {
-        var perCountryAQI : HashMap<Double, String> = hashMapOf()
+        var perCityAQI : HashMap<Double, String> = hashMapOf()
         var count : Int = 1
-        var nCountries : Int = 0
+        var nCities : Int = 0
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         // Sets theme
@@ -34,9 +34,9 @@ class StatsActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(WeatherService::class.java)
         // Loops through received list of countries and gets countryValues
-        val countries : HashMap<String, LatLng> = intent.extras["hashMap"] as HashMap<String, LatLng>
-        nCountries = countries.size
-        for ((key, value) in countries) getCountryValue(client, key, value)
+        val cities : HashMap<String, LatLng> = intent.extras["hashMap"] as HashMap<String, LatLng>
+        nCities = cities.size
+        for ((key, value) in cities) getCityValue(client, key, value)
     }
 
     // TODO: Repetitive code
@@ -45,7 +45,7 @@ class StatsActivity : AppCompatActivity() {
         return sp.getBoolean(prefKey, false)
     }
 
-    private fun getCountryValue(client : WeatherService, key : String, value : LatLng)  {
+    private fun getCityValue(client : WeatherService, key : String, value : LatLng)  {
         doAsync {
             val weather = client.getWeather(value.latitude, value.longitude).execute().body()
             val aqi = weather?.data?.time?.get(0)?.variables?.aQI?.value
@@ -55,14 +55,14 @@ class StatsActivity : AppCompatActivity() {
         }
     }
     // Adds value to the second hashMap of countries
-    private fun addCountryValue(country : String, aqiValue : Double)  {
-        perCountryAQI[aqiValue] = country
-        if(count == nCountries) setRanking(perCountryAQI)
+    private fun addCountryValue(city : String, aqiValue : Double)  {
+        perCityAQI[aqiValue] = city
+        if(count == nCities) setRanking(perCityAQI)
         else count++
     }
-    private fun setRanking(countriesAndValues : HashMap<Double, String>) {
+    private fun setRanking(citiesAndValues : HashMap<Double, String>) {
         // Sorts list
-        val sortedMap = countriesAndValues.toSortedMap(compareByDescending { it })
+        val sortedMap = citiesAndValues.toSortedMap(compareByDescending { it })
         val statsTable : LinearLayout = findViewById(R.id.stats_list)
         var i = 0
         for ((key, value) in sortedMap) {
