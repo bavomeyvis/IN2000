@@ -53,6 +53,12 @@
                   >
         </activity>
 
+        <!-- Alert Activity -->
+        <activity android:name=".ui.AlertActivity"
+                  android:parentActivityName=".ui.MapsActivity"
+                  android:label="@string/alert_title"
+        >
+
         <!-- Stats Activity -->
         <activity android:name=".ui.StatsActivity"
                   android:parentActivityName=".ui.MapsActivity"

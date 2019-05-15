@@ -44,6 +44,7 @@ import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.startActivityForResult
 import org.json.JSONException
 
 // Retrofit imports
@@ -308,7 +309,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when(item?.itemId) {
             R.id.menu_home -> recreate()
-            R.id.menu_alert -> Toast.makeText(this, "alerts", Toast.LENGTH_SHORT).show()
+            R.id.menu_alert -> runAlertActivity()
             R.id.menu_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_SHORT).show()
             R.id.menu_graph -> runGraphActivity(testLat, testLon)
             R.id.menu_stats -> runStatsActivity()
@@ -353,6 +354,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     private fun getSharedPreferenceValue(prefKey: String):Boolean {
         val sp = getSharedPreferences(sharedPref, 0)
         return sp.getBoolean(prefKey, false)
+    }
+
+    fun runAlertActivity() {
+        val alertActivityIntent = Intent(this, AlertActivity::class.java)
+        startActivityForResult(alertActivityIntent, 1)
+        recreate()
     }
 
     // shows popup as well as icons
@@ -400,6 +407,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     // TODO: COMMENT!
     private fun dangerAlert() { // Send the alert.
+        // Do not proceed if user has turned off alerts in settings.
+        if (!getSharedPreferenceValue("alert")) return
         val intent = Intent(this, MapsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
