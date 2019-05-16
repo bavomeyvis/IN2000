@@ -191,13 +191,13 @@
                   app:layout_constraintTop_toBottomOf="@+id/card1_comp5"
                   android:layout_marginTop="8dp"
                   android:layout_marginStart="24dp"/>-->
-        <Button android:id="@+id/forecast_card1_graph"
+        <ImageView
+                android:id="@+id/forecast_card1_graph"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/forecast_card1_units"
-                app:layout_constraintStart_toStartOf="@id/forecast_card1_units"
-                android:layout_marginTop="10dp"
-                android:text="@string/forecast_card_graph"/>
+                android:layout_height="wrap_content" app:srcCompat="@drawable/menu_graph"
+                app:layout_constraintBottom_toBottomOf="@id/forecast_card1"
+                app:layout_constraintRight_toRightOf="@id/forecast_card1"
+                android:padding="10dp"/>
     </android.support.constraint.ConstraintLayout>
 
 
@@ -378,13 +378,13 @@
                   app:layout_constraintTop_toBottomOf="@+id/card2_comp5"
                   android:layout_marginTop="8dp"
                   android:layout_marginStart="24dp"/>-->
-        <Button android:id="@+id/forecast_card2_graph"
+        <ImageView
+                android:id="@+id/forecast_card2_graph"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/forecast_card2_units"
-                app:layout_constraintStart_toStartOf="@id/forecast_card2_units"
-                android:layout_marginTop="10dp"
-                android:text="@string/forecast_card_graph"/>
+                android:layout_height="wrap_content" app:srcCompat="@drawable/menu_graph"
+                app:layout_constraintBottom_toBottomOf="@id/forecast_card2"
+                app:layout_constraintRight_toRightOf="@id/forecast_card2"
+                android:padding="10dp"/>
     </android.support.constraint.ConstraintLayout>
 
     <!-- Decides time -->

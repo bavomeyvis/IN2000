@@ -81,4 +81,9 @@
     <string name="no_alert_weekday">Du vil ikke bli varsla mellom %1$d og %2$d på %3$s.</string>
     <string name="allow_alert_weekday">Du kan bli varsla når som helst på %1$s.</string>
     <string name="forecast_card_graph">Open graph</string>
+    <string name="forecast_unit_aqi">AQI</string>
+    <string name="forecast_unit_pm25">pm25</string>
+    <string name="forecast_unit_pm10">pm10</string>
+    <string name="forecast_unit_no2">no2</string>
+    <string name="forecast_unit_o3">o3</string>
 </resources>
