@@ -1,10 +1,7 @@
 package com.example.pollution.ui
 
 // Our stuff
-import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -34,6 +31,7 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
+import com.example.pollution.classes.CheckAlertConditions
 import com.example.pollution.classes.City
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -64,11 +62,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val sharedPref = "settings"
         val LAT = "com.example.pollution.ui.LAT"
         val LON = "com.example.pollution.ui.LON"
+        lateinit var lastLocation: android.location.Location
     }
 
     //Google Maps
     private lateinit var mMap: GoogleMap
-    private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     //Todo: Move starting of GraphActivity
@@ -190,6 +188,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         })
 
         addCityMarkers(mMap)
+
+        /*
+        // Execute task implemented in CheckAlertConditions.kt.
+        val asyncTask = CheckAlertConditions()
+        TODO("Properly convert the string to AQI on form of integer.")
+        asyncTask.execute(getPositionData(lastLocation.latitude, lastLocation.longitude).toInt())
+        */
     }
 
     // TODO: Consider migrating into object
@@ -352,7 +357,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     }
 
     // TODO: Consider migrating into object
-    private fun dangerAlert() { // Send the alert.
+    fun dangerAlert() { // Send the alert.
         // Do not proceed if user has turned off alerts in settings.
         if (!getSharedPreferenceValue("alert")) return
         val intent = Intent(this, MapsActivity::class.java).apply {

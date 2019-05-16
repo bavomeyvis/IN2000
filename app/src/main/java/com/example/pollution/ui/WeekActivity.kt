@@ -10,6 +10,12 @@ import com.example.pollution.R
 import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
 
 class WeekActivity : AppCompatActivity() {
+    companion object {
+        // These variables will be used in CheckAlertConditions.kt to compute whether app should send notification.
+        val doNotDisturbWeek: Array<Boolean> = Array(7) {i -> false}
+        val maxValues: Array<Int> = Array(7) {i -> 0}
+        val minValues: Array<Int> = Array(7) {i -> (24)}
+    }
     private val returnIntent = Intent()
     override fun onCreate(savedInstanceState: Bundle?) {
         // Displays activity_week
@@ -27,11 +33,7 @@ class WeekActivity : AppCompatActivity() {
             getString(R.string.week_sunday_pl)
         )
 
-        // Also used for localisation.
-        val maxValues: Array<Int> = Array(7) {i -> (0)}
-        val minValues: Array<Int> = Array(7) {i -> (24)}
-
-        // The seekBars and Switches: one for every day of the week.
+        // The seekBars and Switches: one for every day of the week. Since they all share the same functionalty, all their implementation will be done in a loop.
         val seekbars: Array<RangeSeekBar<Int>> = arrayOf(
             findViewById(R.id.seekBarMonday),
             findViewById(R.id.seekBarTuesday),
@@ -55,20 +57,27 @@ class WeekActivity : AppCompatActivity() {
         for (i in 0..6) {
             // Save their states from last time.
             switches[i].isChecked = getSharedPreferenceValueBool("switchValue$i")
-            // TODO: bug: the range values are reset on reopening the activity.
-            seekbars[i].setRangeValues(getSharedPreferenceValueInt("seekBarValue1$i"), getSharedPreferenceValueInt("seekBarValue2$i"))
+            // Seekbars.
+            seekbars[i].setRangeValues(0, 24)
+            // The processes are set to be where the user left them.
+            seekbars[i].selectedMinValue = getSharedPreferenceValueInt("seekBarValue1$i")
+            seekbars[i].selectedMaxValue = getSharedPreferenceValueInt("seekBarValue2$i")
             seekbars[i].setOnRangeSeekBarChangeListener(object : RangeSeekBar.OnRangeSeekBarChangeListener<Int> {
                 override fun onRangeSeekBarValuesChanged(bar: RangeSeekBar<*>, minValue: Int, maxValue: Int) {
+                    // Update values.
                     writeToPreferenceInt("seekBarValue1$i", minValue)
                     writeToPreferenceInt("seekBarValue2$i", maxValue)
                     minValues[i] = minValue
                     maxValues[i] = maxValue
+                    // For reference.
                     Toast.makeText(applicationContext, getString(R.string.alert_time, minValues[i], maxValues[i]), Toast.LENGTH_SHORT).show()
                 }
             })
 
+            // Switches - they activate the do not disturb schedules within the desired time scope.
             switches[i].setOnCheckedChangeListener{_, isChecked -> run {
                 writeToPreferenceBool("switchValue$i", isChecked)
+                doNotDisturbWeek[i] = isChecked
                 if (isChecked)
                     Toast.makeText(applicationContext, getString(R.string.no_alert_weekday, minValues[i], maxValues[i], weekdaysPlural[i]), Toast.LENGTH_LONG).show()
                 else
