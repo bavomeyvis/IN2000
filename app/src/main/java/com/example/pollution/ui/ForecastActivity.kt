@@ -199,6 +199,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private fun getSharedPreferenceValue(prefKey: String): Boolean {
         val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
         return sp.getBoolean(prefKey, false)
+
     }
 
     //Method that runs GraphActivity with extra parameters
