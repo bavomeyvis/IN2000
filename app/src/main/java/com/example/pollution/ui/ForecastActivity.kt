@@ -8,11 +8,15 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.example.pollution.R
 import com.example.pollution.response.WeatherService
 import kotlinx.android.synthetic.main.activity_forecast.*
+import kotlinx.android.synthetic.main.activity_forecast_card.view.*
+import kotlinx.android.synthetic.main.activity_maps.*
 import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -22,6 +26,8 @@ import java.util.*
 private const val TAG = "ForecastActivity"
 
 class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
+
+    private var dataReceived: Boolean = false
 
     // Size of arrays
     private val arraySizes = 49
@@ -42,9 +48,26 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private lateinit var no2Rectangle: View
     private lateinit var o3Rectangle: View
 
+    //CARD 2
+    private val card2timeValues = arrayOfNulls<String>(arraySizes)
+
+    private val card2aqiValues = arrayOfNulls<Double>(arraySizes)
+    private val card2pm25Values = arrayOfNulls<Double>(arraySizes)
+    private val card2pm10Values = arrayOfNulls<Double>(arraySizes)
+    private val card2no2Values = arrayOfNulls<Double>(arraySizes)
+    private val card2o3Values = arrayOfNulls<Double>(arraySizes)
+
+    private lateinit var card2timeTextView: TextView
+    private lateinit var card2aqiRectangle: View
+    private lateinit var card2pm25Rectangle: View
+    private lateinit var card2pm10Rectangle: View
+    private lateinit var card2no2Rectangle: View
+    private lateinit var card2o3Rectangle: View
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Sets UI theme
-        if(getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
+        if (getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
         else setTheme(R.style.AppTheme)
         // Inflate layout
         super.onCreate(savedInstanceState)
@@ -60,8 +83,8 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         forecast_card1_graph.setOnClickListener {
             runGraphActivity(inputLat, inputLon, inputTitle)
         }
-        // TODO: Ask Bjørn
-        //Makes an address object out of the title received from MapsActivity
+
+
         lateinit var address: Address
         val geocoder = Geocoder(this)
         var addressList = arrayListOf<Address>()
@@ -118,17 +141,50 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
             updateColorViews(currentHourIn24Format)
             forecast_time_scroller.progress = currentHourIn24Format
+
+            dataReceived = true
         }
     }
 
+    fun updateCompareTexts(card1Value: Double?, card2Value: Double?, cardTextView: TextView?) {
+        val card1aqiDifference = card1Value!! - card2Value!!
+        var card1aqiDifferenceString = card1aqiDifference.toString()
+
+        if (card1aqiDifference < 0) {
+            card1aqiDifferenceString = card1aqiDifferenceString.substring(0, 4)
+            cardTextView?.setTextColor(Color.parseColor("#C13500"))
+        } else {
+            card1aqiDifferenceString = "+" + card1aqiDifferenceString.substring(0, 3)
+            cardTextView?.setTextColor(Color.parseColor("#3F9F41"))
+        }
+        cardTextView?.text = card1aqiDifferenceString
+    }
+
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+//        if (dataReceived) {
         updateColorViews(progress)
-        println("progress: " + progress)
+
+        updateCompareTexts(card1aqiValues[progress], card2aqiValues[progress], card1CompareTexts[0])
+        updateCompareTexts(card2aqiValues[progress], card1aqiValues[progress], card2CompareTexts[0])
+
+        updateCompareTexts(card1pm25Values[progress], card2pm25Values[progress], card1CompareTexts[1])
+        updateCompareTexts(card2pm25Values[progress], card1pm25Values[progress], card2CompareTexts[1])
+
+        updateCompareTexts(card1pm10Values[progress], card2pm10Values[progress], card1CompareTexts[2])
+        updateCompareTexts(card2pm10Values[progress], card1pm10Values[progress], card2CompareTexts[2])
+
+        updateCompareTexts(card1no2Values[progress], card2no2Values[progress], card1CompareTexts[3])
+        updateCompareTexts(card2no2Values[progress], card1no2Values[progress], card2CompareTexts[3])
+
+        updateCompareTexts(card1o3Values[progress], card2o3Values[progress], card1CompareTexts[4])
+        updateCompareTexts(card2o3Values[progress], card1o3Values[progress], card2CompareTexts[4])
+//
     }
 
     // WHAT??????????????????????????????????????????????????????????????????????????????
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
     }
+
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
     }
 
@@ -165,7 +221,15 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         updateColorViews2(o3, o3Rectangle)
 
     }
-    private fun getSharedPreferenceValue(prefKey: String):Boolean {
+
+    //card2ValueTexts[0]?.text = card2aqiValues[progress].toString().substring(0, 3)
+    //card2ValueTexts[1]?.text = card2pm25Values[progress].toString().substring(0, 3)
+    //card2ValueTexts[2]?.text = card2pm10Values[progress].toString().substring(0, 3)
+//    card2ValueTexts[3]?.text = card2no2Values[progress].toString().substring(0, 3)
+//    card2ValueTexts[4]?.text = card2o3Values[progress].toString().substring(0, 3)
+    //END CARD 2
+
+    private fun getSharedPreferenceValue(prefKey: String): Boolean {
         val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
         return sp.getBoolean(prefKey, false)
     }
