@@ -36,9 +36,9 @@ class GraphActivity: AppCompatActivity() {
         setContentView(R.layout.activity_graph)
         //Gets the data from the intent (lat, lon)
         val intent = intent
-        val inputLat = intent.getDoubleExtra(MapsActivity.LAT, 0.0)
-        val inputLon = intent.getDoubleExtra(MapsActivity.LON, 0.0)
-        val inputTitle = intent.getStringExtra(MapsActivity.TITLE)
+        val inputLat = intent.getDoubleExtra("lat", 0.0)
+        val inputLon = intent.getDoubleExtra("lon", 0.0)
+        val inputTitle = intent.getStringExtra("cityTitle")
         //Makes an address object out of the title received from MapsActivity
         lateinit var address: Address
         val geocoder = Geocoder(this)

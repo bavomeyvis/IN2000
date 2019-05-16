@@ -240,8 +240,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
-
-
     // TODO: Consider migrating the methods below into an object
     private fun getPositionData(lat: Double, lon: Double): String {
         lateinit var returnInfo: String
@@ -253,38 +251,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             return ""
         }
         return returnInfo
-    }
-
-    // Find location
-    private fun addMarkerColoured(address: Address) {
-        val lat = address.latitude
-        val lon = address.longitude
-
-        val client = Retrofit.Builder()
-            .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(WeatherService::class.java)
-
-        doAsync {
-            val weather = client.getWeather(lat, lon).execute().body()
-            val aqi = weather?.data?.time?.get(0)?.variables?.aQI?.value
-            // TODO: Remove print (J)
-            println(aqi)
-
-            var markerColor = BitmapDescriptorFactory.HUE_RED
-
-            if (aqi != null && aqi < 1.75) markerColor = BitmapDescriptorFactory.HUE_GREEN
-
-            runOnUiThread {
-                mMap.addMarker(
-                    MarkerOptions()
-                        .position(LatLng(lat, lon))
-                        .title(address.getAddressLine(0))
-                        .icon(BitmapDescriptorFactory.defaultMarker(markerColor))
-                )
-            }
-        }
     }
 
     // Function that searches for a location
@@ -325,8 +291,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     //Method that runs GraphActivity with extra parameters
     private fun runGraphActivity(lat: Double, lon: Double) {
         val graphActivityIntent = Intent(this, GraphActivity::class.java)
-        graphActivityIntent.putExtra(LAT, lat)
-        graphActivityIntent.putExtra(LON, lon)
+        graphActivityIntent.putExtra("lat", lat)
+        graphActivityIntent.putExtra("lon", lon)
         startActivity(graphActivityIntent)
     }
 
@@ -338,13 +304,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     }
 
-        // Runs ForecastActivity with extra parameters
-        private fun runForecastActivity(lat: Double, lon: Double, title:String) {
-            val forecastActivityIntent = Intent(this, ForecastActivity::class.java) //< --- Change this
-            forecastActivityIntent.putExtra(LAT, lat)
-            forecastActivityIntent.putExtra(LON, lon)
-            forecastActivityIntent.putExtra(TITLE, title)
-            startActivity(forecastActivityIntent)
+    // Runs ForecastActivity with extra parameters
+    private fun runForecastActivity(lat: Double, lon: Double, title:String) {
+        val forecastActivityIntent = Intent(this, ForecastActivity::class.java) //< --- Change this
+        forecastActivityIntent.putExtra("lat", lat)
+        forecastActivityIntent.putExtra("lon", lon)
+        forecastActivityIntent.putExtra("cityTitle", title)
+        startActivity(forecastActivityIntent)
     }
 
     // Runs settingsActivity

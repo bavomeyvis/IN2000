@@ -80,4 +80,5 @@
     <string name="alert_time">Mellom %1$d og %2$d.</string>
     <string name="no_alert_weekday">Du vil ikke bli varsla mellom %1$d og %2$d på %3$s.</string>
     <string name="allow_alert_weekday">Du kan bli varsla når som helst på %1$s.</string>
+    <string name="forecast_card_graph">Open graph</string>
 </resources>

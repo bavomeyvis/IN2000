@@ -10,7 +10,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="backgroundColor">#fcfcfc</item>
+        <item name="backgroundColor">#EEFCED</item>
         <item name="cardBackground">#01A780</item>
         <item name="android:itemBackground">#FFFFFF</item>
         <item name="buttonColor">#2196F3</item>
