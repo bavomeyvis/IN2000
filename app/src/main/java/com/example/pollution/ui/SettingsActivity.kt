@@ -27,36 +27,44 @@ import android.widget.SeekBar
 //SettingsActivity: Represents UI of the settings menu
 // Guidelines: https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 class SettingsActivity : AppCompatActivity() {
+    companion object {
+        // If the users want to disable notifications. Used in CheckAlertConditions.kt.
+        var doNotDisturb = false
+    }
     private var bravo = 0
     private val returnIntent = Intent()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Set theme
-        if(getSharedPreferenceValue("theme")) {
+        // Set theme.
+        if(getSharedPreferenceValue("theme"))
             setTheme(R.style.DarkTheme)
-            MapsActivity.mapsActivity?.setTheme(R.style.DarkTheme)
-        } else {
+        else
             setTheme(R.style.AppTheme)
-            MapsActivity.mapsActivity?.setTheme(R.style.AppTheme)
-        }
-        // Displays activity_settings
+
+        // Displays activity_settings.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        // set settingsThemeBtn according to state
+        // set settingsThemeBtn according to state.
         val theme : Boolean = getSharedPreferenceValue("theme")
         if(getSharedPreferenceValue("theme"))  settingsThemeBtn.isChecked = theme
 
-        // Set button listener for settingsThemeBtn
+        // Set button listener for settingsThemeBtn.
         val themeBtn : Switch = findViewById(R.id.settingsThemeBtn)
         themeBtn.setOnCheckedChangeListener { _, isChecked ->
             writeToPreference("theme", isChecked)
             recreate()
         }
 
+        // Do not disturb switch.
         val alertBtn : Switch = findViewById(R.id.settingsAlertBtn)
         alertBtn.setOnCheckedChangeListener { _, isChecked ->
+            doNotDisturb = isChecked
             writeToPreference("alert", isChecked)
+            if (isChecked)
+                Toast.makeText(this, getString(R.string.settings_alert_off), Toast.LENGTH_SHORT).show()
+            else
+                Toast.makeText(this, getString(R.string.settings_alert_on), Toast.LENGTH_SHORT).show()
         }
 
         findViewById<TextView>(R.id.settingsVersionDesc)
@@ -78,7 +86,7 @@ class SettingsActivity : AppCompatActivity() {
         }
         var current = dropdown.selectedItemPosition
         // On usage:
-        dropdown.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+        dropdown.onItemSelectedListener = object: OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 // Apply selected change.
@@ -93,45 +101,18 @@ class SettingsActivity : AppCompatActivity() {
                     3 -> changeLocalisation("nl")
                     4 -> changeLocalisation("af")
                 }
-                // Refresh the activity, if a new language is selected.
+                // Refresh the activity, if a new language is selected. Without this check, the app will refresh even when just opening the drop down.
                 if (current != position) recreate()
                 current = position
             }
         }
 
-        // Number wheel for threshold.
-        val data = Array(100) {i -> (i + 1).toString()}
-        val number_wheel: NumberPicker = findViewById(R.id.wheelview)
-        number_wheel.minValue = 0
-        number_wheel.maxValue = data.size - 1
-        number_wheel.displayedValues = data
-
-        val seekBar: SeekBar = findViewById(R.id.seekBar)
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(
-                seekBar: SeekBar, progress: Int,
-                fromUser: Boolean
-            ) {
-                Toast.makeText(applicationContext, "seekbar progress: $progress", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-                //Toast.makeText(applicationContext, "seekbar touch started!", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                //Toast.makeText(applicationContext, "seekbar touch stopped!", Toast.LENGTH_SHORT).show()
-            }
-        })
-
-
         // Toolbar
         /*val toolbar : Toolbar = findViewById(R.id.settings_toolbar)
         setSupportActionBar(toolbar) */
-
     }
 
-    // Change local strings.
+    // The below functions make the views in the activity consistent by remembering their states.
     private fun changeLocalisation(language: String) {
         val locale = Locale(language)
         val config = baseContext.resources.configuration
@@ -139,19 +120,17 @@ class SettingsActivity : AppCompatActivity() {
         baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
     }
 
-    // Gets the key from the static variable in sharedPref in MapsActivity
     private fun getSharedPreferenceValue(prefKey: String):Boolean {
         val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
         return sp.getBoolean(prefKey, false)
-
     }
 
-    // When user changes a value onclick, this method is called for
     private fun writeToPreference(prefKey:String, prefValue:Boolean) {
         val editor = getSharedPreferences(MapsActivity.sharedPref, 0).edit()
         editor.putBoolean(prefKey, prefValue)
         editor.apply()
     }
+
     // Forces main activity to always recreate()
     override fun onBackPressed() {
         setResult(Activity.RESULT_OK, returnIntent)

@@ -16,6 +16,8 @@
     <string name="settings_theme_title">Tema</string>
     <string name="settings_alert_desc">Krijg waarschuwing waaneer je waarde wordt overstegen</string>
     <string name="settings_alert_title">Waarschuwing</string>
+    <string name="settings_alert_on">Alerts are disabled.</string>
+    <string name="settings_alert_off">Alerts are enabled.</string>
     <string name="settings_language_title">Taal</string>
     <string name="settings_language_desc">De gekozen taal van de app</string>
     <string name="settings_version_desc">Versie: 0.03</string>
@@ -58,6 +60,9 @@
     <string name="alert_week_title">Time periods to ignore</string>
     <string name="alert_week_desc">Select specific time periods of days of the week for the app to be silent.</string>
     <string name="week_title">Select time periods for the app to be silent:</string>
+    <string name="alert_week_unavailable_title">Unsupported API level.</string>
+    <string name="alert_week_unavailable_desc">This function requires API level 23.</string>
+    <string name="alert_week_unavailable_dismiss">OK</string>
     <string name="week_monday">Monday</string>
     <string name="week_tuesday">Tuesday</string>
     <string name="week_wednesday">Wednesday</string>

@@ -58,6 +58,11 @@
                   android:parentActivityName=".ui.MapsActivity"
                   android:label="@string/alert_title"/>
 
+        <!-- Week Activity -->
+        <activity android:name=".ui.WeekActivity"
+                  android:parentActivityName=".ui.AlertActivity"
+                  android:label="@string/alert_week_title"/>
+
         <!-- Stats Activity -->
         <activity android:name=".ui.StatsActivity"
                   android:parentActivityName=".ui.MapsActivity"

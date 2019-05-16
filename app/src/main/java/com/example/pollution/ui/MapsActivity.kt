@@ -34,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
+import com.example.pollution.classes.CheckAlertConditions
 import com.example.pollution.classes.City
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -65,11 +66,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val LAT = "com.example.pollution.ui.LAT"
         val LON = "com.example.pollution.ui.LON"
         val TITLE = "com.example.pollution.ui.TITLE"
+        lateinit var lastLocation: android.location.Location
     }
 
     //Google Maps
     private lateinit var mMap: GoogleMap
-    private lateinit var lastLocation: android.location.Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     val coordinates : HashMap<String, LatLng> = hashMapOf(
         "oslo" to LatLng(59.915780, 10.752913), "bergen" to LatLng(60.393975, 5.324937),
@@ -234,6 +235,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                 }
             }
         }
+
+        /*
+        // Execute task implemented in CheckAlertConditions.kt.
+        val asyncTask = CheckAlertConditions()
+        TODO("Properly convert the string to AQI on form of integer.")
+        asyncTask.execute(getPositionData(lastLocation.latitude, lastLocation.longitude).toInt())
+        */
     }
 
 
