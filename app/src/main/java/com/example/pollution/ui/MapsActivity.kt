@@ -141,7 +141,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
             darkenSurroundings(false)
         }
-
+        search_input.isCursorVisible = true
 
         // Set the boundaries for movement.
         val builder = LatLngBounds.Builder()
@@ -163,11 +163,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // Assures location is set
         setMyLocation()
 
+        // TODO: This is only if we wantevery place
+        /*
         mMap.setOnMapClickListener { point ->
             //map is clicked latlng can be accessed from
             //point.Latitude & point.Longitude
             runForecastActivity(point.latitude, point.longitude, getPositionData(point.latitude, point.longitude))
-        }
+        }*/
         addCityMarkers(mMap)
 
         //marker is clicked and we find the marker's corresponding City class object
@@ -377,6 +379,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     // Sets up a listener for the enter button on the keyboard.
     private fun setKeyboardFinishedListener() {
         search_input.setOnEditorActionListener { _, actionId, event ->
+            search_input.isCursorVisible = true
+
             if (actionId == EditorInfo.IME_ACTION_DONE
                 || actionId == EditorInfo.IME_ACTION_SEARCH
                 || event.action == KeyEvent.ACTION_DOWN

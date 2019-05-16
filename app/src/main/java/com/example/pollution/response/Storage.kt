@@ -1,15 +1,19 @@
 package com.example.pollution.response
 
+import android.content.Context
 import com.example.pollution.ui.MapsActivity
+import android.preference.PreferenceManager
+import android.support.v7.app.AppCompatActivity
 
-class Storage {
+class Storage (context : Context) {
+    val context: Context = context
+
     companion object {
-        val sharedPref = "settings"
-        var doNotDisturb = false
+        val sharedPref = "storage"
     }
 
     private fun getSharedPreferenceValue(prefKey: String):Boolean {
-        val sp = getSharedPreferences(sharedPref, 0)
+        val sp = context.getSharedPreferences(sharedPref, 0)
         return sp.getBoolean(prefKey, false)
     }
 }

@@ -5,58 +5,76 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.example.pollution.R
+import com.example.pollution.classes.Location
+import com.example.pollution.response.Client
 import com.example.pollution.response.WeatherService
 import kotlinx.android.synthetic.main.activity_forecast.*
 import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
+import kotlin.collections.ArrayList
 
 private const val TAG = "ForecastActivity"
 
 class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
-
+    // TODO: Make a data class of this.
+    // Data will be found in either of these two
+    companion object {
+        var data1 : Location = Location(null, null,null,null, null, null, null)
+        var data2 : Location = Location(null, null,null,null, null, null, null)
+    }
     private var dataReceived: Boolean = false
-
     // Size of arrays
     private val arraySizes = 49
-    // Stores a value for every 48 hours for that unit
-    // Shows the time in forecast activity
+
+
+    //  C A R D 1
+    // Title
+    private lateinit var card1Title: TextView
+    // Shows the time
+    private lateinit var timeTextView: TextView
+    // Rectangles
+    private lateinit var aqiRectangle: View
+    private lateinit var pm25Rectangle: View
+    private lateinit var pm10Rectangle: View
+    private lateinit var no2Rectangle: View
+    private lateinit var o3Rectangle: View
+    // values
     private val timeValues = arrayOfNulls<String>(arraySizes)
     private val aqiValues = arrayOfNulls<Double>(arraySizes)
     private val pm25Values = arrayOfNulls<Double>(arraySizes)
     private val pm10Values = arrayOfNulls<Double>(arraySizes)
     private val no2Values = arrayOfNulls<Double>(arraySizes)
     private val o3Values = arrayOfNulls<Double>(arraySizes)
-    // Value for current time
-    private lateinit var timeTextView: TextView
-    // Stores a value for every 48 hours for that unit
-    private lateinit var aqiRectangle: View
-    private lateinit var pm25Rectangle: View
-    private lateinit var pm10Rectangle: View
-    private lateinit var no2Rectangle: View
-    private lateinit var o3Rectangle: View
 
-    /*
-    //C A R D 2
+
+
+    //  C A R D 2
+    // Title
+    private lateinit var card2Title: TextView
+    // Shows time
+    private lateinit var card2timeTextView: TextView
+    // Rectangles
+    private lateinit var card2aqiRectangle: View
+    private lateinit var card2pm25Rectangle: View
+    private lateinit var card2pm10Rectangle: View
+    private lateinit var card2no2Rectangle: View
+    private lateinit var card2o3Rectangle: View
+    // Values
     private val card2timeValues = arrayOfNulls<String>(arraySizes)
-    // Stores a value for every 48 hours for that unit
     private val card2aqiValues = arrayOfNulls<Double>(arraySizes)
     private val card2pm25Values = arrayOfNulls<Double>(arraySizes)
     private val card2pm10Values = arrayOfNulls<Double>(arraySizes)
     private val card2no2Values = arrayOfNulls<Double>(arraySizes)
     private val card2o3Values = arrayOfNulls<Double>(arraySizes)
 
-    private lateinit var card2timeTextView: TextView
-    private lateinit var card2aqiRectangle: View
-    private lateinit var card2pm25Rectangle: View
-    private lateinit var card2pm10Rectangle: View
-    private lateinit var card2no2Rectangle: View
-    private lateinit var card2o3Rectangle: View
-*/
+    var tmp : Location = Location(null, null,null,null, null, null, null)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Sets UI theme
@@ -65,39 +83,33 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         // Inflate layout
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
-
         // Receives data from MapsActivity
-        val intent = intent
         val inputLat = intent.getDoubleExtra("lat", 0.0)
         val inputLon = intent.getDoubleExtra("lon", 0.0)
         val inputTitle = intent.getStringExtra("cityTitle")
+        //FindViews
+        iniCardsUnits()
+        // Set listeners
+        // Graph button
+        var forecastGraphBtn = findViewById<ImageView>(R.id.forecast_card1_graph)
+        var forecastMapsBtn = findViewById<ImageView>(R.id.forecast_card1_replace)
+        forecastGraphBtn.setOnClickListener{runGraphActivity(inputLat, inputLon, inputTitle) }
+        forecastMapsBtn.setOnClickListener{ runMapsActivity() }
 
-        // Starts graph on button click
+        // Make object based on cards
+        /*
+        if(data1.cityName != null) setCardFocus(2, inputTitle, inputLat, inputLat)
+        else setCardFocus(1, inputTitle, inputLat, inputLon)
+        */
+        // Set seek bar
+        this.forecast_time_scroller!!.setOnSeekBarChangeListener(this)
+        // Sets graph on button click
         forecast_card1_graph.setOnClickListener { runGraphActivity(inputLat, inputLon, inputTitle) }
 
-        // Finds all relevant items in card 1
-        val card1Title = findViewById<TextView>(R.id.forecast_card2_title)
-        timeTextView = findViewById(R.id.forecast_card1_time)
-        aqiRectangle = findViewById<View>(R.id.card1_unit1)
-        pm25Rectangle = findViewById<View>(R.id.card1_unit2)
-        pm10Rectangle = findViewById<View>(R.id.card1_unit3)
-        no2Rectangle = findViewById<View>(R.id.card1_unit4)
-        o3Rectangle = findViewById<View>(R.id.card1_unit5)
-        this.forecast_time_scroller!!.setOnSeekBarChangeListener(this)
-
-        // Sets title of card1
-        card1Title.text = inputTitle
-
-        // TODO: In its own class for the love of god.
-        val client = Retrofit.Builder()
-            .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(WeatherService::class.java)
 
         doAsync {
-            val weather = client.getWeather(inputLat, inputLon).execute().body()
-            // TODO: Ask bj;rn, why 50?
+            val weather = Client.client.getWeather(inputLat, inputLon).execute().body()
+            // TODO: afterwards add this into the Location class
             for (i in aqiValues.indices + 1) {
                 aqiValues[i] = weather?.data?.time?.get(i)?.variables?.aQI?.value
                 pm25Values[i] = weather?.data?.time?.get(i)?.variables?.pm25Concentration?.value
@@ -108,11 +120,44 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             }
 
             val time = Calendar.getInstance()
-            val currentHourIn24Format = time.get(Calendar.HOUR_OF_DAY) - 1
+            val currentHourIn24Format = time.get(Calendar.HOUR_OF_DAY)
 
             //updateColorViews(currentHourIn24Format)
             forecast_time_scroller.progress = currentHourIn24Format
             dataReceived = true
+        }
+
+    }
+
+    private fun iniCardsUnits() {
+        card1Title = findViewById(R.id.forecast_card2_title)
+        timeTextView = findViewById(R.id.forecast_card1_time)
+        aqiRectangle = findViewById<View>(R.id.card1_unit1)
+        pm25Rectangle = findViewById<View>(R.id.card1_unit2)
+        pm10Rectangle = findViewById<View>(R.id.card1_unit3)
+        no2Rectangle = findViewById<View>(R.id.card1_unit4)
+        o3Rectangle = findViewById<View>(R.id.card1_unit5)
+
+        card2Title = findViewById(R.id.forecast_card2_title)
+        card2timeTextView = findViewById(R.id.forecast_card2_time)
+        card2aqiRectangle = findViewById<View>(R.id.card2_unit1)
+        card2pm25Rectangle = findViewById<View>(R.id.card2_unit2)
+        card2pm10Rectangle = findViewById<View>(R.id.card2_unit3)
+        card2no2Rectangle = findViewById<View>(R.id.card2_unit4)
+        card2o3Rectangle = findViewById<View>(R.id.card2_unit5)
+    }
+
+    private fun setCardFocus(card : Int, title: String, lat: Double, lon: Double) {
+        // Finds all relevant rectangles and textViews
+        when(card) {
+            1 -> {
+                // Sets title of card1
+                card1Title.text = title
+            }
+            2 -> {
+                card2Title.text = title
+            }
+            else -> print("Something weird happened")
         }
     }
 /*
@@ -132,7 +177,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 */
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 //        if (dataReceived) {
-        //updateColorViews(progress)
+        updateColorViews(progress)
 /*
         updateCompareTexts(card1aqiValues[progress], card2aqiValues[progress], card1CompareTexts[0])
         updateCompareTexts(card2aqiValues[progress], card1aqiValues[progress], card2CompareTexts[0])
@@ -152,30 +197,22 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 */
     }
 
-    // WHAT??????????????????????????????????????????????????????????????????????????????
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-    }
-
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
     }
 
-    /*
-    fun updateColorViews2(value: Double?, view: View) {
+    fun updateColorViews(value: Double?, view: View) {
         if (value != null) {
-            if (value >= 4) {
-                view.setBackgroundColor(Color.parseColor("#4900AC"))
-            } else if (value >= 3) {
-                view.setBackgroundColor(Color.parseColor("#C13500"))
-            } else if (value >= 2) {
-                view.setBackgroundColor(Color.parseColor("#FFCB00"))
-            } else {
-                view.setBackgroundColor(Color.parseColor("#3F9F41"))
-            }
+            if (value >= 4) view.setBackgroundColor(Color.parseColor("#4900AC"))
+            else if (value >= 3) view.setBackgroundColor(Color.parseColor("#C13500"))
+            else if (value >= 2) view.setBackgroundColor(Color.parseColor("#FFCB00"))
+            else view.setBackgroundColor(Color.parseColor("#3F9F41"))
         }
     }
-*/
-    /*
-    fun updateColorViews(progress: Int) {
+
+
+    private fun updateColorViews(progress: Int) {
         timeTextView.text = timeValues[progress]?.substring(11, 16)
 
         val aqi = aqiValues[progress]
@@ -186,16 +223,15 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         val no2 = no2Values[progress]
         val o3 = o3Values[progress]
 
-        updateColorViews2(aqi, aqiRectangle)
-        updateColorViews2(pm25, pm25Rectangle)
-        updateColorViews2(pm10, pm10Rectangle)
-        updateColorViews2(no2, no2Rectangle)
-        updateColorViews2(o3, o3Rectangle)
+        updateColorViews(aqi, aqiRectangle)
+        updateColorViews(pm25, pm25Rectangle)
+        updateColorViews(pm10, pm10Rectangle)
+        updateColorViews(no2, no2Rectangle)
+        updateColorViews(o3, o3Rectangle)
 
     }
-*/
-    //END CARD 2
 
+    //END CARD 2
     private fun getSharedPreferenceValue(prefKey: String): Boolean {
         val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
         return sp.getBoolean(prefKey, false)
@@ -210,5 +246,9 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         graphActivityIntent.putExtra(MapsActivity.LON, lon)
         graphActivityIntent.putExtra(MapsActivity.TITLE, title)
         startActivity(graphActivityIntent)
+    }
+
+    private fun runMapsActivity() {
+        // TODO: remove cards content so it can be replaced laters
     }
 }

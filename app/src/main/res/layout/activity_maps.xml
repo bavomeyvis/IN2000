@@ -44,6 +44,8 @@
                 app:layout_constraintEnd_toStartOf="@id/search_icon"
                 android:layout_width="0dp"
 
+                android:textCursorDrawable="@drawable/color_cursor"
+
                 android:importantForAutofill="no"
                 tools:targetApi="o"
 
