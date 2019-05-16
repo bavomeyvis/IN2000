@@ -66,7 +66,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val LAT = "com.example.pollution.ui.LAT"
         val LON = "com.example.pollution.ui.LON"
         val TITLE = "com.example.pollution.ui.TITLE"
-        lateinit var lastLocation: android.location.Location
     }
 
     //Google Maps
@@ -90,11 +89,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     val testLat = 59.915780
     val testLon = 10.752913
     // TODO: ???
-    private val channel_id = "channel0"
-    // User-inputted value. If current location's air quality goes below user_limit, the app alerts the user.
-    private val user_limit: Double = 0.0
     //list of City class objects containing name, coordinates and the marker for each large city
     var cities = arrayListOf<City>()
+    private lateinit var lastLocation: android.location.Location
 
     //On create stuff
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,9 +113,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // TODO: Explain what this does
         setKeyboardFinishedListener()
         // Create a notification channel for future use.
-        createNotificationChannel()
+        createNotificationChannel("channel0")
 
-        // TODO: ???
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
@@ -180,6 +176,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             runForecastActivity(marker.position.latitude, marker.position.longitude, city!!.cityName)
             false
         }
+
+        /*
+        // Execute task implemented in CheckAlertConditions.kt.
+        val asyncTask = CheckAlertConditions()
+        TODO("Properly convert the string to AQI on form of integer.")
+        asyncTask.execute(getPositionData(lastLocation.latitude, lastLocation.longitude).toInt())
+        */
     }
 
     //Takes a city marker as argument and returns the corresponding City object
@@ -235,13 +238,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                 }
             }
         }
-
-        /*
-        // Execute task implemented in CheckAlertConditions.kt.
-        val asyncTask = CheckAlertConditions()
-        TODO("Properly convert the string to AQI on form of integer.")
-        asyncTask.execute(getPositionData(lastLocation.latitude, lastLocation.longitude).toInt())
-        */
     }
 
 
@@ -389,13 +385,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         } finally { popup.show() }
     }
 
-    // TODO: comment please ???
-    private fun createNotificationChannel() { // Create the channel. All notifications will be sent through this channel, because we only ever use one alert.
+    private fun createNotificationChannel(channel_id: String) { // Create the channel. All notifications will be sent through this channel, because we only ever use one alert.
         if (Build.VERSION.SDK_INT >= 26) { // This feature is not supported on earlier devices.
             val channel0 = NotificationChannel(channel_id, "Channel 0", NotificationManager.IMPORTANCE_HIGH)
-            channel0.description = getString(R.string.channel_desc)
+            channel0.description = getString(R.string.channel_desc) // Set the description for the channel, can be arbitrary.
             val manager: NotificationManager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel0)
+            manager.createNotificationChannel(channel0) // Create the channel used for dangerAlert.
         }
     }
 
@@ -410,28 +405,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         mMap.isMyLocationEnabled = true
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
             if (location != null) lastLocation = location
-        }
-    }
-
-    // TODO: COMMENT!
-    private fun dangerAlert() { // Send the alert.
-        // Do not proceed if user has turned off alerts in settings.
-        if (!getSharedPreferenceValue("alert")) return
-        val intent = Intent(this, MapsActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
-
-        val builder = NotificationCompat.Builder(this, channel_id) // The builder contains the notification attributes.
-            .setSmallIcon(R.drawable.menu_alert)
-            .setContentTitle(getString(R.string.notification_title))
-            .setContentText(getString(R.string.notification_desc))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-
-        with(NotificationManagerCompat.from(this)) {
-            notify(0, builder.build()) // Send the notification with the builder defined above.
         }
     }
 

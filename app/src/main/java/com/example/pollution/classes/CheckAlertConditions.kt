@@ -1,10 +1,9 @@
 package com.example.pollution.classes
 
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
-import com.example.pollution.ui.AlertActivity
-import com.example.pollution.ui.SettingsActivity
-import com.example.pollution.ui.WeekActivity
+import com.example.pollution.ui.*
 import java.time.LocalDate
 import java.util.*
 
@@ -40,6 +39,7 @@ class CheckAlertConditions: AsyncTask<Int, Int, Boolean>() {
         super.onPostExecute(result)
         if (result == true) {
             TODO("Send the alert using the dangerAlert() function")
+            //Alert.dangerAlert(MapsActivity.java, "channel0")
         }
     }
 }

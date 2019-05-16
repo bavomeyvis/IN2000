@@ -58,6 +58,7 @@ class WeekActivity : AppCompatActivity() {
             // Save their states from last time.
             switches[i].isChecked = getSharedPreferenceValueBool("switchValue$i")
             // Seekbars.
+            seekbars[i].isEnabled = switches[i].isChecked
             seekbars[i].setRangeValues(0, 24)
             // The processes are set to be where the user left them.
             seekbars[i].selectedMinValue = getSharedPreferenceValueInt("seekBarValue1$i")
@@ -78,6 +79,7 @@ class WeekActivity : AppCompatActivity() {
             switches[i].setOnCheckedChangeListener{_, isChecked -> run {
                 writeToPreferenceBool("switchValue$i", isChecked)
                 doNotDisturbWeek[i] = isChecked
+                seekbars[i].isEnabled = isChecked
                 if (isChecked)
                     Toast.makeText(applicationContext, getString(R.string.no_alert_weekday, minValues[i], maxValues[i], weekdaysPlural[i]), Toast.LENGTH_LONG).show()
                 else

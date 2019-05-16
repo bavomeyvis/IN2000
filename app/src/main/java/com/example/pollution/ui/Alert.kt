@@ -8,7 +8,7 @@ import android.support.v4.app.NotificationManagerCompat
 import com.example.pollution.R
 
 object Alert {
-    private fun dangerAlert(context: Context, channel_id: String) { // Send the alert.
+    fun dangerAlert(context: Context, channel_id: String) { // Send the alert.
         val intent = Intent(context, MapsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }

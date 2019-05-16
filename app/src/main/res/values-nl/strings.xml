@@ -59,7 +59,7 @@
     <string name="cancel_disable_alerts">Do not disturb cancelled.</string>
     <string name="alert_week_title">Time periods to ignore</string>
     <string name="alert_week_desc">Select specific time periods of days of the week for the app to be silent.</string>
-    <string name="week_title">Select time periods for the app to be silent:</string>
+    <string name="week_title">Select time frames for the app to be silent:</string>
     <string name="alert_week_unavailable_title">Unsupported API level.</string>
     <string name="alert_week_unavailable_desc">This function requires API level 23.</string>
     <string name="alert_week_unavailable_dismiss">OK</string>

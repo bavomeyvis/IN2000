@@ -10,7 +10,15 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:theme="?attr/actionBarTheme"
-            android:minHeight="?attr/actionBarSize" android:id="@+id/toolbarAlert"/>
+            android:minHeight="?attr/actionBarSize" android:id="@+id/toolbarAlert">
+            <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textAllCaps="true"
+                    android:textSize="20sp"
+                    android:text="@string/alert_title"/>
+
+    </android.support.v7.widget.Toolbar>
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="115dp">

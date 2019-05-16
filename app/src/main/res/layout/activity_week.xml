@@ -10,7 +10,14 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:theme="?attr/actionBarTheme"
-            android:minHeight="?attr/actionBarSize" android:id="@+id/toolbar"/>
+            android:minHeight="?attr/actionBarSize" android:id="@+id/toolbar">
+        <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                android:text="@string/week_title"/>
+    </android.support.v7.widget.Toolbar>
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="85.71428571428571dp" app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +42,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="12dp" android:layout_marginStart="8dp"/>
+        <View
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -59,6 +72,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="12dp" android:layout_marginStart="8dp"/>
+        <View
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -82,6 +101,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="12dp" android:layout_marginStart="8dp"/>
+        <View
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -105,6 +130,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="12dp" android:layout_marginStart="8dp"/>
+        <View
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -128,6 +159,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="12dp" android:layout_marginStart="8dp"/>
+        <View
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -151,6 +188,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="12dp" android:layout_marginStart="8dp"/>
+        <View
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -174,5 +217,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="12dp" android:layout_marginStart="8dp"/>
+        <View
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>
