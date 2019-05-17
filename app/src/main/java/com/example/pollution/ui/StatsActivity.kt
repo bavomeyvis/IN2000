@@ -46,13 +46,14 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val spinner: Spinner = findViewById(R.id.statsUnit)
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.units_array,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
+        val units = listOf("aQI", "no2", "o3", "pm10", "pm25")
+        ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, units)
+        //ArrayAdapter.createFromResource(this, R.array.units_array, android.R.layout.simple_spinner_item).
+            also { adapter ->
             // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter.setDropDown(android.R.layout.simple_spinner_dropdown_item)
+
             // Apply the adapter to the spinner
             spinner.adapter = adapter
         }
