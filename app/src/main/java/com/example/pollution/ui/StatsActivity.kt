@@ -27,8 +27,22 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         var nCities : Int = 0
         lateinit var cities: HashMap<String, LatLng>
     }
-
+    var check = 0
     var selectedUnit = "aQI"
+
+    override fun onNothingSelected(parent: AdapterView<*>) {
+        print("nothing happened")
+
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+        if(++check > 1) {
+            selectedUnit = parent.selectedItem.toString()
+            Log.d("DEBUG", "SELECTED UNIT: $selectedUnit")
+            getStats()
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Sets theme
@@ -42,8 +56,7 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         nCities = cities.size
         // TODO: Insert upgrade
 
-        getStats()
-
+        //getStats()
 
         val spinner: Spinner = findViewById(R.id.statsUnit)
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -62,26 +75,11 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>) {
-        print("nothing happened")
-
-    }
-    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
-        selectedUnit = parent.selectedItem.toString()
-        Log.d("DEBUG", "SELECTED UNIT: $selectedUnit")
-        getStats()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        print("hey")
-    }
-
     private fun getStats() {
         val unitTitle : TextView = findViewById(R.id.statsCountryName)
-        unitTitle.text = selectedUnit
-        //unitTitle.text = selectedUnit
-        for ((key, value) in cities) getCityValue(key, value, selectedUnit)
+        for ((key, value) in cities) {
+            getCityValue(key, value, selectedUnit)
+        }
     }
 
     // TODO: Repetitive code
@@ -116,6 +114,8 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if(count == nCities) setRanking(perCityAQI)
         else count++
     }
+
+    // Ranks and sorts values and cities.
     private fun setRanking(citiesAndValues : HashMap<Double, String>) {
         // Sorts list
         val sortedMap = citiesAndValues.toSortedMap(compareByDescending { it })
