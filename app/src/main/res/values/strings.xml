@@ -89,4 +89,5 @@
     <string name="forecast_unit_pm10">pm10</string>
     <string name="forecast_unit_no2">no2</string>
     <string name="forecast_unit_o3">o3</string>
+    <string name="stats_cities_title">City</string>
 </resources>

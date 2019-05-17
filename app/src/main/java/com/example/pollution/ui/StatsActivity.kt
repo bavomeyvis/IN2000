@@ -1,26 +1,35 @@
 package com.example.pollution.ui
 
+import android.content.Context
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
+import android.util.AttributeSet
+import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.example.pollution.R
+import com.example.pollution.response.Client
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.activity_settings.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.logging.Logger
 
-class StatsActivity : AppCompatActivity() {
+class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     companion object {
         var perCityAQI : HashMap<Double, String> = hashMapOf()
         var count : Int = 1
         var nCities : Int = 0
+        lateinit var cities: HashMap<String, LatLng>
     }
+
+    var selectedUnit = "aQI"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Sets theme
         if(getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
@@ -28,15 +37,53 @@ class StatsActivity : AppCompatActivity() {
         // Sets layout
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stats)
-        // Makes a client connection
-        val client = Retrofit.Builder()
-            .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build().create(WeatherService::class.java)
         // Loops through received list of countries and gets countryValues
-        val cities : HashMap<String, LatLng> = intent.extras["hashMap"] as HashMap<String, LatLng>
+        cities = intent.extras["hashMap"] as HashMap<String, LatLng>
         nCities = cities.size
-        for ((key, value) in cities) getCityValue(client, key, value)
+        // TODO: Insert upgrade
+
+        getStats()
+
+        val spinner: Spinner = findViewById(R.id.statsUnit)
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.units_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            spinner.adapter = adapter
+        }
+
+        spinner.onItemSelectedListener = this
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>) {
+        print("nothing happened")
+        Log.d("Hey LOOOO HERE: ", parent.getChildAt(1).toString())
+    }
+    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+        selectedUnit = parent.getChildAt(pos).toString()
+        getStats()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        print("hey")
+    }
+
+    private fun getStats() {
+        val unitTitle : TextView = findViewById(R.id.statsCountryName)
+        //unitTitle.text = selectedUnit
+        for ((key, value) in cities) getCityValue(key, value, selectedUnit)
     }
 
     // TODO: Repetitive code
@@ -45,15 +92,23 @@ class StatsActivity : AppCompatActivity() {
         return sp.getBoolean(prefKey, false)
     }
 
-    private fun getCityValue(client : WeatherService, key : String, value : LatLng)  {
+    private fun getCityValue(key : String, pos : LatLng, pollutionUnit : String)  {
+        val client = Client.client
         doAsync {
-            val weather = client.getWeather(value.latitude, value.longitude).execute().body()
-            val aqi = weather?.data?.time?.get(0)?.variables?.aQI?.value
+            val weather = client.getWeather(pos.latitude, pos.longitude).execute().body()
+            val aqi = when (pollutionUnit) {
+                "no2" -> weather?.data?.time?.get(0)?.variables?.aQINo2?.value
+                "03" -> weather?.data?.time?.get(0)?.variables?.aQIO3?.value
+                "pm10" -> weather?.data?.time?.get(0)?.variables?.aQIPm10?.value
+                "pm25" -> weather?.data?.time?.get(0)?.variables?.aQIPm25?.value
+                else -> weather?.data?.time?.get(0)?.variables?.aQI?.value
+            }
             uiThread {
                 if (aqi != null) it.addCountryValue(key, aqi)
             }
         }
     }
+
     // Adds value to the second hashMap of countries
     private fun addCountryValue(city : String, aqiValue : Double)  {
         perCityAQI[aqiValue] = city

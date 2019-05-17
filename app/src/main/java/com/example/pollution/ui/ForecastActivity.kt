@@ -9,36 +9,26 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.example.pollution.R
-import com.example.pollution.classes.Location
 import com.example.pollution.response.Client
-import com.example.pollution.response.WeatherService
 import kotlinx.android.synthetic.main.activity_forecast.*
 import org.jetbrains.anko.doAsync
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
-import kotlin.collections.ArrayList
 
 private const val TAG = "ForecastActivity"
 
 class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     // TODO: Make a data class of this.
-    // Data will be found in either of these two
-    companion object {
-        var data1 : Location = Location(null, null,null,null, null, null, null)
-        var data2 : Location = Location(null, null,null,null, null, null, null)
-    }
+
+
     private var dataReceived: Boolean = false
     // Size of arrays
     private val arraySizes = 49
 
 
     //  C A R D 1
-    // Title
+    // title, time, rectangles
     private lateinit var card1Title: TextView
-    // Shows the time
     private lateinit var timeTextView: TextView
-    // Rectangles
     private lateinit var aqiRectangle: View
     private lateinit var pm25Rectangle: View
     private lateinit var pm10Rectangle: View
@@ -52,14 +42,10 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private val no2Values = arrayOfNulls<Double>(arraySizes)
     private val o3Values = arrayOfNulls<Double>(arraySizes)
 
-
-
     //  C A R D 2
-    // Title
+    // Title rectangles
     private lateinit var card2Title: TextView
-    // Shows time
     private lateinit var card2timeTextView: TextView
-    // Rectangles
     private lateinit var card2aqiRectangle: View
     private lateinit var card2pm25Rectangle: View
     private lateinit var card2pm10Rectangle: View
@@ -73,7 +59,6 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private val card2no2Values = arrayOfNulls<Double>(arraySizes)
     private val card2o3Values = arrayOfNulls<Double>(arraySizes)
 
-    var tmp : Location = Location(null, null,null,null, null, null, null)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

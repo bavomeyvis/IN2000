@@ -21,9 +21,6 @@ import android.widget.Toast
 import android.widget.SeekBar
 
 
-
-
-//AppCompatActivity: Base class for activities that use the support library action bar features.
 //SettingsActivity: Represents UI of the settings menu
 // Guidelines: https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 class SettingsActivity : AppCompatActivity() {

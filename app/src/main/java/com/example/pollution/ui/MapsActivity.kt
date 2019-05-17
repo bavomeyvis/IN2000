@@ -4,7 +4,6 @@ package com.example.pollution.ui
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -15,8 +14,6 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
@@ -34,9 +31,8 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
-import com.example.pollution.classes.CheckAlertConditions
 import com.example.pollution.classes.City
-import com.example.pollution.response.WeatherService
+import com.example.pollution.response.Client
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
@@ -45,12 +41,9 @@ import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.startActivityForResult
 import org.json.JSONException
 
 // Retrofit imports
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -69,8 +62,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     }
 
     //Google Maps
-    private lateinit var mMap: GoogleMap
+    private lateinit var gmap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    // Contains all markers coordinates
     val coordinates : HashMap<String, LatLng> = hashMapOf(
         "oslo" to LatLng(59.915780, 10.752913), "bergen" to LatLng(60.393975, 5.324937),
         "trondheim" to LatLng(63.433465, 10.395516), "stavanger" to LatLng(63.433465, 10.395516),
@@ -82,13 +76,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         "sandefjord" to LatLng(59.056636, 10.028874), "lillestrøm" to LatLng(59.956639, 11.050240),
         "arendal" to LatLng(58.463660, 8.772121), "ålesund" to LatLng(62.476929, 6.149429))
 
-    //Todo: Move starting of GraphActivity
-    /*graphActivityIntent.putExtra(LAT, testLat)
-    graphActivityIntent.putExtra(LON, testLon)*/
-    // Test lats
-    val testLat = 59.915780
-    val testLon = 10.752913
-    // TODO: ???
     //list of City class objects containing name, coordinates and the marker for each large city
     var cities = arrayListOf<City>()
     private lateinit var lastLocation: android.location.Location
@@ -126,54 +113,61 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     // Sets Map preferences (e.g. theme, boundaries)
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
+        gmap = googleMap
         // Turns off most of Google Maps widgets
-        mMap.uiSettings.isMapToolbarEnabled = false
-        mMap.uiSettings.isMyLocationButtonEnabled = false
-        mMap.uiSettings.isCompassEnabled = false
-        mMap.uiSettings.isZoomControlsEnabled = false
+        gmap.uiSettings.isMapToolbarEnabled = false
+        gmap.uiSettings.isMyLocationButtonEnabled = false
+        gmap.uiSettings.isCompassEnabled = false
+        gmap.uiSettings.isZoomControlsEnabled = false
         // Sets map theme and surroundings
+
         if (getSharedPreferenceValue("theme")){
-            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
-            darkenSurroundings(true)
+            gmap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
+            //darkenSurroundings(true)
         }
         else {
-            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
-            darkenSurroundings(false)
+            gmap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_normal))
+            //darkenSurroundings(false)
         }
         search_input.isCursorVisible = true
 
-        // Set the boundaries for movement.
-        val builder = LatLngBounds.Builder()
-        builder.include(LatLng(60.443184, 8.052995))
-        builder.include(LatLng(70.012997, 24.316675))
-        val bounds = builder.build() // These are the coordinates of two corners.
-        // ???
-        val width = resources.displayMetrics.widthPixels
-        val height = resources.displayMetrics.heightPixels
-        val padding = width * 0.2
-        // Move the camera to the appropriate place.
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding.toInt()))
-        //mMap.setLatLngBoundsForCameraTarget(bounds) // Setting the bounds. Unfortunately, the camera is restricted even when zoomed in.
-        //mMap.setMinZoomPreference(mMap.cameraPosition.zoom) // Minimum zoom is where the camera currently is.
-        //mMap.setMaxZoomPreference(12.0f) // Maximum zoom.
-         //get latlong for corners for specified city
 
-        darkenSurroundings(getSharedPreferenceValue("theme"))
+        // Set the boundaries for movement.  yy xx
+        val NORWAY = LatLngBounds(LatLng(65.443184, 12.052995), LatLng(70.012997, 25.316675))
+        val CENTER = LatLngBounds(LatLng(60.0, 13.7), LatLng(68.0, 18.7))
+        // Move the camera to the appropriate place.
+
+        gmap.moveCamera(CameraUpdateFactory.newLatLngBounds(NORWAY, resources.displayMetrics.widthPixels, resources.displayMetrics.heightPixels, 0))
+
+        gmap.animateCamera(CameraUpdateFactory.zoomIn())
+        gmap.animateCamera(CameraUpdateFactory.zoomTo(4.3f), 2000, null)
+
+        val cameraPosition = CameraPosition.Builder()
+            .target(LatLng(66.0, 18.7)) // Sets the center of the map to Mountain View
+            .zoom(4.3f) // Sets the zoom
+            .bearing(45.0f) // Sets the orientation of the camera to north-east
+            .tilt(0.0f) // Sets the tilt of the camera to 0 degrees
+            .build() // Creates a CameraPosition from the builder
+        gmap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+        gmap.setLatLngBoundsForCameraTarget(CENTER)
+        gmap.setMaxZoomPreference(5.0f)
+        gmap.setMinZoomPreference(4.3f)
+
+        //darkenSurroundings(getSharedPreferenceValue("theme"))
         // Assures location is set
         setMyLocation()
 
         // TODO: This is only if we wantevery place
         /*
-        mMap.setOnMapClickListener { point ->
+        gmap.setOnMapClickListener { point ->
             //map is clicked latlng can be accessed from
             //point.Latitude & point.Longitude
             runForecastActivity(point.latitude, point.longitude, getPositionData(point.latitude, point.longitude))
         }*/
-        addCityMarkers(mMap)
+        addCityMarkers(gmap)
 
         //marker is clicked and we find the marker's corresponding City class object
-        mMap.setOnMarkerClickListener { marker ->
+        gmap.setOnMarkerClickListener { marker ->
             val city: City? = getCity(marker)
             runForecastActivity(marker.position.latitude, marker.position.longitude, city!!.cityName)
             false
@@ -188,6 +182,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     }
 
     //Takes a city marker as argument and returns the corresponding City object
+    // TODO: In city class. Method in city class. Static list variable of cities.
     fun getCity(marker: Marker): City? {
         var returnCity: City? = null
         for (city in cities) {
@@ -211,11 +206,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             "sandefjord" to LatLng(59.056636, 10.028874), "lillestrøm" to LatLng(59.956639, 11.050240),
             "arendal" to LatLng(58.463660, 8.772121), "ålesund" to LatLng(62.476929, 6.149429))
         //creating a client to fetch AQI data from api
-        val client = Retrofit.Builder()
-            .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(WeatherService::class.java)
+        val client = Client.client
         // Add a colored marker according to checked AQ index (if any)
         for ((key, value) in coordinates) {
             doAsync {
@@ -271,7 +262,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
             //TODO: Hvis man klikker på markeren som lages her krasjer appen
             //addMarkerColoured(address)
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(addressLatLng, 15F))
+            gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(addressLatLng, 15F))
             //Open ForecastActivity when searched
             runForecastActivity(address.latitude, address.longitude, address.getAddressLine(0))
         }
@@ -280,32 +271,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     // The menu items' listener
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when(item?.itemId) {
-            R.id.menu_home -> recreate()
-            R.id.menu_alert -> runAlertActivity()
             R.id.menu_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_SHORT).show()
-            R.id.menu_graph -> runGraphActivity(testLat, testLon)
             R.id.menu_stats -> runStatsActivity()
+            R.id.menu_alert -> runAlertActivity()
             R.id.menu_settings -> runSettingsActivity()
         }
         return true
     }
-
-    //Method that runs GraphActivity with extra parameters
-    private fun runGraphActivity(lat: Double, lon: Double) {
-        val graphActivityIntent = Intent(this, GraphActivity::class.java)
-        graphActivityIntent.putExtra("lat", lat)
-        graphActivityIntent.putExtra("lon", lon)
-        startActivity(graphActivityIntent)
-    }
-
     // Runs activity "Statistics"
     private fun runStatsActivity() {
         val statsActivity = Intent(this, StatsActivity::class.java).putExtra("hashMap", coordinates)
         startActivity(statsActivity)
         recreate()
-
     }
-
     // Runs ForecastActivity with extra parameters
     private fun runForecastActivity(lat: Double, lon: Double, title:String) {
         val forecastActivityIntent = Intent(this, ForecastActivity::class.java) //< --- Change this
@@ -314,7 +292,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         forecastActivityIntent.putExtra("cityTitle", title)
         startActivity(forecastActivityIntent)
     }
-
     // Runs settingsActivity
     private fun runSettingsActivity() {
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
@@ -370,7 +347,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             return
         }
-        mMap.isMyLocationEnabled = true
+        gmap.isMyLocationEnabled = true
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
             if (location != null) lastLocation = location
         }
@@ -406,7 +383,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     private fun darkenSurroundings(dark : Boolean) {
         try {
             // If you want to improve: http://geojson.io.
-            val layer = GeoJsonLayer(mMap, R.raw.camo, applicationContext) //.geojson APIs for data on countries' boundaries.
+            val layer = GeoJsonLayer(gmap, R.raw.camo, applicationContext) //.geojson APIs for data on countries' boundaries.
             val style = layer.defaultPolygonStyle
             style.strokeWidth = 40F
             if(dark) {
