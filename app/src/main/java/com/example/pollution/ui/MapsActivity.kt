@@ -13,6 +13,7 @@ import android.location.Geocoder
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.KeyEvent
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.example.pollution.R
 import com.example.pollution.classes.City
 import com.example.pollution.response.Client
+import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
@@ -42,9 +44,12 @@ import kotlinx.android.synthetic.main.activity_maps.*
 // Async imports
 import org.jetbrains.anko.doAsync
 import org.json.JSONException
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 // Retrofit imports
 import java.io.IOException
+import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -80,6 +85,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     var cities = arrayListOf<City>()
     private lateinit var lastLocation: android.location.Location
 
+    private var cooldown = false
+
     //On create stuff
     override fun onCreate(savedInstanceState: Bundle?) {
         // When object is created. Static variable mapsActivity is set
@@ -103,6 +110,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         createNotificationChannel("channel0")
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        alertConditions()
     }
 
     // Recreates when startActivityForResult gets OK_Signal (.e.g from settings)
@@ -172,13 +180,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             runForecastActivity(marker.position.latitude, marker.position.longitude, city!!.cityName)
             false
         }
-
-        /*
-        // Execute task implemented in CheckAlertConditions.kt.
-        val asyncTask = CheckAlertConditions()
-        TODO("Properly convert the string to AQI on form of integer.")
-        asyncTask.execute(getPositionData(lastLocation.latitude, lastLocation.longitude).toInt())
-        */
     }
 
     //Takes a city marker as argument and returns the corresponding City object
@@ -398,6 +399,64 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             Log.e("IOException", ioe.localizedMessage)
         } catch (jsone: JSONException) {
             Log.e("JSONException", jsone.localizedMessage)
+        }
+    }
+
+    // Constantly check if all conditions to send an alert are fulfilled; in that case - send the alert.
+    private fun alertConditions() {
+        // Used to retrieve API data.
+        val client = Retrofit.Builder()
+            .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(WeatherService::class.java)
+
+        doAsync {
+            // Declare current location's AQI value and current hour of the day.
+            val weather = client.getWeather(lastLocation.latitude, lastLocation.longitude).execute().body()!!
+            val time = Calendar.getInstance()
+            val hours = time.get(Calendar.HOUR_OF_DAY)
+            var cont = true
+            // First, check if the user has granted permission to receive notifications through settings.
+            if (!SettingsActivity.doNotDisturb) {
+                // Has the user turned on do not disturb?
+                if (!AlertActivity.doNotDisturb) {
+                    // Is the current time within the user's selected time frame to not be disturbed?
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        val date = LocalDate.now()
+                        val dow = date.dayOfWeek.value - 1
+                        if (WeekActivity.doNotDisturbWeek[dow])
+                            if (hours >= WeekActivity.maxValues[dow] || hours <= WeekActivity.minValues[dow])
+                                cont = false
+                    }
+                    if (cont) {
+                        // If the program reaches here, the user has given permission for the app to send the alert.
+                        val temp = weather.data.time[hours].variables.aQI.value
+                        // Does current location's AQI exceed user set threshold?
+                        if (temp > AlertActivity.threshold && !cooldown) {
+                            Alert.dangerAlert(this@MapsActivity, "channel0")
+                            // Start a cooldown.
+                            cooldown = true
+                            // Start a timer set to an hour, and an interval with a minute. When the timer stops,
+                            // the cooldown will turn off, and a new alert may be sent.
+                            timer(1000 * 60 * 60, 1000 * 60)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Timer used for restricting time between alerts.
+    private fun timer(millisInFuture: Long, countDownInterval: Long): CountDownTimer {
+        return object: CountDownTimer(millisInFuture, countDownInterval) {
+            override fun onTick(millisUntilFinished: Long) {
+                cooldown = true
+            }
+
+            override fun onFinish() {
+                cooldown = false
+            }
         }
     }
 }
