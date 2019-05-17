@@ -33,10 +33,8 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Set theme.
-        if(getSharedPreferenceValue("theme"))
-            setTheme(R.style.DarkTheme)
-        else
-            setTheme(R.style.AppTheme)
+        if(getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
+        else setTheme(R.style.AppTheme)
 
         // Displays activity_settings.
         super.onCreate(savedInstanceState)
