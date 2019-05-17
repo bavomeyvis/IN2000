@@ -34,15 +34,13 @@ class AlertActivity : AppCompatActivity() {
     private var isCancelled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Set theme
+        if(getSharedPreferenceValueBool("theme")) setTheme(R.style.DarkTheme)
+        else setTheme(R.style.AppTheme)
         // Displays activity_alert
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alert)
 
-        // Set theme
-        if (getSharedPreferenceValueBool("theme"))
-            setTheme(R.style.DarkTheme)
-        else
-            setTheme(R.style.AppTheme)
 
         // Threshold bar
         val threshold: SeekBar = findViewById(R.id.seekBarThreshold)
@@ -139,7 +137,7 @@ class AlertActivity : AppCompatActivity() {
                     popupWindow.exitTransition = slideOut
                 }
 
-                val wheel: NumberPicker = view.findViewById(R.id.wheelview)
+                val wheel = view.findViewById<NumberPicker>(R.id.wheelview)
                 val buttonPopup = view.findViewById<Button>(R.id.button_popup)
 
                 val data = arrayOf(getString(R.string.one_hour), getString(R.string.three_hours), getString(R.string.one_day), getString(R.string.one_week), getString(R.string.one_month))
