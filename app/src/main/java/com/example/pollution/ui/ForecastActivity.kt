@@ -1,6 +1,5 @@
 package com.example.pollution.ui
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -9,29 +8,24 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.example.pollution.R
-import com.example.pollution.classes.Location
+import com.example.pollution.classes.ActivityBooter
 import com.example.pollution.response.Client
-import com.example.pollution.response.WeatherService
 import kotlinx.android.synthetic.main.activity_forecast.*
 import org.jetbrains.anko.doAsync
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
-import kotlin.collections.ArrayList
 
 private const val TAG = "ForecastActivity"
 
 class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     // TODO: Make a data class of this.
-    // Data will be found in either of these two
     companion object {
-        var data1 : Location = Location(null, null,null,null, null, null, null)
-        var data2 : Location = Location(null, null,null,null, null, null, null)
+
     }
+    private val booter = ActivityBooter(this@ForecastActivity)
+
     private var dataReceived: Boolean = false
     // Size of arrays
     private val arraySizes = 49
-
 
     //  C A R D 1
     // Title
@@ -52,8 +46,6 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private val no2Values = arrayOfNulls<Double>(arraySizes)
     private val o3Values = arrayOfNulls<Double>(arraySizes)
 
-
-
     //  C A R D 2
     // Title
     private lateinit var card2Title: TextView
@@ -73,9 +65,6 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private val card2no2Values = arrayOfNulls<Double>(arraySizes)
     private val card2o3Values = arrayOfNulls<Double>(arraySizes)
 
-    var tmp : Location = Location(null, null,null,null, null, null, null)
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         // Sets UI theme
         if (getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
@@ -93,7 +82,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         // Graph button
         var forecastGraphBtn = findViewById<ImageView>(R.id.forecast_card1_graph)
         var forecastMapsBtn = findViewById<ImageView>(R.id.forecast_card1_replace)
-        forecastGraphBtn.setOnClickListener{runGraphActivity(inputLat, inputLon, inputTitle) }
+        forecastGraphBtn.setOnClickListener{booter.runGraphActivity(inputLat, inputLon, inputTitle) }
         forecastMapsBtn.setOnClickListener{ runMapsActivity() }
 
         // Make object based on cards
@@ -105,8 +94,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         setCardTitle(1, inputTitle, inputLat, inputLon)
         this.forecast_time_scroller!!.setOnSeekBarChangeListener(this)
         // Sets graph on button click
-        forecast_card1_graph.setOnClickListener { runGraphActivity(inputLat, inputLon, inputTitle) }
-
+        forecast_card1_graph.setOnClickListener { booter.runGraphActivity(inputLat, inputLon, inputTitle) }
 
         doAsync {
             val weather = Client.client.getWeather(inputLat, inputLon).execute().body()
@@ -129,7 +117,6 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         }
 
     }
-
 
     private fun iniCardsUnits() {
         card1Title = findViewById(R.id.forecast_card1_title)
@@ -213,7 +200,6 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         }
     }
 
-
     private fun updateColorViews(progress: Int) {
         timeTextView.text = timeValues[progress]?.substring(11, 16)
 
@@ -238,16 +224,6 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
         return sp.getBoolean(prefKey, false)
 
-    }
-
-    //Method that runs GraphActivity with extra parameters
-    private fun runGraphActivity(lat: Double, lon: Double, title: String) {
-        val graphActivityIntent = Intent(this, GraphActivity::class.java)
-        // TODO: Fix
-        graphActivityIntent.putExtra(MapsActivity.LAT, lat)
-        graphActivityIntent.putExtra(MapsActivity.LON, lon)
-        graphActivityIntent.putExtra(MapsActivity.TITLE, title)
-        startActivity(graphActivityIntent)
     }
 
     private fun runMapsActivity() {

@@ -4,7 +4,6 @@ package com.example.pollution.ui
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -15,8 +14,6 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
@@ -34,8 +31,9 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
-import com.example.pollution.classes.CheckAlertConditions
-import com.example.pollution.classes.City
+import com.example.pollution.classes.ActivityBooter
+import com.example.pollution.classes.Cities
+import com.example.pollution.data.City
 import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -45,16 +43,13 @@ import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.startActivityForResult
 import org.json.JSONException
 
 // Retrofit imports
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 private const val TAG = "MapsActivity"
 
@@ -71,27 +66,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     //Google Maps
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    val coordinates : HashMap<String, LatLng> = hashMapOf(
-        "oslo" to LatLng(59.915780, 10.752913), "bergen" to LatLng(60.393975, 5.324937),
-        "trondheim" to LatLng(63.433465, 10.395516), "stavanger" to LatLng(63.433465, 10.395516),
-        "sandvika" to LatLng(59.891695, 10.528088), "kristiansand" to LatLng(58.162897, 8.018848),
-        "fredrikstad" to LatLng(59.224392, 10.933630), "tromsø" to LatLng(69.653412, 18.953360),
-        "drammen" to LatLng(59.747642, 10.205377), "sandnes" to LatLng(58.852107, 5.732697),
-        "skien" to LatLng(58.852107, 5.732697), "sarpsborg" to LatLng(59.286260, 11.109056),
-        "bodø" to LatLng(67.282654, 14.404968), "larvik" to LatLng(59.056636, 10.02887),
-        "sandefjord" to LatLng(59.056636, 10.028874), "lillestrøm" to LatLng(59.956639, 11.050240),
-        "arendal" to LatLng(58.463660, 8.772121), "ålesund" to LatLng(62.476929, 6.149429))
 
-    //Todo: Move starting of GraphActivity
-    /*graphActivityIntent.putExtra(LAT, testLat)
-    graphActivityIntent.putExtra(LON, testLon)*/
-    // Test lats
-    val testLat = 59.915780
-    val testLon = 10.752913
-    // TODO: ???
     //list of City class objects containing name, coordinates and the marker for each large city
-    var cities = arrayListOf<City>()
+    //var cities = arrayListOf<City>()
     private lateinit var lastLocation: android.location.Location
+
+    private val booter = ActivityBooter(this@MapsActivity)
+    private val cities = Cities(this@MapsActivity)
 
     //On create stuff
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -165,14 +146,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
 
         mMap.setOnMapClickListener { point ->
-            runForecastActivity(point.latitude, point.longitude, getPositionData(point.latitude, point.longitude))
+            //crashes if click is in water apparently
+            booter.runForecastActivity(point.latitude, point.longitude, cities.getPositionData(point.latitude, point.longitude))
         }
         addCityMarkers(mMap)
 
         //marker is clicked and we find the marker's corresponding City class object
         mMap.setOnMarkerClickListener { marker ->
-            val city: City? = getCity(marker)
-            runForecastActivity(marker.position.latitude, marker.position.longitude, city!!.cityName)
+            val city: City? = cities.getCity(marker)
+            booter.runForecastActivity(marker.position.latitude, marker.position.longitude, city!!.cityName)
             false
         }
 
@@ -184,29 +166,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         */
     }
 
-    //Takes a city marker as argument and returns the corresponding City object
-    fun getCity(marker: Marker): City? {
-        var returnCity: City? = null
-        for (city in cities) {
-            if (city.cityName.equals(marker.title)) {
-                returnCity = city
-            }
-        }
-        return returnCity
-    }
-
     // Adds (colored, depending on AQI value, ) markers to "cityMarkers" using API request (with LatLng)
     private fun addCityMarkers(mMap: GoogleMap) {
-        val coordinates : HashMap<String, LatLng> = hashMapOf(
-            "Oslo" to LatLng(59.915780, 10.752913), "Bergen" to LatLng(60.393975, 5.324937),
-            "Trondheim" to LatLng(63.433465, 10.395516), "Stavanger" to LatLng(63.433465, 10.395516),
-            "Sandvika" to LatLng(59.891695, 10.528088), "Kristiansand" to LatLng(58.162897, 8.018848),
-            "Fredrikstad" to LatLng(59.224392, 10.933630), "Tromsø" to LatLng(69.653412, 18.953360),
-            "Drammen" to LatLng(59.747642, 10.205377), "Sandnes" to LatLng(58.852107, 5.732697),
-            "Skien" to LatLng(58.852107, 5.732697), "Sarpsborg" to LatLng(59.286260, 11.109056),
-            "Bodø" to LatLng(67.282654, 14.404968), "Larvik" to LatLng(59.056636, 10.02887),
-            "Sandefjord" to LatLng(59.056636, 10.028874), "Lillestrøm" to LatLng(59.956639, 11.050240),
-            "Arendal" to LatLng(58.463660, 8.772121), "Ålesund" to LatLng(62.476929, 6.149429))
         //creating a client to fetch AQI data from api
         val client = Retrofit.Builder()
             .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
@@ -214,7 +175,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             .build()
             .create(WeatherService::class.java)
         // Add a colored marker according to checked AQ index (if any)
-        for ((key, value) in coordinates) {
+        for ((key, value) in cities.coordinates) {
             doAsync {
                 lateinit var marker: Marker
                 val weather = client.getWeather(value.latitude, value.longitude).execute().body()
@@ -233,22 +194,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                         }
                     } // Marker added to "cityMarkers"
                     val city = City(key, value, marker)
-                    cities.add(city)
+                    cities.addCity(city)
                 }
             }
         }
-    }
-
-    private fun getPositionData(lat: Double, lon: Double): String {
-        var returnInfo: String?
-        try {
-            val geocoder = Geocoder(this@MapsActivity, Locale.getDefault())
-            val addresses = geocoder.getFromLocation(lat, lon, 1)
-            returnInfo = addresses.get(0).getAddressLine(0)
-        } catch (e: IOException) {
-            return ""
-        }
-        return returnInfo
     }
 
     // Function that searches for a location
@@ -269,46 +218,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
             //addMarkerColoured(address)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(addressLatLng, 15F))
             //Open ForecastActivity when searched
-            runForecastActivity(address.latitude, address.longitude, address.getAddressLine(0))
+            //runForecastActivity(address.latitude, address.longitude, address.getAddressLine(0))
         }
     }
 
     // The menu items' listener
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when(item?.itemId) {
-            R.id.menu_home -> recreate()
             R.id.menu_alert -> runAlertActivity()
             R.id.menu_favorites -> Toast.makeText(this, "favorites", Toast.LENGTH_SHORT).show()
-            R.id.menu_graph -> runGraphActivity(testLat, testLon)
-            R.id.menu_stats -> runStatsActivity()
+            R.id.menu_stats -> booter.runStatsActivity(cities.coordinates)
             R.id.menu_settings -> runSettingsActivity()
         }
         return true
-    }
-
-    //Method that runs GraphActivity with extra parameters
-    private fun runGraphActivity(lat: Double, lon: Double) {
-        val graphActivityIntent = Intent(this, GraphActivity::class.java)
-        graphActivityIntent.putExtra("lat", lat)
-        graphActivityIntent.putExtra("lon", lon)
-        startActivity(graphActivityIntent)
-    }
-
-    // Runs activity "Statistics"
-    private fun runStatsActivity() {
-        val statsActivity = Intent(this, StatsActivity::class.java).putExtra("hashMap", coordinates)
-        startActivity(statsActivity)
-        recreate()
-
-    }
-
-    // Runs ForecastActivity with extra parameters
-    private fun runForecastActivity(lat: Double, lon: Double, title:String) {
-        val forecastActivityIntent = Intent(this, ForecastActivity::class.java) //< --- Change this
-        forecastActivityIntent.putExtra("lat", lat)
-        forecastActivityIntent.putExtra("lon", lon)
-        forecastActivityIntent.putExtra("cityTitle", title)
-        startActivity(forecastActivityIntent)
     }
 
     // Runs settingsActivity

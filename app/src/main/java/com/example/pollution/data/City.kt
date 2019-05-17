@@ -1,4 +1,4 @@
-package com.example.pollution.classes
+package com.example.pollution.data
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
