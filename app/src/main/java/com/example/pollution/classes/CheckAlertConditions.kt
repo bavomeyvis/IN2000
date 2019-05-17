@@ -1,13 +1,18 @@
+/*
 package com.example.pollution.classes
 
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
 import com.example.pollution.ui.*
+import org.jetbrains.anko.uiThread
 import java.time.LocalDate
 import java.util.*
 
 class CheckAlertConditions: AsyncTask<Double, Double, Boolean>() {
+
     override fun doInBackground(vararg params: Double?): Boolean {
+
         // First, check if the user has granted permission to receive notifications through settings.
         if (SettingsActivity.doNotDisturb)
             return false
@@ -37,7 +42,8 @@ class CheckAlertConditions: AsyncTask<Double, Double, Boolean>() {
     override fun onPostExecute(result: Boolean?) {
         super.onPostExecute(result)
         if (result == true) {
-            //dangerAlert(this, "channel0")
+            Alert.dangerAlert()
         }
     }
 }
+*/
