@@ -1,4 +1,4 @@
-package com.example.pollution.ui
+package com.example.pollution.classes
 
 import android.app.PendingIntent
 import android.content.Context
@@ -6,6 +6,7 @@ import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import com.example.pollution.R
+import com.example.pollution.ui.MapsActivity
 
 object Alert {
     fun dangerAlert(context: Context, channel_id: String) { // Send the alert.

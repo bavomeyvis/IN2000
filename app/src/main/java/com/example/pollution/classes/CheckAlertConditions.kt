@@ -1,14 +1,13 @@
 package com.example.pollution.classes
 
-import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
 import com.example.pollution.ui.*
 import java.time.LocalDate
 import java.util.*
 
-class CheckAlertConditions: AsyncTask<Int, Int, Boolean>() {
-    override fun doInBackground(vararg params: Int?): Boolean {
+class CheckAlertConditions: AsyncTask<Double, Double, Boolean>() {
+    override fun doInBackground(vararg params: Double?): Boolean {
         // First, check if the user has granted permission to receive notifications through settings.
         if (SettingsActivity.doNotDisturb)
             return false
@@ -27,7 +26,7 @@ class CheckAlertConditions: AsyncTask<Int, Int, Boolean>() {
             }
         }
         // If the program reaches here, the user has given permission for the app to send the alert.
-        val temp = params[0]?: 0
+        val temp = params[0]?: 0.0
         // Does current location's AQI not exceed user set threshold?
         if (temp <= AlertActivity.threshold)
             return false
@@ -38,8 +37,7 @@ class CheckAlertConditions: AsyncTask<Int, Int, Boolean>() {
     override fun onPostExecute(result: Boolean?) {
         super.onPostExecute(result)
         if (result == true) {
-            TODO("Send the alert using the dangerAlert() function")
-            //Alert.dangerAlert(MapsActivity.java, "channel0")
+            //dangerAlert(this, "channel0")
         }
     }
 }
