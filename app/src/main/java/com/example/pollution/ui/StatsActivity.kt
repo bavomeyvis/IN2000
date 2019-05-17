@@ -44,16 +44,16 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         getStats()
 
+
         val spinner: Spinner = findViewById(R.id.statsUnit)
         // Create an ArrayAdapter using the string array and a default spinner layout
-        val units = listOf("aQI", "no2", "o3", "pm10", "pm25")
-        ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, units)
-        //ArrayAdapter.createFromResource(this, R.array.units_array, android.R.layout.simple_spinner_item).
-            also { adapter ->
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.units_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
             // Specify the layout to use when the list of choices appears
-            //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            adapter.setDropDown(android.R.layout.simple_spinner_dropdown_item)
-
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             // Apply the adapter to the spinner
             spinner.adapter = adapter
         }
@@ -62,17 +62,13 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-
-    }
-
     override fun onNothingSelected(parent: AdapterView<*>) {
         print("nothing happened")
-        Log.d("Hey LOOOO HERE: ", parent.getChildAt(1).toString())
+
     }
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
-        selectedUnit = parent.getChildAt(pos).toString()
+        selectedUnit = parent.selectedItem.toString()
+        Log.d("DEBUG", "SELECTED UNIT: $selectedUnit")
         getStats()
     }
 
@@ -83,6 +79,7 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private fun getStats() {
         val unitTitle : TextView = findViewById(R.id.statsCountryName)
+        unitTitle.text = selectedUnit
         //unitTitle.text = selectedUnit
         for ((key, value) in cities) getCityValue(key, value, selectedUnit)
     }
@@ -99,13 +96,16 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             val weather = client.getWeather(pos.latitude, pos.longitude).execute().body()
             val aqi = when (pollutionUnit) {
                 "no2" -> weather?.data?.time?.get(0)?.variables?.aQINo2?.value
-                "03" -> weather?.data?.time?.get(0)?.variables?.aQIO3?.value
+                "o3" -> weather?.data?.time?.get(0)?.variables?.aQIO3?.value
                 "pm10" -> weather?.data?.time?.get(0)?.variables?.aQIPm10?.value
                 "pm25" -> weather?.data?.time?.get(0)?.variables?.aQIPm25?.value
                 else -> weather?.data?.time?.get(0)?.variables?.aQI?.value
             }
             uiThread {
-                if (aqi != null) it.addCountryValue(key, aqi)
+                if (aqi != null) {
+                    Log.d("DEBUG","Fuz debugger aint working... $aqi")
+                    it.addCountryValue(key, aqi)
+                }
             }
         }
     }

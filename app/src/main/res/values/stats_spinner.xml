@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="units_array">
-        <item>AQI</item>
-        <item>O3</item>
-        <item>PM25</item>
-        <item>PM10</item>
-        <item>O2</item>
+        <item>aQI</item>
+        <item>o3</item>
+        <item>pm25</item>
+        <item>pm10</item>
+        <item>o2</item>
     </string-array>
 </resources>
