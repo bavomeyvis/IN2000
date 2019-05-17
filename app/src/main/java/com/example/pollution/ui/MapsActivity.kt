@@ -58,9 +58,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         var mapsActivity : MapsActivity? = null
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
         val sharedPref = "settings"
-        val LAT = "com.example.pollution.ui.LAT"
-        val LON = "com.example.pollution.ui.LON"
-        val TITLE = "com.example.pollution.ui.TITLE"
+        //val LAT = "com.example.pollution.ui.LAT"
+        //val LON = "com.example.pollution.ui.LON"
+        //val TITLE = "com.example.pollution.ui.TITLE"
     }
 
     //Google Maps
@@ -144,11 +144,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // Assures location is set
         setMyLocation()
 
-
-        mMap.setOnMapClickListener { point ->
-            //crashes if click is in water apparently
-            booter.runForecastActivity(point.latitude, point.longitude, cities.getPositionData(point.latitude, point.longitude))
-        }
         addCityMarkers(mMap)
 
         //marker is clicked and we find the marker's corresponding City class object

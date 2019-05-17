@@ -38,7 +38,14 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private lateinit var pm10Rectangle: View
     private lateinit var no2Rectangle: View
     private lateinit var o3Rectangle: View
-    // values
+    //numerical values
+    private lateinit var card1Value1: TextView
+    private lateinit var card1Value2: TextView
+    private lateinit var card1Value3: TextView
+    private lateinit var card1Value4: TextView
+    private lateinit var card1Value5: TextView
+
+    //ALL values
     private val timeValues = arrayOfNulls<String>(arraySizes)
     private val aqiValues = arrayOfNulls<Double>(arraySizes)
     private val pm25Values = arrayOfNulls<Double>(arraySizes)
@@ -118,6 +125,8 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     }
 
+
+
     private fun iniCardsUnits() {
         card1Title = findViewById(R.id.forecast_card1_title)
         timeTextView = findViewById(R.id.forecast_card1_time)
@@ -134,6 +143,12 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         card2pm10Rectangle = findViewById<View>(R.id.card2_unit3)
         card2no2Rectangle = findViewById<View>(R.id.card2_unit4)
         card2o3Rectangle = findViewById<View>(R.id.card2_unit5)
+
+        card1Value1 = findViewById<TextView>(R.id.card1_value_1)
+        card1Value2 = findViewById<TextView>(R.id.card1_value_2)
+        card1Value3 = findViewById<TextView>(R.id.card1_value_3)
+        card1Value4 = findViewById<TextView>(R.id.card1_value_4)
+        card1Value5 = findViewById<TextView>(R.id.card1_value_5)
     }
 
     private fun setCardTitle(card : Int, title: String, lat: Double, lon: Double) {
@@ -204,12 +219,19 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         timeTextView.text = timeValues[progress]?.substring(11, 16)
 
         val aqi = aqiValues[progress]
-        //  val aqi2 = aqiValues[progress + 1] caused error. Bravo
-        val aqi2 = aqiValues[progress]
+        card1Value1.text = aqi.toString().substring(0, 3)
+
         val pm25 = pm25Values[progress]
+        card1Value2.text = pm25.toString().substring(0, 3)
+
         val pm10 = pm10Values[progress]
+        card1Value3.text = pm10.toString().substring(0, 3)
+
         val no2 = no2Values[progress]
+        card1Value4.text = no2.toString().substring(0, 4)
+
         val o3 = o3Values[progress]
+        card1Value5.text = o3.toString().substring(0, 4)
 
         updateColorViews(aqi, aqiRectangle)
         updateColorViews(pm25, pm25Rectangle)

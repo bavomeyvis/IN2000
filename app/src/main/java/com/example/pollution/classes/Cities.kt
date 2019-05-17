@@ -39,6 +39,26 @@ class Cities(context: Context) {
         return returnCity
     }
 
+    fun getCity(name: String): City? {
+        var returnCity: City? = null
+        for (city in cities) {
+            if (city.cityName.equals(name)) {
+                returnCity = city
+            }
+        }
+        return returnCity
+    }
+
+    fun getCity(latlng: LatLng): City? {
+        var returnCity: City? = null
+        for (city in cities) {
+            if (city.coordinates.latitude == latlng.latitude && city.coordinates.longitude == latlng.longitude) {
+                returnCity = city
+            }
+        }
+        return returnCity
+    }
+
     fun getPositionData(lat: Double, lon: Double): String {
         var returnInfo: String?
         try {
