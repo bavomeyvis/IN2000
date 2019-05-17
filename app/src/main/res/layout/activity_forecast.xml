@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp">
+            android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="1.0">
 
         <!-- Favorite icon -->
         <ImageView
@@ -134,7 +134,58 @@
                 app:layout_constraintStart_toEndOf="@id/forecast_card1_units"
                 android:layout_marginStart="8dp"/> -->
 
+        <!-- CARD 1 Numerical AQI values -->
+        <TextView android:id="@+id/card1_aqi_title"
+                  android:text="Values"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_card1_time"
+                  android:layout_marginStart="35dp"/>
+        <TextView android:id="@+id/card1_value_1"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp_title"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="35dp"/>
+        <TextView android:id="@+id/card1_value_2"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp1"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="35dp"/>
+        <TextView android:id="@+id/card1_value_3"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp2"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="35dp"/>
+        <TextView android:id="@+id/card1_value_4"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp3"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="35dp"/>
+        <TextView android:id="@+id/card1_value_5"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card1_comp4"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="35dp"/>
 
+
+        <!-- CARD 1 Compare Values -->
         <TextView android:id="@+id/card1_comp_title"
                   android:text="@string/card_comp_title"
                   android:textColor="?attr/textColor"
@@ -142,7 +193,7 @@
                   android:layout_height="wrap_content"
                   app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
                   app:layout_constraintTop_toTopOf="@+id/forecast_card1_time"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <TextView android:id="@+id/card1_comp1"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -150,7 +201,7 @@
                   app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
                   app:layout_constraintTop_toBottomOf="@+id/card1_comp_title"
                   android:layout_marginTop="8dp"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <TextView android:id="@+id/card1_comp2"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -158,7 +209,7 @@
                   app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
                   app:layout_constraintTop_toBottomOf="@+id/card1_comp1"
                   android:layout_marginTop="8dp"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <TextView android:id="@+id/card1_comp3"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -166,7 +217,7 @@
                   app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
                   app:layout_constraintTop_toBottomOf="@+id/card1_comp2"
                   android:layout_marginTop="8dp"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <TextView android:id="@+id/card1_comp4"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -174,7 +225,7 @@
                   app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
                   app:layout_constraintTop_toBottomOf="@+id/card1_comp3"
                   android:layout_marginTop="8dp"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <TextView android:id="@+id/card1_comp5"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -182,7 +233,7 @@
                   app:layout_constraintStart_toEndOf="@+id/forecast_card1_time"
                   app:layout_constraintTop_toBottomOf="@+id/card1_comp4"
                   android:layout_marginTop="8dp"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <!--<TextView android:id="@+id/card1_comp6"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -191,6 +242,9 @@
                   app:layout_constraintTop_toBottomOf="@+id/card1_comp5"
                   android:layout_marginTop="8dp"
                   android:layout_marginStart="24dp"/>-->
+
+
+
         <ImageView
                 android:id="@+id/forecast_card1_graph"
                 android:layout_width="wrap_content"
@@ -219,7 +273,7 @@
             app:layout_constraintTop_toBottomOf="@id/forecast_card1"
             app:layout_constraintBottom_toBottomOf="@id/forecast_time_scroller"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="1.0">
 
         <!-- Favorite icon -->
         <ImageView
@@ -232,7 +286,7 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintTop_toTopOf="parent"/>
         <!-- Card 2 Title -->
-        <TextView  android:id="@+id/forecast_card2_title"
+        <TextView android:id="@+id/forecast_card2_title"
                   android:text="@string/forecast_card2_title"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -244,7 +298,8 @@
         <ImageView android:layout_width="wrap_content"
                    android:layout_height="wrap_content" app:srcCompat="@drawable/forecast_compare_cards"
                    android:id="@+id/imageView2" android:layout_marginTop="8dp"
-                   app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/forecast_card2_title"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintStart_toEndOf="@+id/forecast_card2_title"
                    android:layout_marginStart="8dp"/>
 
         <!-- CARD 2 UNITS -->
@@ -254,7 +309,8 @@
                  android:layout_height="wrap_content"
                  layout="@layout/activity_forecast_units"
                  android:layout_marginTop="24dp"
-                 app:layout_constraintTop_toBottomOf="@+id/forecast_card2_title" app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toBottomOf="@+id/forecast_card2_title"
+                 app:layout_constraintStart_toStartOf="parent"
                  android:layout_marginStart="24dp"/>
 
         <!-- CARD 2 TIME -->
@@ -321,6 +377,56 @@
               app:layout_constraintTop_toBottomOf="@id/card2_unit5"
               app:layout_constraintStart_toEndOf="@id/forecast_card2_units"/>-->
 
+        <!-- CARD 2 Numerical AQI values -->
+        <TextView android:id="@+id/card2_aqi_title"
+                  android:text="Values"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_card2_time"
+                  android:layout_marginStart="35dp"/>
+        <TextView android:id="@+id/card2_value_1"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp_title"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="35dp"/>
+        <TextView android:id="@+id/card2_value_2"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp1"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="35dp"/>
+        <TextView android:id="@+id/card2_value_3"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp2"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="35dp"/>
+        <TextView android:id="@+id/card2_value_4"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp3"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="35dp"/>
+        <TextView android:id="@+id/card2_value_5"
+                  android:textColor="?attr/textColor"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
+                  app:layout_constraintTop_toBottomOf="@+id/card2_comp4"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="35dp"/>
+
         <!-- CARD 2 Compare -->
         <TextView android:id="@+id/card2_comp_title"
                   android:text="@string/card_comp_title"
@@ -329,7 +435,7 @@
                   android:layout_height="wrap_content"
                   app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
                   app:layout_constraintTop_toTopOf="@+id/forecast_card2_time"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <TextView android:id="@+id/card2_comp1"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -337,7 +443,7 @@
                   app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
                   app:layout_constraintTop_toBottomOf="@+id/card2_comp_title"
                   android:layout_marginTop="8dp"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <TextView android:id="@+id/card2_comp2"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -345,7 +451,7 @@
                   app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
                   app:layout_constraintTop_toBottomOf="@+id/card2_comp1"
                   android:layout_marginTop="8dp"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <TextView android:id="@+id/card2_comp3"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -353,7 +459,7 @@
                   app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
                   app:layout_constraintTop_toBottomOf="@+id/card2_comp2"
                   android:layout_marginTop="8dp"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <TextView android:id="@+id/card2_comp4"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -361,7 +467,7 @@
                   app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
                   app:layout_constraintTop_toBottomOf="@+id/card2_comp3"
                   android:layout_marginTop="8dp"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <TextView android:id="@+id/card2_comp5"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
@@ -369,7 +475,7 @@
                   app:layout_constraintStart_toEndOf="@+id/forecast_card2_time"
                   app:layout_constraintTop_toBottomOf="@+id/card2_comp4"
                   android:layout_marginTop="8dp"
-                  android:layout_marginStart="24dp"/>
+                  android:layout_marginStart="115dp"/>
         <!--<TextView android:id="@+id/card2_comp6"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"

@@ -102,6 +102,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         else setCardFocus(1, inputTitle, inputLat, inputLon)
         */
         // Set seek bar
+        setCardTitle(1, inputTitle, inputLat, inputLon)
         this.forecast_time_scroller!!.setOnSeekBarChangeListener(this)
         // Sets graph on button click
         forecast_card1_graph.setOnClickListener { runGraphActivity(inputLat, inputLon, inputTitle) }
@@ -129,8 +130,9 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     }
 
+
     private fun iniCardsUnits() {
-        card1Title = findViewById(R.id.forecast_card2_title)
+        card1Title = findViewById(R.id.forecast_card1_title)
         timeTextView = findViewById(R.id.forecast_card1_time)
         aqiRectangle = findViewById<View>(R.id.card1_unit1)
         pm25Rectangle = findViewById<View>(R.id.card1_unit2)
@@ -147,7 +149,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         card2o3Rectangle = findViewById<View>(R.id.card2_unit5)
     }
 
-    private fun setCardFocus(card : Int, title: String, lat: Double, lon: Double) {
+    private fun setCardTitle(card : Int, title: String, lat: Double, lon: Double) {
         // Finds all relevant rectangles and textViews
         when(card) {
             1 -> {

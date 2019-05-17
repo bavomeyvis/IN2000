@@ -163,13 +163,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         // Assures location is set
         setMyLocation()
 
-        // TODO: This is only if we wantevery place
-        /*
+
         mMap.setOnMapClickListener { point ->
-            //map is clicked latlng can be accessed from
-            //point.Latitude & point.Longitude
             runForecastActivity(point.latitude, point.longitude, getPositionData(point.latitude, point.longitude))
-        }*/
+        }
         addCityMarkers(mMap)
 
         //marker is clicked and we find the marker's corresponding City class object
@@ -201,15 +198,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     // Adds (colored, depending on AQI value, ) markers to "cityMarkers" using API request (with LatLng)
     private fun addCityMarkers(mMap: GoogleMap) {
         val coordinates : HashMap<String, LatLng> = hashMapOf(
-            "oslo" to LatLng(59.915780, 10.752913), "bergen" to LatLng(60.393975, 5.324937),
-            "trondheim" to LatLng(63.433465, 10.395516), "stavanger" to LatLng(63.433465, 10.395516),
-            "sandvika" to LatLng(59.891695, 10.528088), "kristiansand" to LatLng(58.162897, 8.018848),
-            "fredrikstad" to LatLng(59.224392, 10.933630), "tromsø" to LatLng(69.653412, 18.953360),
-            "drammen" to LatLng(59.747642, 10.205377), "sandnes" to LatLng(58.852107, 5.732697),
-            "skien" to LatLng(58.852107, 5.732697), "sarpsborg" to LatLng(59.286260, 11.109056),
-            "bodø" to LatLng(67.282654, 14.404968), "larvik" to LatLng(59.056636, 10.02887),
-            "sandefjord" to LatLng(59.056636, 10.028874), "lillestrøm" to LatLng(59.956639, 11.050240),
-            "arendal" to LatLng(58.463660, 8.772121), "ålesund" to LatLng(62.476929, 6.149429))
+            "Oslo" to LatLng(59.915780, 10.752913), "Bergen" to LatLng(60.393975, 5.324937),
+            "Trondheim" to LatLng(63.433465, 10.395516), "Stavanger" to LatLng(63.433465, 10.395516),
+            "Sandvika" to LatLng(59.891695, 10.528088), "Kristiansand" to LatLng(58.162897, 8.018848),
+            "Fredrikstad" to LatLng(59.224392, 10.933630), "Tromsø" to LatLng(69.653412, 18.953360),
+            "Drammen" to LatLng(59.747642, 10.205377), "Sandnes" to LatLng(58.852107, 5.732697),
+            "Skien" to LatLng(58.852107, 5.732697), "Sarpsborg" to LatLng(59.286260, 11.109056),
+            "Bodø" to LatLng(67.282654, 14.404968), "Larvik" to LatLng(59.056636, 10.02887),
+            "Sandefjord" to LatLng(59.056636, 10.028874), "Lillestrøm" to LatLng(59.956639, 11.050240),
+            "Arendal" to LatLng(58.463660, 8.772121), "Ålesund" to LatLng(62.476929, 6.149429))
         //creating a client to fetch AQI data from api
         val client = Retrofit.Builder()
             .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
@@ -242,9 +239,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         }
     }
 
-    // TODO: Consider migrating the methods below into an object
     private fun getPositionData(lat: Double, lon: Double): String {
-        lateinit var returnInfo: String
+        var returnInfo: String?
         try {
             val geocoder = Geocoder(this@MapsActivity, Locale.getDefault())
             val addresses = geocoder.getFromLocation(lat, lon, 1)
