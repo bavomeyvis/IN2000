@@ -60,7 +60,6 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     private val card2o3Values = arrayOfNulls<Double>(arraySizes)
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         // Sets UI theme
         if (getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
@@ -110,6 +109,23 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             //updateColorViews(currentHourIn24Format)
             forecast_time_scroller.progress = currentHourIn24Format
             dataReceived = true
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val replaceBtn1 : ImageView = findViewById(R.id.forecast_card1_replace)
+        replaceBtn1.setOnClickListener {
+            val intent = Intent(this, MapsActivity::class.java)
+            intent.putExtra("card", "card1")
+            startActivityForResult(intent, 1)
+        }
+
+        val replaceBtn2 : ImageView = findViewById(R.id.forecast_card2_replace)
+        replaceBtn2.setOnClickListener {
+            val intent = Intent(this, MapsActivity::class.java)
+            startActivityForResult(intent, 2)
         }
 
     }
@@ -183,9 +199,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-    }
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 
     fun updateColorViews(value: Double?, view: View) {
         if (value != null) {

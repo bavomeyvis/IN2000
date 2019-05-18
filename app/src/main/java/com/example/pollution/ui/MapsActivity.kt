@@ -43,6 +43,7 @@ import kotlinx.android.synthetic.main.activity_maps.*
 
 // Async imports
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.startActivityForResult
 import org.json.JSONException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -247,6 +248,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         return returnInfo
     }
 
+    // TODO: Jørgen fix this battered code please
     // Function that searches for a location
     private fun searchLocation() {
         val searchAddress: String = search_input.text.toString()
@@ -285,13 +287,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         startActivity(statsActivity)
         recreate()
     }
+
+    // TODO: Pass city object perhaps
     // Runs ForecastActivity with extra parameters
     private fun runForecastActivity(lat: Double, lon: Double, title:String) {
         val forecastActivityIntent = Intent(this, ForecastActivity::class.java) //< --- Change this
         forecastActivityIntent.putExtra("lat", lat)
         forecastActivityIntent.putExtra("lon", lon)
         forecastActivityIntent.putExtra("cityTitle", title)
-        startActivity(forecastActivityIntent)
+
+
+
+        startActivityForResult(forecastActivityIntent, 1)
     }
     // Runs settingsActivity
     private fun runSettingsActivity() {
