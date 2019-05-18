@@ -1,33 +1,27 @@
 package com.example.pollution.ui
 
-import android.content.Context
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
-import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.*
 import com.example.pollution.R
 import com.example.pollution.response.Client
-import com.example.pollution.response.WeatherService
-import com.google.android.gms.maps.StreetViewPanorama
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.android.synthetic.main.activity_settings.*
-import kotlinx.android.synthetic.main.activity_settings.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.util.logging.Logger
 
 class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     companion object {
-        var perCityAQI : HashMap<String, Double> = linkedMapOf()
         var count : Int = 1
         var nCities : Int = 0
-        lateinit var cities: HashMap<String, LatLng>
+
+        val client = Client.client
     }
+
+    lateinit var cities: HashMap<String, LatLng>
+    var perCityAQI : HashMap<Double, String> = HashMap()
 
     override fun onNothingSelected(parent: AdapterView<*>) { print("nothing happened") }
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) { getCitiesStats(parent.selectedItem.toString()) }
@@ -39,6 +33,10 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // Sets layout
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stats)
+    }
+
+    override fun onStart() {
+        super.onStart()
         // Loops through received list of countries and gets countryValues
         cities = intent.extras["hashMap"] as HashMap<String, LatLng>
         nCities = cities.size
@@ -47,11 +45,11 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // Set adapter of spinner
         ArrayAdapter.createFromResource(this, R.array.units_array, android.R.layout.simple_spinner_item)
             .also { adapter ->
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner
-            spinner.adapter = adapter
-        }
+                // Specify the layout to use when the list of choices appears
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                // Apply the adapter to the spinner
+                spinner.adapter = adapter
+            }
         spinner.onItemSelectedListener = this
     }
 
@@ -62,7 +60,7 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
     }
     private fun getCityValue(key : String, pos : LatLng, pollutionUnit : String)  {
-        val client = Client.client
+
         doAsync {
             val weather = client.getWeather(pos.latitude, pos.longitude).execute().body()
             val aqi = when (pollutionUnit) {
@@ -80,41 +78,42 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     // Adds value to the second hashMap of countries
     private fun addCountryValue(city : String, aqiValue : Double)  {
-        perCityAQI[city] = aqiValue
+
+        // clear list
+        // aqivalue : By
+        perCityAQI[aqiValue] = city
         if(count == nCities) setRanking(perCityAQI)
         else count++
     }
 
     // Ranks and sorts values and cities based on hashmap received from api
-    private fun setRanking(citiesAndValues : HashMap<String, Double>) {
+    private fun setRanking(citiesAndValues : HashMap<Double, String>) {
         // Sorts list
-        val sortedMap = citiesAndValues
+        citiesAndValues.toSortedMap()
+
               /*
                  .toList()
                  .sortedBy{(key, value) -> value}
                  .toMap()
                  */
-
-        /*
-               sortedMap
+        /*sortedMap
                    .toList()
                    .sortedByDescending { (key, value) -> value }
                    .toMap()*/
-
         val statsTable : LinearLayout = findViewById(R.id.stats_list)
         var i = 0
         count = 0
-        for ((key, value) in sortedMap) {
+        for ((key, value) in citiesAndValues) {
             val v =  statsTable.getChildAt(++i)
             if(v is LinearLayout) {
                 // Set country text in XML column
                 val item0 : View = v.getChildAt(0)
-                if(item0 is TextView) item0.text = key
+                if(item0 is TextView) item0.text = value
                 // Set AQI value text in XML column
                 val item1 : View = v.getChildAt(1)
                 if(item1 is TextView) {
-                    //val decimal = BigDecimal(value).setScale(2, RoundingMode.HALF_EVEN)
-                    item1.text =  value.toString()
+                    val decimal = BigDecimal(key).setScale(2, RoundingMode.HALF_EVEN)
+                    item1.text =  decimal.toString()
                 }
             }
         }

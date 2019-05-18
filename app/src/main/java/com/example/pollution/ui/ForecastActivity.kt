@@ -133,9 +133,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         replaceBtn2.setOnClickListener {
             val intent = Intent(this, MapsActivity::class.java)
             startActivityForResult(intent, 2)
-
         }
-
     }
 
     private fun iniCardsUnits() {
