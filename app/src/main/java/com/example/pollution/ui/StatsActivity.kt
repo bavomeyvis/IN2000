@@ -91,15 +91,6 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // Sorts list
         citiesAndValues.toSortedMap()
 
-              /*
-                 .toList()
-                 .sortedBy{(key, value) -> value}
-                 .toMap()
-                 */
-        /*sortedMap
-                   .toList()
-                   .sortedByDescending { (key, value) -> value }
-                   .toMap()*/
         val statsTable : LinearLayout = findViewById(R.id.stats_list)
         var i = 0
         count = 0
