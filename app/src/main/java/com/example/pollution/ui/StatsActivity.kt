@@ -21,7 +21,6 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     companion object {
         var count : Int = 1
         var nCities : Int = 0
-
         val client = Client.client
     }
 
@@ -76,7 +75,6 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 else -> weather?.data?.time?.get(0)?.variables?.aQI?.value
             }
             uiThread {
-                Log.d("DEBUG", "Added to county: $aqi ($pollutionUnit)($key)")
                 if (aqi != null) it.addCountryValue(key, aqi)
             }
         }
@@ -84,9 +82,6 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     // Adds value to the second hashMap of countries
     private fun addCountryValue(city : String, aqiValue : Double)  {
-
-        // clear list
-        // aqivalue : By
         perCityAQI[aqiValue] = city
         if(count == nCities) setRanking(perCityAQI)
         else count++
@@ -95,21 +90,22 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     // Ranks and sorts values and cities based on hashmap received from api
     private fun setRanking(citiesAndValues : HashMap<Double, String>) {
         // Sorts list
-        citiesAndValues.toSortedMap(compareByDescending { it.compareTo(it) })
-
-        val units : MutableSet<Double> = citiesAndValues.keys
-        units.sortedByDescending { it.absoluteValue }
-
-        Log.d("DEBUG", "$citiesAndValues")
-
+        var units : ArrayList<Double> = ArrayList()
+        for ((key, value) in citiesAndValues) {
+            units.add(key)
+        }
+        units.sortDescending()
+        // Set in table
         val statsTable : LinearLayout = findViewById(R.id.stats_list)
         var i = 0
         for (key in units) {
+            val by = citiesAndValues[key]
+            Log.d("DEBUG", "$key and $by")
             val v =  statsTable.getChildAt(++i)
             if(v is LinearLayout) {
                 // Set country text in XML column
                 val item0 : View = v.getChildAt(0)
-                if(item0 is TextView) item0.text = citiesAndValues[key]
+                if(item0 is TextView) item0.text = by
                 // Set AQI value text in XML column
                 val item1 : View = v.getChildAt(1)
                 if(item1 is TextView) {
