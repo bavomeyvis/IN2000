@@ -32,6 +32,7 @@ import com.google.android.gms.maps.SupportMapFragment
 
 // Packages' class imports
 import com.example.pollution.R
+import com.example.pollution.classes.Alert
 import com.example.pollution.classes.City
 import com.example.pollution.response.Client
 import com.example.pollution.response.WeatherService
@@ -52,6 +53,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.time.LocalDate
 import java.util.*
+import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
