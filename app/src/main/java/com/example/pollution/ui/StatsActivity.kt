@@ -2,6 +2,7 @@ package com.example.pollution.ui
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.*
 import com.example.pollution.R
@@ -11,6 +12,10 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.*
+import kotlin.Comparator
+import kotlin.collections.HashMap
+import kotlin.math.absoluteValue
 
 class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     companion object {
@@ -35,8 +40,8 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         setContentView(R.layout.activity_stats)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         // Loops through received list of countries and gets countryValues
         cities = intent.extras["hashMap"] as HashMap<String, LatLng>
         nCities = cities.size
@@ -64,13 +69,14 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         doAsync {
             val weather = client.getWeather(pos.latitude, pos.longitude).execute().body()
             val aqi = when (pollutionUnit) {
-                "o2" -> weather?.data?.time?.get(0)?.variables?.aQINo2?.value
-                "o3" -> weather?.data?.time?.get(0)?.variables?.aQIO3?.value
-                "pm10" -> weather?.data?.time?.get(0)?.variables?.aQIPm10?.value
-                "pm25" -> weather?.data?.time?.get(0)?.variables?.aQIPm25?.value
+                "no2" -> weather?.data?.time?.get(0)?.variables?.no2Concentration?.value
+                "o3" -> weather?.data?.time?.get(0)?.variables?.o3Concentration?.value
+                "pm10" -> weather?.data?.time?.get(0)?.variables?.pm10Concentration?.value
+                "pm25" -> weather?.data?.time?.get(0)?.variables?.pm25Concentration?.value
                 else -> weather?.data?.time?.get(0)?.variables?.aQI?.value
             }
             uiThread {
+                Log.d("DEBUG", "Added to county: $aqi ($pollutionUnit)($key)")
                 if (aqi != null) it.addCountryValue(key, aqi)
             }
         }
@@ -89,17 +95,21 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     // Ranks and sorts values and cities based on hashmap received from api
     private fun setRanking(citiesAndValues : HashMap<Double, String>) {
         // Sorts list
-        citiesAndValues.toSortedMap()
+        citiesAndValues.toSortedMap(compareByDescending { it.compareTo(it) })
+
+        val units : MutableSet<Double> = citiesAndValues.keys
+        units.sortedByDescending { it.absoluteValue }
+
+        Log.d("DEBUG", "$citiesAndValues")
 
         val statsTable : LinearLayout = findViewById(R.id.stats_list)
         var i = 0
-        count = 0
-        for ((key, value) in citiesAndValues) {
+        for (key in units) {
             val v =  statsTable.getChildAt(++i)
             if(v is LinearLayout) {
                 // Set country text in XML column
                 val item0 : View = v.getChildAt(0)
-                if(item0 is TextView) item0.text = value
+                if(item0 is TextView) item0.text = citiesAndValues[key]
                 // Set AQI value text in XML column
                 val item1 : View = v.getChildAt(1)
                 if(item1 is TextView) {
@@ -108,6 +118,7 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 }
             }
         }
+        count = 1
         citiesAndValues.clear()
     }
 
