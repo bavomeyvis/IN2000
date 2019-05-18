@@ -47,7 +47,10 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val spinner: Spinner = findViewById(R.id.statsUnit)
         // Set adapter of spinner
-        ArrayAdapter.createFromResource(this, R.array.units_array, android.R.layout.simple_spinner_item)
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.units_array,
+            android.R.layout.simple_spinner_item)
             .also { adapter ->
                 // Specify the layout to use when the list of choices appears
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
