@@ -26,18 +26,12 @@
             android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="1.0">
 
         <!-- Favorite icon -->
-        <ImageView
-                android:id="@+id/forecast_card1_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/menu_favorites"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp"/>
         <!-- Card 1 Title -->
         <TextView
                 android:id="@+id/forecast_card1_title"
                 android:text="@string/forecast_card1_title"
+                android:textStyle="bold"
+                android:textSize="17sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/textColor"
@@ -73,6 +67,7 @@
         <TextView
                 android:id="@+id/forecast_card1_time"
                 android:text="0"
+                android:textStyle="bold"
                 android:textColor="?attr/textColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -136,6 +131,7 @@
         <!-- CARD 1 Numerical AQI values -->
         <TextView android:id="@+id/card1_aqi_title"
                   android:text="Values"
+                  android:textStyle="bold"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
@@ -187,6 +183,7 @@
         <!-- CARD 1 Compare Values -->
         <TextView android:id="@+id/card1_comp_title"
                   android:text="@string/card_comp_title"
+                  android:textStyle="bold"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
@@ -275,16 +272,10 @@
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="1.0">
 
         <!-- Favorite icon -->
-        <ImageView
-                android:id="@+id/forecast_card2_favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/menu_favorites"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp"/>
         <!-- Card 2 Title -->
         <TextView android:id="@+id/forecast_card2_title"
+                  android:textStyle="bold"
+                  android:textSize="17sp"
                   android:text="@string/forecast_card2_title"
                   android:textColor="?attr/textColor"
                   android:layout_width="wrap_content"
