@@ -20,7 +20,7 @@
     <string name="settings_alert_off">Alerts are enabled.</string>
     <string name="settings_language_title">Taal</string>
     <string name="settings_language_desc">De gekozen taal van de app</string>
-    <string name="settings_version_desc">Versie: 0.03</string>
+    <string name="settings_version_desc">Versie: 1.00 (Bravo)</string>
     <string name="forecast_example_text">TextView</string>
     <string name="forecast_value_1">1</string>
     <string name="forecast_value_2">2</string>
