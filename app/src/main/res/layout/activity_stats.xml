@@ -2,8 +2,9 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
                                              android:layout_height="match_parent"
-
                                              android:background="?attr/backgroundColor">
+
+
     <LinearLayout
             android:id="@+id/stats_list"
             android:elevation="20dp"
@@ -17,6 +18,7 @@
             app:layout_constraintHorizontal_bias="0.6"
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
+
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -25,33 +27,39 @@
             <TextView
                     android:id="@+id/statsCountryName"
                     android:background="@drawable/stats_item_bg"
-                    android:text="City"
+                    android:text="string/stats_cities_title"
                     android:textColor="?attr/textColor"
 
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"/>
-            <TextView
+            <Spinner
                     android:id="@+id/statsUnit"
-                    android:background="@drawable/stats_item_bg"
-                    android:text="Value"
-                    android:textColor="?attr/textColor"
+                    android:textColor="#ACACAC"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"/>
         </LinearLayout>
-        <include layout="@layout/stats_item" />
-        <include layout="@layout/stats_item" />
-        <include layout="@layout/stats_item" />
-        <include layout="@layout/stats_item" />
-        <include layout="@layout/stats_item" />
-        <include layout="@layout/stats_item" />
-        <include layout="@layout/stats_item" />
-        <include layout="@layout/stats_item" />
-        <include layout="@layout/stats_item" />
-        <include layout="@layout/stats_item" />
-        <include layout="@layout/stats_item" />
+        <include layout="@layout/stats_item"/>
+        <include layout="@layout/stats_item"/>
+        <include layout="@layout/stats_item"/>
+        <include layout="@layout/stats_item"/>
+        <include layout="@layout/stats_item"/>
+        <include layout="@layout/stats_item"/>
+        <include layout="@layout/stats_item"/>
+        <include layout="@layout/stats_item"/>
+        <include layout="@layout/stats_item"/>
+        <include layout="@layout/stats_item"/>
+        <include layout="@layout/stats_item"/>
     </LinearLayout>
+    <TextView
+            android:text="Statistics over worst cities"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/stats_title" android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/stats_list" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
 
 
 </android.support.constraint.ConstraintLayout>

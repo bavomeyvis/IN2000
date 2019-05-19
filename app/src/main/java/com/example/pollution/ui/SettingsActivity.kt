@@ -21,9 +21,6 @@ import android.widget.Toast
 import android.widget.SeekBar
 
 
-
-
-//AppCompatActivity: Base class for activities that use the support library action bar features.
 //SettingsActivity: Represents UI of the settings menu
 // Guidelines: https://www.androidhive.info/2016/01/android-working-with-recycler-view/
 class SettingsActivity : AppCompatActivity() {
@@ -36,18 +33,12 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Set theme.
-        if(getSharedPreferenceValue("theme"))
-            setTheme(R.style.DarkTheme)
-        else
-            setTheme(R.style.AppTheme)
+        if(getSharedPreferenceValue("theme")) setTheme(R.style.DarkTheme)
+        else setTheme(R.style.AppTheme)
 
         // Displays activity_settings.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        // set settingsThemeBtn according to state.
-        val theme : Boolean = getSharedPreferenceValue("theme")
-        if(getSharedPreferenceValue("theme"))  settingsThemeBtn.isChecked = theme
 
         // Set button listener for settingsThemeBtn.
         val themeBtn : Switch = findViewById(R.id.settingsThemeBtn)
@@ -56,8 +47,14 @@ class SettingsActivity : AppCompatActivity() {
             recreate()
         }
 
+        // set settingsThemeBtn according to state.
+        val theme : Boolean = getSharedPreferenceValue("theme")
+        if(getSharedPreferenceValue("theme"))  themeBtn.isChecked = theme
+
+
         // Do not disturb switch.
         val alertBtn : Switch = findViewById(R.id.settingsAlertBtn)
+        alertBtn.isChecked = getSharedPreferenceValue("alert")
         alertBtn.setOnCheckedChangeListener { _, isChecked ->
             doNotDisturb = isChecked
             writeToPreference("alert", isChecked)

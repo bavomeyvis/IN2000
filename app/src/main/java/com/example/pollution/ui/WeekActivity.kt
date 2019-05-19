@@ -18,6 +18,9 @@ class WeekActivity : AppCompatActivity() {
     }
     private val returnIntent = Intent()
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Set theme
+        if(getSharedPreferenceValueBool("theme")) setTheme(R.style.DarkTheme)
+        else setTheme(R.style.AppTheme)
         // Displays activity_week
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_week)
