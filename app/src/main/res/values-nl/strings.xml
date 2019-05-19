@@ -1,51 +1,40 @@
 <resources>
     <string name="app_name">Vervuiling</string>
+
+    <!-- Map -->
     <string name="title_activity_maps">Kaart</string>
     <string name="enter_a_city_name">Schrijf een stadsnaam</string>
-    <string name="picture_of_magnifying_glass">Foto van een vergrootsglas</string>
-    <string name="list_title">Instellingen</string>
-    <string name="bravo">Balanced. As all things should be.</string>
-    <string name="settings">Instellingen</string>
-    <string name="menu_item_favorites">Favorieten</string>
-    <string name="menu_item_settings">Instellingen</string>
-    <string name="menu_item_alerts">Waarschuwing</string>
+
     <string name="menu_item_home">Thuis</string>
-    <string name="menu">menu</string>
-    <string name="marker_oslo">Oslo</string>
-    <string name="settings_theme_desc">Zet donkerheids modus aan</string>
+    <string name="menu_item_alerts">Waarschuwing</string>
+    <string name="menu_item_favorites">Favorieten</string>
+    <string name="menu_4_graph">Graph</string>
+    <string name="menu_stats">Stats</string>
+    <string name="menu_item_settings">Instellingen</string>
+
+    <!-- Settings -->
     <string name="settings_theme_title">Tema</string>
-    <string name="settings_alert_desc">Krijg waarschuwing waaneer je waarde wordt overstegen</string>
+    <string name="settings_theme_desc">Zet donkerheids modus aan</string>
     <string name="settings_alert_title">Waarschuwing</string>
-    <string name="settings_alert_on">Alerts are disabled.</string>
-    <string name="settings_alert_off">Alerts are enabled.</string>
+    <string name="settings_alert_desc">Krijg waarschuwing waaneer je waarde wordt overstegen</string>
     <string name="settings_language_title">Taal</string>
     <string name="settings_language_desc">De gekozen taal van de app</string>
     <string name="settings_version_desc">Versie: 0.03</string>
-    <string name="forecast_example_text">TextView</string>
-    <string name="forecast_value_1">1</string>
-    <string name="forecast_value_2">2</string>
-    <string name="forecast_value_3">3</string>
-    <string name="forecast_unit_time">Unit Time</string>
-    <string name="channel_desc">Alerts</string>
-    <string name="enter_limit">Enter limit</string>
-    <string name="notification_title">Current air quality is exceeding your limit!</string>
-    <string name="notification_desc">Consider planning an escape route!</string>
-    <string name="card_comp_title">Difference</string>
-    <string name="menu_4_graph">Graph</string>
-    <string name="menu_stats">Stats</string>
 
-    <string name="settings_threshold_title">Set threshold</string>
+    <!-- Alerts -->
     <string name="alert_title">Alert</string>
     <string name="alert_threshold_title">Set threshold</string>
     <string name="alert_threshold_desc">Should the current AQI value exceed your threshold, the app will send an alert.</string>
     <string name="alert_dnd_title">Do not disturb</string>
     <string name="alert_dnd_desc">Do not disturb for a short period of time.</string>
+
     <string name="aqi_good">Good</string>
     <string name="aqi_moderate">Moderate</string>
     <string name="aqi_potentially_unhealthy">Unhealthy for Sensitive Groups</string>
     <string name="aqi_unhealthy">Unhealthy</string>
     <string name="aqi_very_unhealthy">Very Unhealthy</string>
     <string name="aqi_hazardous">Hazardous</string>
+
     <string name="dnd_title">How long would you like to disable alerts?</string>
     <string name="one_hour">One Hour</string>
     <string name="three_hours">Three Hours</string>
@@ -55,12 +44,13 @@
     <string name="dnd_exit">OK</string>
     <string name="disable_alerts">Alerts disabled for %1$s.</string>
     <string name="cancel_disable_alerts">Do not disturb cancelled.</string>
+
     <string name="alert_week_title">Time periods to ignore</string>
     <string name="alert_week_desc">Select specific time periods of days of the week for the app to be silent.</string>
     <string name="week_title">Select time frames for the app to be silent:</string>
     <string name="alert_week_unavailable_title">Unsupported API level.</string>
     <string name="alert_week_unavailable_desc">This function requires API level 23.</string>
-    <string name="alert_week_unavailable_dismiss">OK</string>
+
     <string name="week_monday">Monday</string>
     <string name="week_tuesday">Tuesday</string>
     <string name="week_wednesday">Wednesday</string>
@@ -79,7 +69,16 @@
     <string name="no_alert_weekday">You won\'t be notified between %1$d and %2$d on %3$s.</string>
     <string name="allow_alert_weekday">You can be notified anytime on %1$s.</string>
 
+    <string name="notification_title">Current air quality is exceeding your limit!</string>
+    <string name="notification_desc">Current AQI is %1$.2f, and your limit is set to %2$d.</string>
+
+    <!-- Forecast -->
+    <string name="forecast_unit_time">Unit Time</string>
+    <string name="forecast_card1_title">Add a location</string>
+    <string name="forecast_card2_title">Add a location:</string>
+    <string name="card_comp_title">Difference</string>
     <string name="forecast_card_graph">Open graph</string>
+
     <string name="forecast_unit_aqi">AQI</string>
     <string name="forecast_unit_pm25">pm25</string>
     <string name="forecast_unit_pm10">pm10</string>

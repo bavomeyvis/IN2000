@@ -34,7 +34,7 @@
 
                 android:onClick="showPopup"
                 android:src="@drawable/menu_icon"
-                android:contentDescription="@string/menu"/>
+                android:contentDescription="Menu"/>
 
         <!-- android:layout_width="0dp", which is the equivalent of "MATCH_CONSTRAINT" -->
         <EditText
@@ -67,7 +67,7 @@
                 android:background="?attr/cardBackground"
 
                 android:src="@drawable/menu_search"
-                android:contentDescription="@string/picture_of_magnifying_glass"/>
+                android:contentDescription="Picture of a magnifying glass"/>
 
     </android.support.constraint.ConstraintLayout>
 

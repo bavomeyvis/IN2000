@@ -356,7 +356,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     private fun createNotificationChannel(channel_id: String) { // Create the channel. All notifications will be sent through this channel, because we only ever use one alert.
         if (Build.VERSION.SDK_INT >= 26) { // This feature is not supported on earlier devices.
             val channel0 = NotificationChannel(channel_id, "Channel 0", NotificationManager.IMPORTANCE_HIGH)
-            channel0.description = getString(R.string.channel_desc) // Set the description for the channel, can be arbitrary.
+            channel0.description = getString(R.string.alert_title) // Set the description for the channel, can be arbitrary.
             val manager: NotificationManager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel0) // Create the channel used for dangerAlert.
         }

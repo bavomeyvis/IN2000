@@ -61,15 +61,11 @@ class SettingsActivity : AppCompatActivity() {
         alertBtn.setOnCheckedChangeListener { _, isChecked ->
             doNotDisturb = isChecked
             writeToPreference("alert", isChecked)
-            if (isChecked)
-                Toast.makeText(this, getString(R.string.settings_alert_off), Toast.LENGTH_SHORT).show()
-            else
-                Toast.makeText(this, getString(R.string.settings_alert_on), Toast.LENGTH_SHORT).show()
         }
 
         findViewById<TextView>(R.id.settingsVersionDesc)
         alertBtn.setOnClickListener {
-            if(++bravo == 3) Toast.makeText(this,R.string.bravo, Toast.LENGTH_LONG).show()
+            if(++bravo == 3) Toast.makeText(this, "Balanced. As all things should be.", Toast.LENGTH_LONG).show() // Hardcoded the string to reduce amount of strings. The string was the same for all strings anyways.
         }
 
         // Language drop-down menu.

@@ -1,25 +1,25 @@
 <resources>
-    <string name="app_name">Vervuiling</string>
+    <string name="app_name">Pollution</string>
 
     <!-- Map -->
-    <string name="title_activity_maps">Kaart</string>
-    <string name="enter_a_city_name">Schrijf een stadsnaam</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="enter_a_city_name">Enter a city name</string>
 
-    <string name="menu_item_home">Thuis</string>
-    <string name="menu_item_alerts">Waarschuwing</string>
-    <string name="menu_item_favorites">Favorieten</string>
+    <string name="menu_item_home">Home</string>
+    <string name="menu_item_alerts">Alerts</string>
+    <string name="menu_item_favorites">Favorites</string>
     <string name="menu_4_graph">Graph</string>
     <string name="menu_stats">Stats</string>
-    <string name="menu_item_settings">Instellingen</string>
+    <string name="menu_item_settings">Settings</string>
 
     <!-- Settings -->
-    <string name="settings_theme_title">Tema</string>
-    <string name="settings_theme_desc">Zet donkerheids modus aan</string>
-    <string name="settings_alert_title">Waarschuwing</string>
-    <string name="settings_alert_desc">Krijg waarschuwing waaneer je waarde wordt overstegen</string>
-    <string name="settings_language_title">Taal</string>
-    <string name="settings_language_desc">De gekozen taal van de app</string>
-    <string name="settings_version_desc">Versie: 0.03</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_desc">Turn on Dark Mode.</string>
+    <string name="settings_alert_title">Alerts</string>
+    <string name="settings_alert_desc">Get notified when values are above threshold.</string>
+    <string name="settings_language_title">Language</string>
+    <string name="settings_language_desc">The displayed language of the app</string>
+    <string name="settings_version_desc">Current version: 0.03</string>
 
     <!-- Alerts -->
     <string name="alert_title">Alert</string>
