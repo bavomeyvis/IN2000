@@ -374,7 +374,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
                         // Does current location's AQI exceed user set threshold?
                         if (temp?: 0.0 > AlertActivity.threshold)
                             uiThread {
-                                Alert.dangerAlert(this@MapsActivity, "channel0")
+                                Alert.dangerAlert(this@MapsActivity, "channel0", temp?: 0.0, AlertActivity.threshold)
+                                AlertActivity.doNotDisturb = true
                                 // Start a timer set to an hour, and an interval with a minute. When the timer stops,
                                 // the cooldown will turn off, and a new alert may be sent.
                                 timer(1000 * 60 * 60, 1000 * 60)
