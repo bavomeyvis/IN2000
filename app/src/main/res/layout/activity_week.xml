@@ -12,6 +12,7 @@
             android:theme="?attr/actionBarTheme"
             android:minHeight="?attr/actionBarSize" android:id="@+id/toolbar">
         <TextView
+                android:textColor="?attr/textColor"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:textAllCaps="true"
@@ -19,6 +20,7 @@
                 android:text="@string/week_title"/>
     </android.support.v7.widget.Toolbar>
     <android.support.constraint.ConstraintLayout
+            android:background="?attr/cardBackground"
             android:layout_width="match_parent"
             android:layout_height="85.71428571428571dp" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" android:id="@+id/monday">
@@ -50,6 +52,7 @@
                 android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
+            android:background="?attr/cardBackground"
             android:layout_width="match_parent"
             android:layout_height="85.71428571428571dp" android:id="@+id/tuesday">
 
@@ -80,6 +83,7 @@
                 android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
+            android:background="?attr/cardBackground"
             android:layout_width="match_parent"
             android:layout_height="85.71428571428571dp" android:id="@+id/wednesday">
 
@@ -109,6 +113,7 @@
                 android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
+            android:background="?attr/cardBackground"
             android:layout_width="match_parent"
             android:layout_height="85.71428571428571dp" android:id="@+id/thursday">
 
@@ -138,6 +143,7 @@
                 android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
+            android:background="?attr/cardBackground"
             android:layout_width="match_parent"
             android:layout_height="85.71428571428571dp" android:id="@+id/friday">
 
@@ -167,6 +173,7 @@
                 android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
+            android:background="?attr/cardBackground"
             android:layout_width="match_parent"
             android:layout_height="85.71428571428571dp" android:id="@+id/saturday">
 
@@ -196,8 +203,9 @@
                 android:background="@android:color/darker_gray"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.constraint.ConstraintLayout
+            android:background="?attr/cardBackground"
             android:layout_width="match_parent"
-            android:layout_height="85.71428571428571dp" android:id="@+id/sunday">
+            android:layout_height="95dp" android:id="@+id/sunday">
 
         <TextView
                 android:text="@string/week_sunday"

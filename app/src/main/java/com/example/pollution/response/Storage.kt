@@ -10,10 +10,12 @@ class Storage (context : Context) {
 
     companion object {
         val sharedPref = "storage"
-    }
 
-    private fun getSharedPreferenceValue(prefKey: String):Boolean {
+
+    }
+    fun getValue(prefKey: String):Boolean {
         val sp = context.getSharedPreferences(sharedPref, 0)
         return sp.getBoolean(prefKey, false)
     }
+
 }

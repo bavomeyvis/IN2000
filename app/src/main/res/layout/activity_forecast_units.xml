@@ -8,6 +8,7 @@
 
     <!-- Units -->
     <TextView
+            android:textStyle="bold"
             android:id="@+id/forecast_unit_time"
             android:text="@string/forecast_unit_time"
             android:textColor="?attr/textColor"
