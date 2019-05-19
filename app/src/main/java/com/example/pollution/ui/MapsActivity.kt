@@ -347,42 +347,40 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     // breaks don't work in asyncs, I had to construct a complicated if-flow.
     private fun alertConditions() {
         val client = Client.client
+        // The two below variables are local versions of their class variable counterparts.
         val currentLastLocation = lastLocation
         doAsync {
-            if (!cooldown) { // The cooldown has worn off, time to check conditions.
-                // Declare current location's AQI value and current hour of the day.
-                val weather = client.getWeather(currentLastLocation.latitude, currentLastLocation.longitude).execute().body()
-                val time = Calendar.getInstance()
-                val hours = time.get(Calendar.HOUR_OF_DAY)
-                var cont = true
-                // First, check if the user has granted permission to receive notifications through settings.
-                if (SettingsActivity.doNotDisturb)
-                    // Has the user turned on do not disturb?
-                    if (!AlertActivity.doNotDisturb) {
-                        // Is the current time within the user's selected time frame to not be disturbed?
-                        if (Build.VERSION.SDK_INT >= 26) {
-                            val date = LocalDate.now()
-                            val dow = date.dayOfWeek.value - 1
-                            if (WeekActivity.doNotDisturbWeek[dow])
-                                if (hours <= WeekActivity.maxValues[dow] || hours >= WeekActivity.minValues[dow])
-                                    cont = false
-                        }
-                        if (cont) {
-                            // The user has given permission for the app to send the alert.
-                            val temp = weather?.data?.time?.get(hours)?.variables?.aQI?.value
-                            // Does current location's AQI exceed user set threshold?
-                            if (temp?: 0.0 > AlertActivity.threshold)
-                                uiThread {
-                                    Alert.dangerAlert(this@MapsActivity, "channel0")
-                                    // Start a cooldown.
-                                    cooldown = true
-                                    // Start a timer set to an hour, and an interval with a minute. When the timer stops,
-                                    // the cooldown will turn off, and a new alert may be sent.
-                                    timer(1000 * 60 * 60, 1000 * 60)
-                                }
-                        }
+            // The cooldown has worn off, time to check conditions.
+            // Declare current location's AQI value and current hour of the day.
+            val weather = client.getWeather(currentLastLocation.latitude, currentLastLocation.longitude).execute().body()
+            val time = Calendar.getInstance()
+            val hours = time.get(Calendar.HOUR_OF_DAY)
+            var cont = true
+            // First, check if the user has granted permission to receive notifications through settings.
+            if (SettingsActivity.doNotDisturb)
+                // Has the user turned on do not disturb?
+                if (!AlertActivity.doNotDisturb) {
+                    // Is the current time within the user's selected time frame to not be disturbed?
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        val date = LocalDate.now()
+                        val dow = date.dayOfWeek.value - 1
+                        if (WeekActivity.doNotDisturbWeek[dow])
+                            if (hours <= WeekActivity.maxValues[dow] || hours >= WeekActivity.minValues[dow])
+                                cont = false
                     }
-            }
+                    if (cont) {
+                        // The user has given permission for the app to send the alert.
+                        val temp = weather?.data?.time?.get(hours)?.variables?.aQI?.value
+                        // Does current location's AQI exceed user set threshold?
+                        if (temp?: 0.0 > AlertActivity.threshold)
+                            uiThread {
+                                Alert.dangerAlert(this@MapsActivity, "channel0")
+                                // Start a timer set to an hour, and an interval with a minute. When the timer stops,
+                                // the cooldown will turn off, and a new alert may be sent.
+                                timer(1000 * 60 * 60, 1000 * 60)
+                            }
+                    }
+                }
         }
     }
 
@@ -390,11 +388,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     private fun timer(millisInFuture: Long, countDownInterval: Long): CountDownTimer {
         return object: CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
-                cooldown = true
+                AlertActivity.doNotDisturb = true
             }
 
             override fun onFinish() {
-                cooldown = false
+                AlertActivity.doNotDisturb = false
             }
         }
     }

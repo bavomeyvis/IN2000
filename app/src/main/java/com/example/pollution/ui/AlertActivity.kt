@@ -214,7 +214,7 @@ class AlertActivity : AppCompatActivity() {
             }
     }
 
-    private fun timer(millisInFuture: Long, countDownInterval: Long): CountDownTimer {
+    fun timer(millisInFuture: Long, countDownInterval: Long): CountDownTimer {
         return object: CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
                 if (isCancelled) {
