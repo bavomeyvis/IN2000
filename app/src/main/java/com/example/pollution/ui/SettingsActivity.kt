@@ -70,7 +70,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // Language drop-down menu.
         val dropdown: Spinner = findViewById(R.id.spinner)
-        val languages = listOf("English", "Norsk (bokmål)", "Norsk (nynorsk)", "Nederlands", "Afrikaans")
+        val languages = listOf("English", "Norsk (bokmål)", "Norsk (nynorsk)", "Nederlands", "Español", "اردو", "Tiếng Việt", "Afrikaans")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, languages)
         dropdown.adapter = adapter
         // Set the default selection to be the previously selected one.
@@ -95,7 +95,10 @@ class SettingsActivity : AppCompatActivity() {
                     1 -> changeLocalisation("no")
                     2 -> changeLocalisation("nn")
                     3 -> changeLocalisation("nl")
-                    4 -> changeLocalisation("af")
+                    4 -> changeLocalisation("es")
+                    5 -> changeLocalisation("ur")
+                    6 -> changeLocalisation("vi")
+                    7 -> changeLocalisation("af")
                 }
                 // Refresh the activity, if a new language is selected. Without this check, the app will refresh even when just opening the drop down.
                 if (current != position) recreate()
