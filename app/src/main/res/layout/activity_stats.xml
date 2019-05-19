@@ -27,7 +27,7 @@
             <TextView
                     android:id="@+id/statsCountryName"
                     android:background="@drawable/stats_item_bg"
-                    android:text="@string/stats_cities_title"
+                    android:text="@string/city"
                     android:textColor="?attr/textColor"
 
                     android:layout_width="0dp"

@@ -17,8 +17,6 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.util.*
 
-private const val TAG = "ForecastActivity"
-
 class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     companion object {
         private var card1City : String = "Add a card ->"
@@ -111,24 +109,24 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
         //Find and initializes Views of both cards and sets replace button
-        initCardViews()
     }
 
     override fun onResume() {
         super.onResume()
         // Set scroller
         this.forecast_time_scroller!!.setOnSeekBarChangeListener(this)
-        // Sets current hour of scroller
-        val currentHour: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        forecast_time_scroller.progress = currentHour
-        // Set the companion objects with their info received from MapsActivity
-
+        // Sets the views
+        initCardViews()
+        //Set the info for cards
         setCardInfo()
         // Sets card 1 data
         initCard1()
         // Sets card 2 data if necessary
         initCard2()
-
+        // Sets current hour of scroller
+        val currentHour: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        forecast_time_scroller.progress = currentHour
+        // Set the companion objects with their info received from MapsActivity
     }
     override fun onBackPressed() {
         card2BeChanged = false
@@ -136,7 +134,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     private fun setCardInfo() {
-        // Set the variable appropriately
+        // Set the variable companion static variables appropriately
         if(card2BeChanged) {
             card2Lat = intent.getDoubleExtra("lat", 0.0)
             card2Lon = intent.getDoubleExtra("lon", 0.0)
@@ -266,19 +264,8 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         // as a way to prevent errors if not everything is ready
-        if(cardsChecked == 3 && card2IsEmpty) {
-            handleChanges(progress, false)
-        }
-        else if (cardsChecked == 3 && !card2IsEmpty){
-            handleChanges(progress, true)
-        }
-        else {
-
-        }
-/*
-
-//
-*/
+        if(cardsChecked == 3 && card2IsEmpty) handleChanges(progress, false)
+        else if (cardsChecked == 3 && !card2IsEmpty) handleChanges(progress, true)
     }
 
     private fun updateComparedValues(card1Value: Double?, card2Value: Double?, comp1View : TextView, comp2View : TextView) {
@@ -294,10 +281,10 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         comp2View.text = difference.toString().substring(0,4)
     }
 
-
     // Changes the numerical value and rectangle of card 1
     private fun handleChanges(progress: Int, card2IsActive : Boolean) {
         // --------- CARD 1 (no compare) -------------
+        // set variables
         val aqi = card1aqiValues[progress]
         val pm25 = card1pm25Values[progress]
         val pm10 = card1pm10Values[progress]
@@ -309,14 +296,16 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         card1value3.text = pm10.toString().substring(0, 3)
         card1value4.text = no2.toString().substring(0, 4)
         card1value5.text = o3.toString().substring(0, 4)
+        // Change colours
         changeRectColor(aqi, card1aqiRect)
         changeRectColor(pm25, card1pm25Rect)
         changeRectColor(pm10, card1pm10Rect)
         changeRectColor(no2, card1no2Rect)
         changeRectColor(o3, card1o3Rect)
 
+        //  ------- CARD 2 (no compare) ---------
         if(card2IsActive) {
-            //  ------- CARD 2 (no compare) ---------
+            // set variables
             val c2aqi = card2aqiValues[progress]
             val c2pm25 = card2pm25Values[progress]
             val c2pm10 = card2pm10Values[progress]
@@ -328,18 +317,20 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             card2value3.text = c2pm10.toString().substring(0, 3)
             card2value4.text = c2no2.toString().substring(0, 4)
             card2value5.text = c2o3.toString().substring(0, 4)
-            changeRectColor(c2aqi, card2aqiRect)
-            changeRectColor(c2pm25, card2pm25Rect)
-            changeRectColor(c2pm10, card2pm10Rect)
-            changeRectColor(c2no2, card2no2Rect)
-            changeRectColor(c2o3, card2o3Rect)
-
             // Comparison
             updateComparedValues(card1aqiValues[progress], card2aqiValues[progress], card1_comp1, card2_comp1)
             updateComparedValues(card1pm25Values[progress], card2pm25Values[progress], card1_comp2, card2_comp2)
             updateComparedValues(card1pm10Values[progress], card2pm10Values[progress], card1_comp3, card2_comp3)
             updateComparedValues(card1no2Values[progress], card2no2Values[progress], card1_comp4, card2_comp4)
             updateComparedValues(card1o3Values[progress], card2o3Values[progress], card1_comp5, card2_comp5)
+            // Change colours
+            changeRectColor(c2aqi, card2aqiRect)
+            changeRectColor(c2pm25, card2pm25Rect)
+            changeRectColor(c2pm10, card2pm10Rect)
+            changeRectColor(c2no2, card2no2Rect)
+            changeRectColor(c2o3, card2o3Rect)
+
+
         }
     }
 
@@ -352,10 +343,10 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         }
     }
 
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        Toast.makeText(this, "Checked: $cardsChecked, empty: $card2IsEmpty", Toast.LENGTH_LONG).show()
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
     }
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
     private fun getSharedPreferenceValue(prefKey: String): Boolean {
         val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
         return sp.getBoolean(prefKey, false)

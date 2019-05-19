@@ -6,19 +6,19 @@
     <string name="list_title">Instellingen</string>
     <string name="bravo">Balanced. As all things should be.</string>
     <string name="settings">Instellingen</string>
-    <string name="menu_item_favorites">Favorieten</string>
-    <string name="menu_item_settings">Instellingen</string>
-    <string name="menu_item_alerts">Waarschuwing</string>
-    <string name="menu_item_home">Thuis</string>
+    <string name="favorites">Favorieten</string>
+    <string name="settings">Instellingen</string>
+    <string name="alerts">Waarschuwing</string>
+    <string name="home">Thuis</string>
     <string name="menu">menu</string>
     <string name="marker_oslo">Oslo</string>
     <string name="settings_theme_desc">Zet donkerheids modus aan</string>
-    <string name="settings_theme_title">Tema</string>
+    <string name="theme">Tema</string>
     <string name="settings_alert_desc">Krijg waarschuwing waaneer je waarde wordt overstegen</string>
     <string name="settings_alert_title">Waarschuwing</string>
     <string name="settings_alert_on">Alerts are disabled.</string>
     <string name="settings_alert_off">Alerts are enabled.</string>
-    <string name="settings_language_title">Taal</string>
+    <string name="language">Taal</string>
     <string name="settings_language_desc">De gekozen taal van de app</string>
     <string name="settings_version_desc">Versie: 1.00 (Bravo)</string>
     <string name="forecast_example_text">TextView</string>
@@ -34,7 +34,7 @@
     <string name="menu_4_graph">Graph</string>
     <string name="menu_stats">Stats</string>
 
-    <string name="settings_threshold_title">Set threshold</string>
+    <string name="threshold">Set threshold</string>
     <string name="alert_title">Alert</string>
     <string name="alert_threshold_title">Set threshold</string>
     <string name="alert_threshold_desc">Should the current AQI value exceed your threshold, the app will send an alert.</string>
