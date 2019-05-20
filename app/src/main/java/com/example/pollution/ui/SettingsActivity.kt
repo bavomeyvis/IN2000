@@ -53,6 +53,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // Do not disturb switch.
         val alertBtn : Switch = findViewById(R.id.settingsAlertBtn)
+        alertBtn.isChecked = getSharedPreferenceValue("alert")
         alertBtn.setOnCheckedChangeListener { _, isChecked ->
             doNotDisturb = isChecked
             writeToPreference("alert", isChecked)
