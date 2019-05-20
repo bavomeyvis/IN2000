@@ -40,18 +40,17 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        // set settingsThemeBtn according to state.
+        val theme : Boolean = getSharedPreferenceValue("theme")
+        if(getSharedPreferenceValue("theme"))  settingsThemeBtn.isChecked = theme
+
         // Set button listener for settingsThemeBtn.
         val themeBtn : Switch = findViewById(R.id.settingsThemeBtn)
         themeBtn.setOnCheckedChangeListener { _, isChecked ->
             writeToPreference("theme", isChecked)
             recreate()
         }
-
-        // set settingsThemeBtn according to state.
-        val theme : Boolean = getSharedPreferenceValue("theme")
-        if(getSharedPreferenceValue("theme"))  themeBtn.isChecked = theme
-
-
+        
         // Do not disturb switch.
         val alertBtn : Switch = findViewById(R.id.settingsAlertBtn)
         alertBtn.isChecked = getSharedPreferenceValue("alert")
