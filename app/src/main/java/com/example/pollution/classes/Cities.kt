@@ -15,7 +15,7 @@ class Cities(context: Context) {
     var cities = arrayListOf<City>()
     val coordinates : HashMap<String, LatLng> = hashMapOf(
         "Oslo" to LatLng(59.915780, 10.752913), "Bergen" to LatLng(60.393975, 5.324937),
-        "Trondheim" to LatLng(63.433465, 10.395516), "Stavanger" to LatLng(63.433465, 10.395516),
+        "Trondheim" to LatLng(63.433465, 10.395516), "Stavanger" to LatLng(58.9486344, 5.6102977),
         "Sandvika" to LatLng(59.891695, 10.528088), "Kristiansand" to LatLng(58.162897, 8.018848),
         "Fredrikstad" to LatLng(59.224392, 10.933630), "Tromsø" to LatLng(69.653412, 18.953360),
         "Drammen" to LatLng(59.747642, 10.205377), "Sandnes" to LatLng(58.852107, 5.732697),
