@@ -12,7 +12,7 @@ import kotlin.collections.HashMap
 class Cities(context: Context) {
 
     val context: Context = context
-    var cities = arrayListOf<City>()
+    var cities: ArrayList<City> = arrayListOf<City>()
     val coordinates : HashMap<String, LatLng> = hashMapOf(
         "Oslo" to LatLng(59.915780, 10.752913), "Bergen" to LatLng(60.393975, 5.324937),
         "Trondheim" to LatLng(63.433465, 10.395516), "Stavanger" to LatLng(58.9486344, 5.6102977),

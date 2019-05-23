@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class Client {
     companion object {
-        val client = Retrofit.Builder()
+        val client: WeatherService = Retrofit.Builder()
             .baseUrl("https://in2000-apiproxy.ifi.uio.no/weatherapi/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
