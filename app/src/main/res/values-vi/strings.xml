@@ -1,32 +1,32 @@
 <resources>
-    <string name="app_name">Pollution</string>
+    <string name="app_name">Ô Nhiễm</string>
 
     <!-- Map -->
-    <string name="title_activity_maps">Map</string>
-    <string name="enter_a_city_name">Enter a city name</string>
+    <string name="title_activity_maps">Bản Đồ</string>
+    <string name="enter_a_city_name">Nhập tên một thành phố</string>
 
-    <string name="menu_item_home">Home</string>
-    <string name="menu_item_alerts">Alerts</string>
-    <string name="menu_item_favorites">Favorites</string>
-    <string name="menu_4_graph">Graph</string>
-    <string name="menu_stats">Stats</string>
-    <string name="menu_item_settings">Settings</string>
+    <string name="menu_item_home">Trang Chủ</string>
+    <string name="menu_item_alerts">Báo Động</string>
+    <string name="menu_item_favorites">Mục Ưa Thích</string>
+    <string name="menu_4_graph">Biểu Đồ</string>
+    <string name="menu_stats">Thông Số</string>
+    <string name="menu_item_settings">Cài đặt</string>
 
     <!-- Settings -->
-    <string name="settings_theme_title">Theme</string>
-    <string name="settings_theme_desc">Turn on Dark Mode.</string>
-    <string name="settings_alert_title">Alerts</string>
-    <string name="settings_alert_desc">Get notified when values are above threshold.</string>
-    <string name="settings_language_title">Language</string>
-    <string name="settings_language_desc">The displayed language of the app</string>
-    <string name="settings_version_desc">Current version: 0.03</string>
+    <string name="settings_theme_title">Chủ đề</string>
+    <string name="settings_theme_desc">Bật chế độ Màn đen.</string>
+    <string name="settings_alert_title">Cảnh báo</string>
+    <string name="settings_alert_desc">Nhận thông báo khi các chỉ số lớn hơn ngưỡng.</string>
+    <string name="settings_language_title">Ngôn ngữ</string>
+    <string name="settings_language_desc">Ngôn ngữ hiển thị trong chương trình</string>
+    <string name="settings_version_desc">Phiên bản hiện tại: 0.03</string>
 
     <!-- Alerts -->
-    <string name="alert_title">Alert</string>
-    <string name="alert_threshold_title">Set threshold</string>
-    <string name="alert_threshold_desc">Should the current AQI value exceed your threshold, the app will send an alert.</string>
-    <string name="alert_dnd_title">Do not disturb</string>
-    <string name="alert_dnd_desc">Do not disturb for a short period of time.</string>
+    <string name="alert_title">Cảnh báo</string>
+    <string name="alert_threshold_title">Cài đặt ngưỡng</string>
+    <string name="alert_threshold_desc">Nếu tỉ lệ AQI hiện tại lớn hơn ngưỡng của bạn, chương trình sẽ đưa ra cảnh báo. </string>
+    <string name="alert_dnd_title">Miễn làm phiền</string>
+    <string name="alert_dnd_desc">Miễn làm phiền trong thời gian ngắn.</string>
 
     <string name="aqi_good">Good</string>
     <string name="aqi_moderate">Moderate</string>
@@ -35,51 +35,51 @@
     <string name="aqi_very_unhealthy">Very Unhealthy</string>
     <string name="aqi_hazardous">Hazardous</string>
 
-    <string name="dnd_title">How long would you like to disable alerts?</string>
-    <string name="one_hour">One Hour</string>
-    <string name="three_hours">Three Hours</string>
-    <string name="one_day">One Day</string>
-    <string name="one_week">One Week</string>
-    <string name="one_month">One Month</string>
+    <string name="dnd_title">Bạn muốn tắt báo động trong bao lâu?</string>
+    <string name="one_hour">Một Tiếng</string>
+    <string name="three_hours">Ba Tiếng</string>
+    <string name="one_day">Một Ngày</string>
+    <string name="one_week">Một Tuần</string>
+    <string name="one_month">Một Tháng</string>
     <string name="dnd_exit">OK</string>
-    <string name="disable_alerts">Alerts disabled for %1$s.</string>
-    <string name="cancel_disable_alerts">Do not disturb cancelled.</string>
+    <string name="disable_alerts">Báo động được tắt trong %1$s.</string>
+    <string name="cancel_disable_alerts">Chế độ miễn làm phiền đã được tắt.</string>
 
-    <string name="alert_week_title">Time periods to ignore</string>
-    <string name="alert_week_desc">Select specific time periods of days of the week for the app to be silent.</string>
-    <string name="week_title">Select time frames for the app to be silent:</string>
-    <string name="alert_week_unavailable_title">Unsupported API level.</string>
-    <string name="alert_week_unavailable_desc">This function requires API level 23.</string>
+    <string name="alert_week_title">Các khoảng thời gian cần bỏ qua</string>
+    <string name="alert_week_desc">Hãy lựa chọn một thời điểm của ngày trong tuần để cài đặt chế độ im lặng cho chương trình.</string>
+    <string name="week_title">Hãy chọn khung thời gian im lặng cho chương trình:</string>
+    <string name="alert_week_unavailable_title">Mức giao diện lập trình (API) không được hỗ trợ.</string>
+    <string name="alert_week_unavailable_desc">Chức năng này cần giao diện lập trình ứng dụng (API) ở mức 23.</string>
 
-    <string name="week_monday">Monday</string>
-    <string name="week_tuesday">Tuesday</string>
-    <string name="week_wednesday">Wednesday</string>
-    <string name="week_thursday">Thursday</string>
-    <string name="week_friday">Friday</string>
-    <string name="week_saturday">Saturday</string>
-    <string name="week_sunday">Sunday</string>
-    <string name="week_monday_pl">mondays</string>
-    <string name="week_tuesday_pl">tuesdays</string>
-    <string name="week_wednesday_pl">wednesdays</string>
-    <string name="week_thursday_pl">thursdays</string>
-    <string name="week_friday_pl">fridays</string>
-    <string name="week_saturday_pl">saturdays</string>
-    <string name="week_sunday_pl">sundays</string>
-    <string name="alert_time">Between %1$d and %2$d.</string>
-    <string name="no_alert_weekday">You won\'t be notified between %1$d and %2$d on %3$s.</string>
-    <string name="allow_alert_weekday">You can be notified anytime on %1$s.</string>
+    <string name="week_monday">Thứ Hai</string>
+    <string name="week_tuesday">Thứ Ba</string>
+    <string name="week_wednesday">Thứ Tư</string>
+    <string name="week_thursday">Thứ Năm</string>
+    <string name="week_friday">Thứ Sáu</string>
+    <string name="week_saturday">Thứ Bảy</string>
+    <string name="week_sunday">Chủ Nhật</string>
+    <string name="week_monday_pl">các ngày thứ hai</string>
+    <string name="week_tuesday_pl">các ngày thứ ba</string>
+    <string name="week_wednesday_pl">các ngày thứ tư</string>
+    <string name="week_thursday_pl">các ngày thứ năm</string>
+    <string name="week_friday_pl">các ngày thứ sáu</string>
+    <string name="week_saturday_pl">các ngày thứ bảy</string>
+    <string name="week_sunday_pl">các ngày chủ nhật</string>
+    <string name="alert_time">Trong khoảng từ %1$d tới %2$d.</string>
+    <string name="no_alert_weekday">Bạn sẽ không nhận được thông báo trong khoảng từ %1$d tới %2$d trong %3$s.</string>
+    <string name="allow_alert_weekday">Bạn có thể nhận thông báo trong các khoảng thời gian từ %1$s.</string>
 
     <string name="notification_title">Current air quality is exceeding your limit!</string>
     <string name="notification_desc">Current AQI is %1$.2f, and your limit is set to %2$d.</string>
 
     <!-- Forecast -->
-    <string name="forecast_unit_time">Unit Time</string>
-    <string name="forecast_card1_title">Add a location</string>
-    <string name="forecast_card2_title">Add a location:</string>
-    <string name="card_comp_title">Difference</string>
-    <string name="forecast_card_graph">Open graph</string>
+    <string name="forecast_unit_time">Đơn vị thời gian</string>
+    <string name="forecast_card1_title">Thêm địa điểm</string>
+    <string name="forecast_card2_title">Thêm địa điểm:</string>
+    <string name="card_comp_title">Sự khác biệt</string>
+    <string name="forecast_card_graph">Mở biểu đồ</string>
 
-    <string name="forecast_unit_aqi">AQI</string>
+    <string name="forecast_unit_aqi">Chỉ số chất lượng không khí (AQI)</string>
     <string name="forecast_unit_pm25">pm25</string>
     <string name="forecast_unit_pm10">pm10</string>
     <string name="forecast_unit_no2">no2</string>

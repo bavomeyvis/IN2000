@@ -29,7 +29,6 @@
                     android:background="@drawable/stats_item_bg"
                     android:text="string/stats_cities_title"
                     android:textColor="?attr/textColor"
-
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="4"/>
