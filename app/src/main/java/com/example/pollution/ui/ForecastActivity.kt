@@ -354,7 +354,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {}
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
-        Toast.makeText(this, "Checked: $cardsChecked, empty: $card2IsEmpty", Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, "Checked: $cardsChecked, empty: $card2IsEmpty", Toast.LENGTH_LONG).show()
     }
     private fun getSharedPreferenceValue(prefKey: String): Boolean {
         val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
