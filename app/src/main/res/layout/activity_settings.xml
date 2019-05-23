@@ -9,7 +9,6 @@
         android:layout_height="match_parent"
         android:background="?attr/backgroundColor">
 
-
     <include
             layout="@layout/toolbar"
             android:id="@+id/settings_toolbar">
@@ -20,7 +19,7 @@
             android:layout_height="wrap_content">
         <TextView
                 android:id="@+id/settingsThemeTitle"
-                android:text="@string/menu_item_settings"
+                android:text="@string/settings_theme_title"
                 android:textColor="?attr/textColor"
                 android:layout_width="wrap_content"
                 android:textSize="16sp"
