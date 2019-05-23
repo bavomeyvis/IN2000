@@ -17,6 +17,8 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.util.*
 
+private const val TAG = "ForecastActivity"
+
 class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     companion object {
         private var card1City : String = "Add a card ->"
@@ -109,24 +111,24 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forecast)
         //Find and initializes Views of both cards and sets replace button
+        initCardViews()
     }
 
     override fun onResume() {
         super.onResume()
         // Set scroller
         this.forecast_time_scroller!!.setOnSeekBarChangeListener(this)
-        // Sets the views
-        initCardViews()
-        //Set the info for cards
+        // Sets current hour of scroller
+        val currentHour: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        forecast_time_scroller.progress = currentHour
+        // Set the companion objects with their info received from MapsActivity
+
         setCardInfo()
         // Sets card 1 data
         initCard1()
         // Sets card 2 data if necessary
         initCard2()
-        // Sets current hour of scroller
-        val currentHour: Int = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        forecast_time_scroller.progress = currentHour
-        // Set the companion objects with their info received from MapsActivity
+
     }
     override fun onBackPressed() {
         card2BeChanged = false
@@ -134,7 +136,7 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     private fun setCardInfo() {
-        // Set the variable companion static variables appropriately
+        // Set the variable appropriately
         if(card2BeChanged) {
             card2Lat = intent.getDoubleExtra("lat", 0.0)
             card2Lon = intent.getDoubleExtra("lon", 0.0)
@@ -226,10 +228,10 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             val weather = Client.client.getWeather(card1Lat, card1Lon).execute().body()
             for (i in card1aqiValues.indices + 1) {
                 card1aqiValues[i] = weather?.data?.time?.get(i)?.variables?.aQI?.value
-                card1pm25Values[i] = weather?.data?.time?.get(i)?.variables?.pm25Concentration?.value
-                card1pm10Values[i] = weather?.data?.time?.get(i)?.variables?.pm10Concentration?.value
-                card1no2Values[i] = weather?.data?.time?.get(i)?.variables?.no2Concentration?.value
-                card1o3Values[i] = weather?.data?.time?.get(i)?.variables?.o3Concentration?.value
+                card1pm25Values[i] = weather?.data?.time?.get(i)?.variables?.aQIPm25?.value
+                card1pm10Values[i] = weather?.data?.time?.get(i)?.variables?.aQIPm10?.value
+                card1no2Values[i] = weather?.data?.time?.get(i)?.variables?.aQINo2?.value
+                card1o3Values[i] = weather?.data?.time?.get(i)?.variables?.aQIO3?.value
                 card1timeValues[i] = weather?.data?.time?.get(i)?.from
             }
             uiThread {
@@ -249,10 +251,10 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
                 val weather = Client.client.getWeather(card2Lat, card2Lon).execute().body()
                 for (i in card2aqiValues.indices + 1) {
                     card2aqiValues[i] = weather?.data?.time?.get(i)?.variables?.aQI?.value
-                    card2pm25Values[i] = weather?.data?.time?.get(i)?.variables?.pm25Concentration?.value
-                    card2pm10Values[i] = weather?.data?.time?.get(i)?.variables?.pm10Concentration?.value
-                    card2no2Values[i] = weather?.data?.time?.get(i)?.variables?.no2Concentration?.value
-                    card2o3Values[i] = weather?.data?.time?.get(i)?.variables?.o3Concentration?.value
+                    card2pm25Values[i] = weather?.data?.time?.get(i)?.variables?.aQIPm25?.value
+                    card2pm10Values[i] = weather?.data?.time?.get(i)?.variables?.aQIPm10?.value
+                    card2no2Values[i] = weather?.data?.time?.get(i)?.variables?.aQINo2?.value
+                    card2o3Values[i] = weather?.data?.time?.get(i)?.variables?.aQIO3?.value
                     card2timeValues[i] = weather?.data?.time?.get(i)?.from
                 }
             } else this@ForecastActivity.card2IsEmpty = true
@@ -264,8 +266,19 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         // as a way to prevent errors if not everything is ready
-        if(cardsChecked == 3 && card2IsEmpty) handleChanges(progress, false)
-        else if (cardsChecked == 3 && !card2IsEmpty) handleChanges(progress, true)
+        if(cardsChecked == 3 && card2IsEmpty) {
+            handleChanges(progress, false)
+        }
+        else if (cardsChecked == 3 && !card2IsEmpty){
+            handleChanges(progress, true)
+        }
+        else {
+
+        }
+/*
+
+//
+*/
     }
 
     private fun updateComparedValues(card1Value: Double?, card2Value: Double?, comp1View : TextView, comp2View : TextView) {
@@ -291,9 +304,9 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         val no2 = card1no2Values[progress]
         val o3 = card1o3Values[progress]
         card1time.text = card1timeValues[progress]?.substring(11, 16)
-        card1value1.text = aqi.toString().substring(0, 3)
-        card1value2.text = pm25.toString().substring(0, 3)
-        card1value3.text = pm10.toString().substring(0, 3)
+        card1value1.text = aqi.toString().substring(0, 4)
+        card1value2.text = pm25.toString().substring(0, 4)
+        card1value3.text = pm10.toString().substring(0, 4)
         card1value4.text = no2.toString().substring(0, 4)
         card1value5.text = o3.toString().substring(0, 4)
         // Change colours
@@ -312,25 +325,23 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             val c2no2 = card2no2Values[progress]
             val c2o3 = card2o3Values[progress]
             card2time.text = card2timeValues[progress]?.substring(11, 16)
-            card2value1.text = c2aqi.toString().substring(0, 3)
-            card2value2.text = c2pm25.toString().substring(0, 3)
-            card2value3.text = c2pm10.toString().substring(0, 3)
+            card2value1.text = c2aqi.toString().substring(0, 4)
+            card2value2.text = c2pm25.toString().substring(0, 4)
+            card2value3.text = c2pm10.toString().substring(0, 4)
             card2value4.text = c2no2.toString().substring(0, 4)
             card2value5.text = c2o3.toString().substring(0, 4)
-            // Comparison
-            updateComparedValues(card1aqiValues[progress], card2aqiValues[progress], card1_comp1, card2_comp1)
-            updateComparedValues(card1pm25Values[progress], card2pm25Values[progress], card1_comp2, card2_comp2)
-            updateComparedValues(card1pm10Values[progress], card2pm10Values[progress], card1_comp3, card2_comp3)
-            updateComparedValues(card1no2Values[progress], card2no2Values[progress], card1_comp4, card2_comp4)
-            updateComparedValues(card1o3Values[progress], card2o3Values[progress], card1_comp5, card2_comp5)
-            // Change colours
             changeRectColor(c2aqi, card2aqiRect)
             changeRectColor(c2pm25, card2pm25Rect)
             changeRectColor(c2pm10, card2pm10Rect)
             changeRectColor(c2no2, card2no2Rect)
             changeRectColor(c2o3, card2o3Rect)
 
-
+            // Comparison
+            updateComparedValues(card1aqiValues[progress], card2aqiValues[progress], card1_comp1, card2_comp1)
+            updateComparedValues(card1pm25Values[progress], card2pm25Values[progress], card1_comp2, card2_comp2)
+            updateComparedValues(card1pm10Values[progress], card2pm10Values[progress], card1_comp3, card2_comp3)
+            updateComparedValues(card1no2Values[progress], card2no2Values[progress], card1_comp4, card2_comp4)
+            updateComparedValues(card1o3Values[progress], card2o3Values[progress], card1_comp5, card2_comp5)
         }
     }
 
@@ -343,10 +354,10 @@ class ForecastActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         }
     }
 
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        //Toast.makeText(this, "Checked: $cardsChecked, empty: $card2IsEmpty", Toast.LENGTH_LONG).show()
     }
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
     private fun getSharedPreferenceValue(prefKey: String): Boolean {
         val sp = getSharedPreferences(MapsActivity.sharedPref, 0)
         return sp.getBoolean(prefKey, false)
