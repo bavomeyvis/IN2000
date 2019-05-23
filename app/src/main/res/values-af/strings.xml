@@ -73,7 +73,7 @@
     <string name="notification_desc">Current AQI is %1$.2f, and your limit is set to %2$d.</string>
 
     <!-- Forecast -->
-    <string name="forecast_unit_time">Unit Time</string>
+    <string name="forecast_unit_time">Unit</string>
     <string name="forecast_card1_title">Add a location</string>
     <string name="forecast_card2_title">Add a location:</string>
     <string name="card_comp_title">Difference</string>
