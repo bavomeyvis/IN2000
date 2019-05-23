@@ -77,7 +77,7 @@ class GraphActivity: AppCompatActivity() {
                 graph.setScaleEnabled(true)
                 graph.description.text = address.getAddressLine(0)
                 graph.description.textColor = Color.GRAY
-                graph.description.textSize = 10f
+                graph.description.textSize = 13f
                 graph.axisRight.isEnabled = false
                 graph.animateX(1000)
                 graph.setDrawBorders(true)
@@ -204,7 +204,7 @@ class GraphActivity: AppCompatActivity() {
                 currentTimeMark.lineWidth = 1f
                 currentTimeMark.enableDashedLine(10f, 10f, 0f)
                 currentTimeMark.labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
-                currentTimeMark.textSize = 10f
+                currentTimeMark.textSize = 13f
                 currentTimeMark.textColor = Color.GRAY
 
                 //Setting different settings for the xAxis
