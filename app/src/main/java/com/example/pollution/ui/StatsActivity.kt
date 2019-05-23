@@ -28,7 +28,7 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     var perCityAQI : HashMap<Double, String> = HashMap()
 
     override fun onNothingSelected(parent: AdapterView<*>) { print("nothing happened") }
-    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) { getCitiesStats(parent.selectedItem.toString()) }
+    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) { setCitiesStats(parent.selectedItem.toString()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Sets theme
@@ -47,10 +47,7 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val spinner: Spinner = findViewById(R.id.statsUnit)
         // Set adapter of spinner
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.units_array,
-            android.R.layout.simple_spinner_item)
+        ArrayAdapter.createFromResource(this, R.array.units_array, android.R.layout.simple_spinner_item)
             .also { adapter ->
                 // Specify the layout to use when the list of choices appears
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -61,7 +58,7 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     // Receives spinner item name. Iterate cities and call getCityValue to find aqi
-    private fun getCitiesStats(selectedUnit : String) {
+    private fun setCitiesStats(selectedUnit : String) {
         for ((key, value) in cities) {
             getCityValue(key, value, selectedUnit)
         }
