@@ -207,7 +207,7 @@ class AlertActivity : AppCompatActivity() {
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle(getString(R.string.alert_week_unavailable_title))
                     builder.setMessage(getString(R.string.alert_week_unavailable_desc))
-                    builder.setNeutralButton(getString(R.string.alert_week_unavailable_dismiss)) {_,_ ->}
+                    builder.setNeutralButton(getString(R.string.dnd_exit)) {_,_ ->}
                     val dialog: AlertDialog = builder.create()
                     dialog.show()
                 }

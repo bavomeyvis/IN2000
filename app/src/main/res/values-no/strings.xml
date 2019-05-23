@@ -1,53 +1,40 @@
 <resources>
     <string name="app_name">Forurensing</string>
+
+    <!-- Map -->
     <string name="title_activity_maps">Kart</string>
     <string name="enter_a_city_name">Skriv et bynavn</string>
-    <string name="picture_of_magnifying_glass">Bilde av forstørrelsesglass</string>
-    <string name="list_title">Innstillinger</string>
-    <string name="bravo">Balansert. Slik alt bør være.</string>
-    <string name="settings">Instillinger</string>
-    <string name="favorites">Favoritter</string>
-    <string name="settings">Innstillinger</string>
-    <string name="alerts">Varslinger</string>
-    <string name="home">Hjem</string>
-    <string name="menu">meny</string>
-    <string name="marker_oslo">Oslo</string>
-    <string name="settings_theme_desc">Skru på nattmodus.</string>
-    <string name="theme">Tema</string>
-    <string name="settings_alert_desc">Få varsel når verdier er over en grense.</string>
-    <string name="settings_alert_title">Varsler</string>
-    <string name="settings_alert_on">Varslingar er avslått.</string>
-    <string name="settings_alert_off">Varslingar er på.</string>
-    <string name="language">Språk</string>
-    <string name="settings_language_desc">Det gitte språket på appen.</string>
-    <string name="settings_version_desc">Gjeldende utgave: 0.03</string>
-    <string name="forecast_example_text">TextView</string>
-    <string name="forecast_value_1">1</string>
-    <string name="forecast_value_2">2</string>
-    <string name="forecast_value_3">3</string>
-    <string name="forecast_unit_time">Unit Time</string>
-    <string name="channel_desc">Varsler</string>
-    <string name="enter_limit">Sett en begrensning</string>
-    <string name="notification_title">Gjeldende luftkvalitet overstiger grensa!</string>
-    <string name="notification_desc">Vurder å planlegge en rømningsvei!</string>
-    <string name="add_location">Legg til et sted</string>
-    <string name="forecast_card2_title">Legg til et sted:</string>
-    <string name="card_comp_title">Forskjell</string>
+
+    <string name="menu_item_home">Hjem</string>
+    <string name="menu_item_alerts">Varslinger</string>
+    <string name="menu_item_favorites">Favoritter</string>
     <string name="menu_4_graph">Graf</string>
     <string name="menu_stats">Statistikk</string>
+    <string name="menu_item_settings">Innstillinger</string>
 
-    <string name="threshold">Sett varslingsgrense</string>
+    <!-- Settings -->
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_theme_desc">Skru på nattmodus.</string>
+    <string name="settings_alert_title">Varsler</string>
+    <string name="settings_alert_desc">Få varsel når verdier er over en grense.</string>
+    <string name="settings_language_title">Språk</string>
+    <string name="settings_language_desc">Det gitte språket på appen.</string>
+    <string name="settings_version_desc">Gjeldende utgave: 0.03</string>
+
+    <!-- Alerts -->
     <string name="alert_title">Varsling</string>
     <string name="alert_threshold_title">Sett varslingsgrense</string>
     <string name="alert_threshold_desc">Overstiger den gjeldende AQI-verdien din varslingsgrense, sender appen en varsling.</string>
     <string name="alert_dnd_title">Ikke forstyrr</string>
     <string name="alert_dnd_desc">Ikke forstyrr for en kort tidsperiode.</string>
+
     <string name="aqi_good">God</string>
     <string name="aqi_moderate">Moderat</string>
     <string name="aqi_potentially_unhealthy">Usunt for følsomme grupper</string>
     <string name="aqi_unhealthy">Usunt</string>
     <string name="aqi_very_unhealthy">Veldig usunt</string>
     <string name="aqi_hazardous">Farlig</string>
+
     <string name="dnd_title">Hvor lenge vil du avbryte varslinger?</string>
     <string name="one_hour">En time</string>
     <string name="three_hours">Tre timer</string>
@@ -57,12 +44,13 @@
     <string name="dnd_exit">OK</string>
     <string name="disable_alerts">Varslinger er avbrytt for %1$s.</string>
     <string name="cancel_disable_alerts">Ikke forstyrr er avbrytt.</string>
+
     <string name="alert_week_title">Tidsperioder å ignorere</string>
     <string name="alert_week_desc">Vel spesifikke tidsperioder for dagar i veka som appen skal vera stille i.</string>
     <string name="week_title">Velg tidsrammer der appen skal være stille:</string>
     <string name="alert_week_unavailable_title">API-nivå ikke støtta.</string>
     <string name="alert_week_unavailable_desc">Denne funksjonen krever API-nivå 23.</string>
-    <string name="alert_week_unavailable_dismiss">OK</string>
+
     <string name="week_monday">Mondag</string>
     <string name="week_tuesday">Tirsdag</string>
     <string name="week_wednesday">Onsdag</string>
@@ -80,7 +68,17 @@
     <string name="alert_time">Mellom %1$d og %2$d.</string>
     <string name="no_alert_weekday">Du vil ikke bli varsla mellom %1$d og %2$d på %3$s.</string>
     <string name="allow_alert_weekday">Du kan bli varsla når som helst på %1$s.</string>
+
+    <string name="notification_title">Gjeldende luftkvalitet overstiger grensa!</string>
+    <string name="notification_desc">Gjeldende AQI er %1$.2f, og din grense er satt til %2$d.</string>
+
+    <!-- Forecast -->
+    <string name="forecast_unit_time">Unit Time</string>
+    <string name="forecast_card1_title">Add a location</string>
+    <string name="forecast_card2_title">Add a location:</string>
+    <string name="card_comp_title">Difference</string>
     <string name="forecast_card_graph">Open graph</string>
+
     <string name="forecast_unit_aqi">AQI</string>
     <string name="forecast_unit_pm25">pm25</string>
     <string name="forecast_unit_pm10">pm10</string>

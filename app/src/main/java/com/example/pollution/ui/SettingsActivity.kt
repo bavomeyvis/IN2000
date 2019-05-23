@@ -50,27 +50,23 @@ class SettingsActivity : AppCompatActivity() {
             writeToPreference("theme", isChecked)
             recreate()
         }
-
+        
         // Do not disturb switch.
         val alertBtn : Switch = findViewById(R.id.settingsAlertBtn)
         alertBtn.isChecked = getSharedPreferenceValue("alert")
         alertBtn.setOnCheckedChangeListener { _, isChecked ->
             doNotDisturb = isChecked
             writeToPreference("alert", isChecked)
-            if (isChecked)
-                Toast.makeText(this, getString(R.string.settings_alert_off), Toast.LENGTH_SHORT).show()
-            else
-                Toast.makeText(this, getString(R.string.settings_alert_on), Toast.LENGTH_SHORT).show()
         }
 
         findViewById<TextView>(R.id.settingsVersionDesc)
         alertBtn.setOnClickListener {
-            if(++bravo == 3) Toast.makeText(this,R.string.bravo, Toast.LENGTH_LONG).show()
+            if(++bravo == 3) Toast.makeText(this, "Balanced. As all things should be.", Toast.LENGTH_LONG).show() // Hardcoded the string to reduce amount of strings. The string was the same for all strings anyways.
         }
 
         // Language drop-down menu.
         val dropdown: Spinner = findViewById(R.id.spinner)
-        val languages = listOf("English", "Norsk (bokmål)", "Norsk (nynorsk)", "Nederlands", "Afrikaans")
+        val languages = listOf("English", "Norsk (bokmål)", "Norsk (nynorsk)", "Spanish", "Nederlands", "Afrikaans", "اردو", "Tiếng Việt")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, languages)
         dropdown.adapter = adapter
         // Set the default selection to be the previously selected one.
@@ -94,8 +90,11 @@ class SettingsActivity : AppCompatActivity() {
                     0 -> changeLocalisation("")
                     1 -> changeLocalisation("no")
                     2 -> changeLocalisation("nn")
-                    3 -> changeLocalisation("nl")
-                    4 -> changeLocalisation("af")
+                    3 -> changeLocalisation("es")
+                    4 -> changeLocalisation("nl")
+                    5 -> changeLocalisation("af")
+                    6 -> changeLocalisation("pk")
+                    7 -> changeLocalisation("vi")
                 }
                 // Refresh the activity, if a new language is selected. Without this check, the app will refresh even when just opening the drop down.
                 if (current != position) recreate()

@@ -40,7 +40,7 @@ import com.example.pollution.classes.ActivityBooter
 import com.example.pollution.classes.Cities
 import com.example.pollution.data.City
 import com.example.pollution.response.Client
-import com.example.pollution.response.WeatherService
+//import com.example.pollution.response.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.*
@@ -78,8 +78,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
     private val booter = ActivityBooter(this@MapsActivity)
     private val cities = Cities(this@MapsActivity)
-
-    var cooldown = false
 
     //On create stuff
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,7 +133,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
 
         // Set the boundaries for movement.  yy xx
         val NORWAY = LatLngBounds(LatLng(65.443184, 12.052995), LatLng(70.012997, 25.316675))
-        val CENTER = LatLngBounds(LatLng(60.0, 13.7), LatLng(68.0, 18.7))
+        val CENTER = LatLngBounds(LatLng(58.0, 3.7), LatLng(68.0, 28.7))
         // Move the camera to the appropriate place.
 
         gmap.moveCamera(CameraUpdateFactory.newLatLngBounds(NORWAY, resources.displayMetrics.widthPixels, resources.displayMetrics.heightPixels, 0))
@@ -146,12 +144,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
         val cameraPosition = CameraPosition.Builder()
             .target(LatLng(66.0, 18.7)) // Sets the center of the map to Mountain View
             .zoom(4.3f) // Sets the zoom
-            .bearing(45.0f) // Sets the orientation of the camera to north-east
+            .bearing(22.5f) // Sets the orientation of the camera to north-east
             .tilt(0.0f) // Sets the tilt of the camera to 0 degrees
             .build() // Creates a CameraPosition from the builder
         gmap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         gmap.setLatLngBoundsForCameraTarget(CENTER)
-        gmap.setMaxZoomPreference(5.0f)
+        gmap.setMaxZoomPreference(7.0f)
         gmap.setMinZoomPreference(4.3f)
 
         //darkenSurroundings(getSharedPreferenceValue("theme"))
@@ -272,7 +270,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, PopupMenu.OnMenuIt
     private fun createNotificationChannel(channel_id: String) { // Create the channel. All notifications will be sent through this channel, because we only ever use one alert.
         if (Build.VERSION.SDK_INT >= 26) { // This feature is not supported on earlier devices.
             val channel0 = NotificationChannel(channel_id, "Channel 0", NotificationManager.IMPORTANCE_HIGH)
-            channel0.description = getString(R.string.channel_desc) // Set the description for the channel, can be arbitrary.
+            channel0.description = getString(R.string.alert_title) // Set the description for the channel, can be arbitrary.
             val manager: NotificationManager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel0) // Create the channel used for dangerAlert.
         }

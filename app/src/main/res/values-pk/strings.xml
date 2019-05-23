@@ -1,0 +1,87 @@
+<resources>
+    <string name="app_name">آلودگی</string>
+
+    <!-- Map -->
+    <string name="title_activity_maps">نقشہ</string>
+    <string name="enter_a_city_name">شہر کا نام درج کریں</string>
+
+    <string name="menu_item_home">گھر</string>
+    <string name="menu_item_alerts">انتباہات</string>
+    <string name="menu_item_favorites">پسندیدہ</string>
+    <string name="menu_4_graph">گراف</string>
+    <string name="menu_stats">اعداد و شمار</string>
+    <string name="menu_item_settings">ترتیبات</string>
+
+    <!-- Settings -->
+    <string name="settings_theme_title">خیالیہ</string>
+    <string name="settings_theme_desc">آنسیاہ موڈ کو آن کر دیں.</string>
+    <string name="settings_alert_title">انتباہات</string>
+    <string name="settings_alert_desc">جب قدر سے زیادہ حد تک ہوتی ہے تو نوٹیفیکیشن حاصل کریں</string>
+    <string name="settings_language_title">زبان</string>
+    <string name="settings_language_desc">اپلی کیشن کی ظاہر کردہ زبان</string>
+    <string name="settings_version_desc">موجودہ ورژن: 0.03</string>
+
+    <!-- Alerts -->
+    <string name="alert_title">انتباہ</string>
+    <string name="alert_threshold_title">حد طے کریں</string>
+    <string name="alert_threshold_desc">کیا موجودہ AQI قدر آپ کی حد سے تجاوز کرنا چاہئے، ایپ آپ کو ایک نوٹیفیکیشن بھیج دے گا.</string>
+    <string name="alert_dnd_title">پریشان نہ کرو</string>
+    <string name="alert_dnd_desc">مختصر مدت کے لئے پریشان مت کرو</string>
+
+    <string name="aqi_good">اچھا</string>
+    <string name="aqi_moderate">درمیانی</string>
+    <string name="aqi_potentially_unhealthy">حساس گروپوں کے لئے غیر صحت بخش</string>
+    <string name="aqi_unhealthy">غیر صحت بخش</string>
+    <string name="aqi_very_unhealthy">بہت غیر صحت بخش</string>
+    <string name="aqi_hazardous">خطرناک</string>
+
+    <string name="dnd_title">آپ کو نوٹیفیکیشن کو غیر فعال کرنا کتنی دیر تک کرنا ہے؟</string>
+    <string name="one_hour">ایک گھنٹہ</string>
+    <string name="three_hours">تین گھنٹے</string>
+    <string name="one_day">ایک دن</string>
+    <string name="one_week">ایک ہفتہ</string>
+    <string name="one_month">ایک مہینہ</string>
+    <string name="dnd_exit">ٹھیک ہے</string>
+    <string name="disable_alerts">اطلاعات کیلئے غیر فعال%1$s.</string>
+    <string name="cancel_disable_alerts">پریشان نہ کرو منسوخ</string>
+
+    <string name="alert_week_title">وقت کی نظر انداز کرنے کے لئے</string>
+    <string name="alert_week_desc">اپلی کیشن کے لئے ہفتے کے دن کے مخصوص وقت کی مدت کو خاموش رہیں.</string>
+    <string name="week_title">اپلی کیشن کے لئے وقت کے فریم کو خاموش ہونے کا انتخاب کریں:</string>
+    <string name="alert_week_unavailable_title">غیر تعاون شدہ API کی سطح.</string>
+    <string name="alert_week_unavailable_desc">فنکشن API کی سطح 23 کی ضرورت ہوتی ہے.</string>
+
+    <string name="week_monday">سوموار</string>
+    <string name="week_tuesday">منگل</string>
+    <string name="week_wednesday">بدھ</string>
+    <string name="week_thursday">جمعرات</string>
+    <string name="week_friday">جمعہ</string>
+    <string name="week_saturday">ہفتہ</string>
+    <string name="week_sunday">اتوار</string>
+    <string name="week_monday_pl">سوموار</string>
+    <string name="week_tuesday_pl">منگل</string>
+    <string name="week_wednesday_pl">بدھ</string>
+    <string name="week_thursday_pl">جمعرات</string>
+    <string name="week_friday_pl">جمعہ</string>
+    <string name="week_saturday_pl">ہفتہ</string>
+    <string name="week_sunday_pl">اتوار</string>
+    <string name="alert_time"> %1$d  %2$d کے درمیان .</string>
+    <string name="no_alert_weekday">آپ کے درمیان مطلع نہیں کیا جائے گا %1$d and %2$d on %3$s.</string>
+    <string name="allow_alert_weekday">آپ کسی بھی وقت مطلع کیا جا سکتا ہے %1$s.</string>
+
+    <string name="notification_title">موجودہ فضائی معیار آپ کی حد سے زیادہ ہے!</string>
+    <string name="notification_desc">موجودہ AQI٪ 1 $ .2f ہے، اور آپ کی حد٪ 2 $ d پر مقرر کی گئی ہے.</string>
+
+    <!-- Forecast -->
+    <string name="forecast_unit_time">یونٹ وقت</string>
+    <string name="forecast_card1_title">یک جگہ شامل کریں</string>
+    <string name="forecast_card2_title">یک جگہ شامل کریں:</string>
+    <string name="card_comp_title">فرق</string>
+    <string name="forecast_card_graph">کھولیں گراف</string>
+
+    <string name="forecast_unit_aqi">AQI</string>
+    <string name="forecast_unit_pm25">pm25</string>
+    <string name="forecast_unit_pm10">pm10</string>
+    <string name="forecast_unit_no2">no2</string>
+    <string name="forecast_unit_o3">o3</string>
+</resources>
