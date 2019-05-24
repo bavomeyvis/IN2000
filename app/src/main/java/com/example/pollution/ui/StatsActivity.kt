@@ -68,10 +68,10 @@ class StatsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         doAsync {
             val weather = client.getWeather(pos.latitude, pos.longitude).execute().body()
             val aqi = when (pollutionUnit) {
-                "no2" -> weather?.data?.time?.get(0)?.variables?.no2Concentration?.value
-                "o3" -> weather?.data?.time?.get(0)?.variables?.o3Concentration?.value
-                "pm10" -> weather?.data?.time?.get(0)?.variables?.pm10Concentration?.value
-                "pm25" -> weather?.data?.time?.get(0)?.variables?.pm25Concentration?.value
+                "no2" -> weather?.data?.time?.get(0)?.variables?.aQINo2?.value
+                "o3" -> weather?.data?.time?.get(0)?.variables?.aQIO3?.value
+                "pm10" -> weather?.data?.time?.get(0)?.variables?.aQIPm10?.value
+                "pm25" -> weather?.data?.time?.get(0)?.variables?.aQIPm25?.value
                 else -> weather?.data?.time?.get(0)?.variables?.aQI?.value
             }
             uiThread {
