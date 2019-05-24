@@ -10,16 +10,16 @@
     <string name="menu_item_favorites">Favorites</string>
     <string name="menu_4_graph">Graph</string>
     <string name="menu_stats">Stats</string>
-    <string name="menu_item_settings">Settings</string>
+    <string name="menu_item_settings">Ajustes</string>
 
     <!-- Settings -->
-    <string name="settings_theme_title">Theme</string>
-    <string name="settings_theme_desc">Turn on Dark Mode.</string>
-    <string name="settings_alert_title">Alerts</string>
-    <string name="settings_alert_desc">Get notified when values are above threshold.</string>
-    <string name="settings_language_title">Language</string>
-    <string name="settings_language_desc">The displayed language of the app</string>
-    <string name="settings_version_desc">Current version: 0.03</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_theme_desc">Accepta el negro tema</string>
+    <string name="settings_alert_title">Alerta</string>
+    <string name="settings_alert_desc">Recibe una notifician cuando los valores están  are encima del límite.</string>
+    <string name="settings_language_title">Idioma</string>
+    <string name="settings_language_desc">La idioma del app</string>
+    <string name="settings_version_desc">Presente versíon: 0.03</string>
 
     <!-- Alerts -->
     <string name="alert_title">Alert</string>

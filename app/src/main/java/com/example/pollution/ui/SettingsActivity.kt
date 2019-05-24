@@ -66,7 +66,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // Language drop-down menu.
         val dropdown: Spinner = findViewById(R.id.spinner)
-        val languages = listOf("English", "Norsk (bokmål)", "Norsk (nynorsk)", "Spanish", "Nederlands", "Afrikaans", "اردو", "Tiếng Việt")
+        val languages = listOf("English", "Norsk (bokmål)", "Norsk (nynorsk)", "Español", "Nederlands", "Afrikaans", "اردو", "Tiếng Việt")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, languages)
         dropdown.adapter = adapter
         // Set the default selection to be the previously selected one.
