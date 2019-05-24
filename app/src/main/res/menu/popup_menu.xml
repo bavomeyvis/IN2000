@@ -11,7 +11,7 @@
           android:icon="@drawable/menu_stats"
           app:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_alert"
-          android:title="@string/menu_stats"
+          android:title="@string/menu_item_alerts"
           android:icon="@drawable/menu_alert"
           app:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/menu_settings"
