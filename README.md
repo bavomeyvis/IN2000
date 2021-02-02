@@ -70,7 +70,7 @@ g. Finish data modelling after parsing by March 18th.
 h. Hopefully finish project by 01.05.2019
 i. Do at least something, no matter how small, before next meet up.
 
-## Team deal:
+## Team deal
 a. We expect to have a meeting at least once weekly, in addition to standups and
 eventually retroperspectives.
 b. In addition to the meetings, every member use time appropriate to their skill and
